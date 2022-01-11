@@ -1,0 +1,167 @@
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  color: #454545;
+  text-transform: capitalize;
+}
+
+.headers {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.card-icon-bg {
+  border-radius: 10px 0 0 10px;
+  height: 84px;
+  width: 25%;
+  display: flex;
+  align-items: center;
+
+  .wrapper {
+    margin: 0 auto;
+    ion-icon {
+      margin: auto;
+      // margin-left: -7px;
+      width: 50px;
+      height: 50px;
+      content: url("../../../../../assets/home/heatwave/heatwave_ic.svg");
+    }
+  }
+}
+
+.card-content-bg {
+  border-radius: 0 10px 10px 0;
+  height: 84px;
+  display: flex;
+  align-items: center;
+
+  .card-content-location::before {
+    content: url("../../../../../assets/modules/heatwave/loc.svg");
+  }
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.3rem;
+  }
+
+  .card-content-location {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-left: -11px;
+  }
+  .temperature {
+    font-family: "Alata", sans-serif !important;
+    font-weight: 500;
+  }
+}
+swiper {
+  width: 100%;
+}
+.normal,
+.fav-1 {
+  .card-icon-bg {
+    background-color: #54c954;
+  }
+  .card-content-bg {
+    background-color: #6fdc6f;
+    color: #fbfbfb;
+  }
+}
+
+.heat,
+.fav-2 {
+  .card-icon-bg {
+    background-color: #fcb809;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/heatwave/heatwave_outline_dark.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #ffc738;
+    color: #5a5a5a;
+  }
+  .card-content-location::before {
+    content: url("../../../../../assets/modules/heatwave/loc_dark.svg");
+  }
+}
+
+.severe,
+.fav-3 {
+  .card-icon-bg {
+    background-color: #fb800e;
+  }
+  .card-content-bg {
+    background-color: #fe902a;
+    color: #fbfbfb;
+    // ion-label {
+    //   // font-size: 1.25rem;
+    // }
+  }
+}
+
+.extreme,
+.fav-4 {
+  .card-icon-bg {
+    background-color: #f54444;
+  }
+  .card-content-bg {
+    background-color: #ff5c5c;
+    color: #fbfbfb;
+    // ion-label {
+    //   font-size: 1.25rem;
+    // }
+  }
+}
+
+.forecast {
+  ion-label {
+    font-weight: 500;
+  }
+  ion-col {
+    border-right: 1.5px solid #cccccc;
+  }
+
+  ion-col:last-child {
+    border: none;
+  }
+
+  .vl {
+    border-right: 1.5px solid #cccccc;
+    margin-top: 10px;
+  }
+  .vl:last-child {
+    border-left: none;
+  }
+
+  .temperature-1 {
+    color: #32cd32;
+  }
+  .temperature-2 {
+    color: #fcb809;
+  }
+
+  .temperature-3 {
+    color: #e48400;
+  }
+
+  .temperature-4 {
+    color: #ff5c5c;
+  }
+}
+
+.favourites {
+  ion-card {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.swiper-pagination {
+  position: relative;
+  margin: 5px auto;
+}

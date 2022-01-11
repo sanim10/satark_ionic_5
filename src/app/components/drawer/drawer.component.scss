@@ -1,0 +1,341 @@
+// * {
+//   animation: easeIn 200ms;
+// }
+.drawer {
+  position: absolute;
+  box-shadow: 0px -1px 0px 0px #00000031;
+  width: 100%;
+  bottom: 0px;
+  height: 95px;
+  z-index: 10;
+  border-top-left-radius: 19px;
+  border-top-right-radius: 19px;
+  background: #fff;
+  will-change: transform;
+}
+
+.drawer-handle {
+  margin: 0 auto;
+}
+.drawer-handle-icon {
+  background-color: #545454;
+  height: 4px;
+  width: 70px;
+  border-radius: 2px;
+  margin: 10px auto;
+}
+
+.drawer-handle-content {
+  color: #454545;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin: 15px 0;
+}
+.drawer-handle-content-location {
+  margin: 5px 0;
+}
+.drawer-inactive {
+  background-color: var(--ion-color-primary);
+  transition: background-color 0.5s linear;
+  .drawer-handle-icon {
+    background-color: rgb(245, 245, 245);
+  }
+  .drawer-handle-content {
+    color: #fff;
+  }
+  ion-icon {
+    color: #fff;
+  }
+}
+
+.drawer-active {
+  overflow-y: hidden;
+  height: 60vh;
+  box-shadow: 0px 0px 0px 0px #00000000;
+  transition: 0.5s linear all;
+}
+
+ion-button {
+  --padding-bottom: 40px;
+}
+
+ion-icon {
+  margin-left: -10px;
+  color: var(--ion-color-primary);
+  font-size: 0.9rem;
+}
+
+.drawer-card {
+  color: #454545 !important;
+  height: 100px;
+  border-radius: 10px;
+  margin: 25px 20px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0px 0px 15px 0px #00000031;
+}
+.drawer-card-icon-bg {
+  border-radius: 10px 0 0 10px;
+  height: 100%;
+  width: 23%;
+  display: flex;
+  align-items: center;
+
+  .wrapper {
+    margin: 0 auto;
+    ion-img {
+      margin: auto;
+      padding-bottom: 5px;
+    }
+  }
+}
+
+.drawer-card-content-bg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  width: 77%;
+  height: 100%;
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.4rem;
+  }
+}
+
+.drawer-card-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 10px;
+  margin: auto 10px;
+  width: 100%;
+}
+.drawer-card-content-box {
+  border-radius: 6px;
+  position: relative;
+  text-align: center;
+  height: 60px;
+  font-family: "Alata", sans-serif !important;
+  display: flex;
+  font-size: 0.8rem;
+  align-content: center;
+
+  div {
+    margin: auto;
+  }
+
+  .cloud {
+    content: url("../../../assets/home/weather/clouds.svg");
+  }
+  .rain {
+    content: url("../../../assets/home/weather/rain.svg");
+  }
+  .wind {
+    content: url("../../../assets/home/weather/wind.svg");
+  }
+  .humidity {
+    content: url("../../../assets/home/weather/humidity.svg");
+  }
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.4rem;
+  }
+}
+
+.weather {
+  ion-label {
+    color: #616161;
+  }
+  .drawer-card-icon-bg {
+    background: linear-gradient(rgba(255, 192, 30, 1), #ffe08f);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/weather/sunny_icon.svg");
+      }
+    }
+  }
+  .drawer-card-content-bg {
+    .drawer-card-content-grid {
+      .drawer-card-content-box {
+        background: #ffefc7;
+        ion-label {
+          font-weight: 400;
+          margin: auto;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+.weather-2,
+.weather-3,
+.weather-4,
+.weather-5,
+.weather-6 {
+  ion-label {
+    color: #616161;
+  }
+  .drawer-card-icon-bg {
+    background: linear-gradient(rgba(94, 94, 94, 1), rgba(228, 227, 227, 1));
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/weather/rainy_icon.svg");
+      }
+    }
+  }
+  .drawer-card-content-bg {
+    .drawer-card-content-grid {
+      .drawer-card-content-box {
+        background: #e3e3e3;
+        ion-label {
+          font-weight: 400;
+          margin: auto;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+.lightning {
+  .drawer-card-icon-bg {
+    background: linear-gradient(rgba(111, 220, 111, 1), rgb(168, 251, 168));
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/lightning/lightning_ic.svg");
+      }
+      ion-label {
+        color: #208320;
+      }
+    }
+  }
+  .drawer-card-content-bg {
+    ion-label {
+      font-weight: 500;
+      margin: auto;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.lightning-low {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#fcb809, #ffe4a0);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/lightning/lightning_heavy_icon.svg");
+      }
+      ion-label {
+        color: #be8b0a;
+      }
+    }
+  }
+}
+.lightning-medium {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#ff713d, #ffbba2);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/lightning/lightning_heavy_icon.svg");
+      }
+      ion-label {
+        color: #be542d;
+      }
+    }
+  }
+}
+.lightning-high {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#f54444, #ffacac);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/lightning/lightning_heavy_icon.svg");
+      }
+      ion-label {
+        color: #aa3131;
+      }
+    }
+  }
+}
+
+.heatwave {
+  .drawer-card-icon-bg {
+    background: linear-gradient(rgba(111, 220, 111, 1), rgb(168, 251, 168));
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/heatwave/heatwave_ic.svg");
+      }
+      ion-label {
+        color: #208320;
+      }
+    }
+  }
+}
+
+.heatwave-heat {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#fcb809, #ffe4a0);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/heatwave/heatwave_ic.svg");
+      }
+      ion-label {
+        color: #be8b0a;
+      }
+    }
+  }
+}
+
+.heatwave-severe {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#ff713d, #ffbba2);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/heatwave/heatwave_ic.svg");
+      }
+      ion-label {
+        color: #be542d;
+      }
+    }
+  }
+}
+.heatwave-extreme {
+  .drawer-card-icon-bg {
+    background: linear-gradient(#f54444, #ffacac);
+    .wrapper {
+      ion-img {
+        content: url("../../../assets/home/heatwave/heatwave_ic.svg");
+      }
+      ion-label {
+        color: #aa3131;
+      }
+    }
+  }
+}
+
+@media screen and (max-height: 780px) {
+  .drawer-active {
+    height: 65vh;
+  }
+}
+
+@media screen and (max-height: 670px) {
+  .drawer-active {
+    height: 75vh;
+  }
+}
+@media screen and (max-height: 568px) {
+  .drawer-card {
+    height: 80px;
+  }
+}
+
+.weather-icon {
+  max-width: 25px;
+  margin: 0 auto;
+}

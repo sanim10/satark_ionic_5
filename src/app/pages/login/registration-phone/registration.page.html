@@ -1,0 +1,199 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title type="small">{{"Phone Registration" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"> </ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end" style="display: none"> </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="bottom-bg">
+    <ion-img src="../../../assets/login/landing_bottom_bg_.png"></ion-img>
+  </div>
+  <form>
+    <swiper
+      [config]="config"
+      (swiper)="onSwiper($event)"
+      (slideChange)="onSlideChange()"
+      #swiper
+    >
+      <ng-template swiperSlide>
+        <!-- Slide 1 --- get phone number-->
+        <swiper-slide>
+          <ion-grid class="container">
+            <ion-card>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="12">
+                    <br />
+                    <ion-text class="ion-text-center">
+                      <p>
+                        {{"Please enter the phone number you wish to register
+                        with" | translate}}
+                      </p>
+                    </ion-text>
+                    <br />
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-input
+                      name="phone"
+                      type="tel"
+                      placeholder="{{'Your mobile number' | translate}}"
+                      minlength="10"
+                      maxlength="10"
+                      ngModel
+                      #phoneCtrl="ngModel"
+                      required
+                    >
+                      <img
+                        src="../../assets/login/india_ic.svg"
+                        style="margin-left: 10px"
+                      />
+                      <ion-text color="primary" style="font-weight: 500">
+                        &nbsp;&nbsp;+91
+                      </ion-text>
+                      <span class="pipe">|&nbsp;</span>
+                    </ion-input>
+                    <br />
+
+                    <ion-button
+                      expand="block"
+                      size="default"
+                      class="login-button"
+                      (click)="requestOtp(phoneCtrl.value)"
+                      [disabled]="!phoneCtrl.valid"
+                      >{{"Verify Number" |translate}}
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-grid>
+        </swiper-slide>
+      </ng-template>
+
+      <ng-template swiperSlide>
+        <!-- Slide 2 --- otp-->
+        <swiper-slide>
+          <ion-grid class="container">
+            <ion-card>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="12">
+                    <br />
+                    <ion-text class="ion-text-center">
+                      <p>
+                        {{"Please enter the six OTP code you received to
+                        register your number" | translate}}
+                      </p>
+                    </ion-text>
+                    <br />
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <div class="otp">
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(1)"
+                        name="otp-1"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp1Ctrl
+                        required
+                        ngModel
+                        #otp1="ngModel"
+                      >
+                      </ion-input>
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(2)"
+                        name="otp-2"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp2Ctrl
+                        required
+                        ngModel
+                        #otp2="ngModel"
+                      >
+                      </ion-input>
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(3)"
+                        name="otp-3"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp3Ctrl
+                        required
+                        ngModel
+                        #otp3="ngModel"
+                      >
+                      </ion-input>
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(4)"
+                        name="otp-4"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp4Ctrl
+                        required
+                        ngModel
+                        #otp4="ngModel"
+                      >
+                      </ion-input>
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(5)"
+                        name="otp-5"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp5Ctrl
+                        required
+                        ngModel
+                        #otp5="ngModel"
+                      >
+                      </ion-input>
+                      <ion-input
+                        class="ion-no-padding ion-text-center"
+                        (keyup)="shiftFocus(6)"
+                        name="otp-6"
+                        inputmode="number"
+                        minlength="1"
+                        maxlength="1"
+                        #otp6Ctrl
+                        required
+                        ngModel
+                        #otp6="ngModel"
+                      >
+                      </ion-input>
+                    </div>
+                    <br />
+                    <ion-button
+                      expand="block"
+                      size="default"
+                      class="login-button"
+                      (click)="verifyOtp()"
+                      [disabled]="!otp1.valid || !otp2.valid || !otp3.valid || !otp4.valid || !otp5.valid 
+                      || !otp6.valid"
+                    >
+                      {{"Verify OTP" | translate}}
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-grid>
+        </swiper-slide>
+      </ng-template>
+    </swiper>
+  </form>
+</ion-content>

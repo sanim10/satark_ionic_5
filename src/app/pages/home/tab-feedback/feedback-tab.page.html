@@ -1,0 +1,92 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>Feedback</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="/home"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col style="margin: auto">
+        <ion-label class="headers">
+          {{"to share your experience with Satark mobile application, fill out
+          this form with your review" | translate}}<br />
+        </ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-select
+          ngModel
+          #selectCtrl="ngModel"
+          placeholder="{{'Select your field to comment about' | translate}}"
+          interface="action-sheet"
+          cancelText="{{'Cancel'| translate}}"
+          required
+        >
+          <ion-select-option value="Heat Wave"
+            >{{"Heatwave" | translate}}</ion-select-option
+          >
+          <ion-select-option value="Lightning"
+            >{{"Lightning" | translate}}</ion-select-option
+          >
+          <ion-select-option value="Flood"
+            >{{"Flood" | translate}}</ion-select-option
+          >
+          <ion-select-option value="Ocean"
+            >{{"Ocean" | translate}}</ion-select-option
+          >
+          <ion-select-option value="Road Accident"
+            >{{"Road Accident" | translate}}</ion-select-option
+          >
+          <ion-select-option value="Others"
+            >{{"Others" | translate}}</ion-select-option
+          >
+        </ion-select>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-label class="headers">
+          <span style="opacity: 0.9; font-size: 0.9rem">
+            {{"Please enter your view below" | translate}}</span
+          >
+        </ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          ngModel
+          #textCtrl="ngModel"
+          autocapitalize="true"
+          minlength="10"
+          type="text"
+          required
+        >
+        </ion-textarea>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-button
+          Expand="block"
+          [disabled]="!selectCtrl.valid ||!textCtrl.valid "
+          (click)="  saveFeedback(selectCtrl.value, textCtrl.value)"
+        >
+          {{"Submit" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

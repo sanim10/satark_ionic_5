@@ -1,0 +1,29 @@
+<ion-content [fullscreen]=" true" scrollY="false">
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" component="home">
+      <ion-tab-button tab="home">
+        <ion-icon
+          name="home"
+          src="../../../../assets/home/home_ic.svg"
+        ></ion-icon>
+        <ion-label>{{"Lightning" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button routerLink="/edit-favorites">
+        <ion-icon
+          name="favourite"
+          src="../../../../assets/modules/heatwave/favourite_ic.svg"
+        ></ion-icon>
+        <ion-label>{{"Edit Location" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="setting-tab">
+        <ion-icon
+          name="setting"
+          src="../../../../assets/home/map_ic.svg"
+        ></ion-icon>
+        <ion-label>{{"Map View" | translate}}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

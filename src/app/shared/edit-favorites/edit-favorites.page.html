@@ -1,0 +1,65 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>Edit Favourites</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="/home"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="container">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-input placeholder="  Search to add new favourites"> </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-label class="ion-padding-start headers">Your Location</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-input disabled>
+            &nbsp;&nbsp;
+            <ion-icon src="../../../assets/home/card/location.svg"></ion-icon>
+            &nbsp;Dhankauda, Sambalpur
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-label class="ion-padding-start headers"
+          >Favourite locations<br />
+          <span
+            style="opacity: 0.7; font-size: 0.7rem"
+            class="ion-padding-start"
+            >Maximum of five location can be added</span
+          >
+        </ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none"
+          >Angul
+          <ion-toggle slot="end" checked></ion-toggle>
+        </ion-item>
+        <ion-item lines="none"
+          >Bhanja nagar
+          <ion-toggle slot="end"></ion-toggle>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,202 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@import "~swiper/scss";
+// @import "~swiper/scss/navigation";
+@import "~swiper/scss/pagination";
+
+.alert-wrapper {
+  --backdrop-opacity: 0;
+}
+
+.ios {
+  ion-card {
+    margin: 10px 12px;
+  }
+  ion-back-button {
+    margin: auto 20px;
+  }
+  ion-tab-button {
+    ion-icon {
+      transform: scale(0.73);
+    }
+    ion-label {
+      margin-top: -5px;
+    }
+  }
+}
+ion-card {
+  border-radius: 15px;
+  box-shadow: 0px 0px 15px 0px #00000031;
+  margin: 10px 12px;
+}
+
+* {
+  font-family: "Roboto";
+  font-weight: 400;
+  // -webkit-user-select: none;
+  // -webkit-touch-callout: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none;
+}
+ion-page {
+  will-change: transform;
+}
+
+ion-title {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  // text-align: center;
+}
+
+ion-button {
+  --background: linear-gradient(0deg, rgba(1, 82, 134, 1), rgba(0, 98, 159, 1));
+  --border-width: 1px;
+  --background-hover: rgba(20, 20, 20, 0.096);
+}
+
+ion-title {
+  font-size: 18px;
+}
+
+ion-back-button {
+  --icon-font-size: 24px;
+  // padding: 10px ;
+  --color: var(--ion-color-primary);
+}
+
+ion-modal {
+  ion-header {
+    ion-button {
+      --background: null;
+      ion-icon {
+        width: 20px;
+        margin-left: 10px;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 320px) {
+  :root {
+    font-size: 0.9rem !important;
+
+    h1 {
+      font-size: 1.2rem;
+    }
+
+    ion-title {
+      font-size: 1.1rem;
+    }
+
+    ion-input {
+      font-size: 1rem;
+    }
+
+    ion-button {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (prefers-color-scheme: statusbar) {
+  :root {
+    --ion-color-primary-contrast: #454545;
+  }
+}
+
+@keyframes easeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+
+.skeleton-container {
+  margin: 25px;
+}
+.skeleton {
+  opacity: 0.7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.skeleton-header {
+  width: 30%;
+  height: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.skeleton-card {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+}
+.skeleton-card-desc {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 85%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
+.back-button {
+  position: absolute;
+  z-index: 100;
+  margin: 10px 20px;
+}
+
+.md {
+  .back-button {
+    position: absolute;
+    z-index: 100;
+    margin: 10px 10px;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

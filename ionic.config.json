@@ -1,0 +1,10 @@
+{
+  "name": "Satark",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {
+      "enabled": false
+    }
+  },
+  "type": "angular"
+}

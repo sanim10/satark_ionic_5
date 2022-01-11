@@ -1,0 +1,27 @@
+<ion-content [fullscreen]=" true" scrollY="false" style="visibility: 100">
+  <ion-tabs #iontabs>
+    <ion-tab-bar slot="bottom" component="home">
+      <ion-tab-button tab="home-tab">
+        <ion-icon name="home" src="../../assets/home/home_ic.svg"></ion-icon>
+        <ion-label>{{"Home" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="feedback-tab">
+        <ion-icon
+          style="margin-left: 10px"
+          name="feedback"
+          src="../../assets/home/feedback_ic.svg"
+        ></ion-icon>
+        <ion-label>{{"Feedback" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="setting-tab">
+        <ion-icon
+          name="setting"
+          src="../../assets/home/setting_ic.svg"
+        ></ion-icon>
+        <ion-label>{{"Settings" | translate}}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

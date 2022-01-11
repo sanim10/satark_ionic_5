@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="/home"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item detail>{{"Profile" | translate}}</ion-item>
+
+  <ion-label>
+    <p class="option-header">{{"User preferences" | translate}}</p>
+  </ion-label>
+
+  <ion-item lines="none" (click)="selectAppLang()" detail>
+    <ion-grid class="ion-no-padding ion-padding-top">
+      <ion-row>
+        <ion-col size="12">{{"App language"| translate}}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col *ngIf="lHelper.lang=='en'" size="12" class="option-detail"
+          >English</ion-col
+        >
+        <ion-col *ngIf="lHelper.lang=='od'" size="12" class="option-detail"
+          >Oriya</ion-col
+        >
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+  <ion-item lines="none" (click)="selectNotificationLang()" detail>
+    <ion-grid class="ion-no-padding ion-padding-top">
+      <ion-row>
+        <ion-col size="12">{{"Notification language" | translate}}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" class="option-detail"
+          >{{ (noti_lang==null||noti_lang=='en' )? 'English' :'Oriya'}}</ion-col
+        >
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+  <ion-item [routerLink]="['/edit-favorites']" detail
+    >{{"Manage locations" | translate}}
+  </ion-item>
+  <ion-label>
+    <p class="option-header">{{"Notifications" | translate}}</p>
+  </ion-label>
+  <ion-item lines="none"
+    >{{"Location-based notification" | translate}}
+    <ion-toggle slot="end"></ion-toggle>
+  </ion-item>
+
+  <ion-item (click)="setNotiSound()" detail>
+    <ion-grid class="ion-no-padding ion-padding-top ion-padding-bottom">
+      <ion-row>
+        <ion-col size="12">{{"Custom notification sound" | translate}}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" class="option-detail">Default </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+
+  <!-- </div> -->
+
+  <ion-item lines="none" class="logout" (click)="logout()"
+    >{{"Logout" | translate}}
+    <ion-icon name="log-out-outline" slot="end"></ion-icon>
+  </ion-item>
+</ion-content>

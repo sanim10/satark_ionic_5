@@ -1,0 +1,34 @@
+// path.ionicon {
+//   color: var(--ion-color-primary);
+// }
+* {
+  animation: easeIn 250ms;
+}
+
+ion-button {
+  margin: 0 auto;
+  width: 50%;
+}
+
+.headers {
+  font-weight: 600;
+  text-transform: capitalize;
+  line-height: 25px;
+}
+
+ion-input {
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  padding: auto 10px;
+}
+ion-select {
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  padding: auto 10px;
+}
+
+ion-textarea {
+  min-height: 100px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+}

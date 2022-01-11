@@ -1,0 +1,161 @@
+ion-segment {
+  --background: #efefef;
+  width: 90%;
+  margin: auto;
+  margin-top: 10px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+ion-segment-button {
+  text-transform: capitalize;
+  font-size: 1.0001rem;
+  --color: #b8b8b8;
+  font-weight: 500;
+  --indicator-height: 0px;
+  --background-checked: #fefefe;
+  --background-hover: rgba(255, 255, 255, 0);
+  --color-checked: var(--ion-color-primary);
+  height: 30px;
+  min-height: 30px;
+  margin: 5px;
+  border-radius: 5px;
+}
+ion-segment-button:focus {
+  --background-checked: #fefefe;
+}
+
+.fade-up {
+  animation-name: fadein;
+  animation-duration: 1s;
+}
+
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  color: #454545;
+  text-transform: capitalize;
+}
+
+.headers {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.card-icon-bg {
+  border-radius: 10px 0 0 10px;
+  height: 84px;
+  width: 25%;
+  display: flex;
+  align-items: center;
+
+  .wrapper {
+    margin: 0 auto;
+    ion-icon {
+      margin: auto;
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+.card-content-bg {
+  border-radius: 0 10px 10px 0;
+  height: 84px;
+  display: flex;
+  align-items: center;
+
+  .card-content-location {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-left: -11px;
+  }
+  .card-content-location::before {
+    content: url("../../../../../assets/modules/lightning/loc.svg");
+  }
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.5rem;
+  }
+}
+.card-icon-bg {
+  background-color: #6cd06c;
+  .wrapper {
+    ion-icon {
+      content: url("../../../../../assets/modules/lightning/lightning_no_icon.svg");
+    }
+  }
+}
+.card-content-bg {
+  background-color: #6fdc6f;
+  color: #ffffff;
+}
+
+swiper {
+  width: 100%;
+}
+
+.low {
+  .card-content-location::before {
+    content: url("../../../../../assets/modules/lightning/loc_dark.svg");
+  }
+
+  .card-icon-bg {
+    background-color: #fcb809;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_low_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #ffd15c;
+    color: #5a5a5a;
+  }
+}
+
+.medium {
+  .card-icon-bg {
+    background-color: #ff713d;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_medium_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #ff7f50;
+    color: #fbfbfb;
+  }
+}
+
+.high {
+  .card-icon-bg {
+    background-color: #f54444;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_heavy_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #fa665a;
+    color: #fbfbfb;
+  }
+}
+
+.favourites {
+  ion-card {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.swiper-pagination {
+  position: relative;
+  margin: 5px auto;
+}

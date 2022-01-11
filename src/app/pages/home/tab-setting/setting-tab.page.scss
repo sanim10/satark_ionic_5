@@ -1,0 +1,33 @@
+* {
+  animation: easeIn 250ms;
+}
+ion-content {
+  color: #454545;
+}
+
+ion-item {
+  --detail-icon-color: var(--ion-color-primary);
+  --detail-icon-opacity: 0.8;
+  --detail-icon-font-size: 0.9rem;
+}
+
+.option-header {
+  color: var(--ion-color-primary);
+  margin-left: 15px;
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+.logout {
+  color: crimson;
+}
+
+ion-icon {
+  color: var(--ion-color-primary);
+}
+
+.option-detail {
+  color: var(--ion-color-primary);
+  margin-top: 4px;
+  font-size: 0.8rem;
+}

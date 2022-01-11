@@ -1,0 +1,97 @@
+<ion-content class="ion-padding" scrollY="false">
+  <div class="bottom-bg"></div>
+  <ion-grid class="container">
+    <ion-row>
+      <ion-col size="12" class="ion-no-padding" style="margin-bottom: 5px">
+        <ion-img src="../../assets/login/satark.png"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title color="primary">
+              <h1>{{"Login"|translate}}</h1>
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+              <ion-input
+                name="email"
+                ngModel
+                type="email"
+                required
+                placeholder="{{'Your email id'|translate}}"
+                #emailCtrl="ngModel"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                (focusout)="emailCtrl.value==='' ? null: showErrorToastEmail(emailCtrl.value)"
+              >
+                <ion-icon slot="start" name="mail"></ion-icon>
+                <span class="pipe">|&nbsp;</span>
+              </ion-input>
+              <br />
+              <ion-input
+                name="password"
+                ngModel
+                type="password"
+                required
+                placeholder="{{'Password' | translate}}"
+                minlength="6"
+                #passCtrl="ngModel"
+                (focusout)="passCtrl.value==='' ? null: showErrorToastPassword(passCtrl.value)"
+              >
+                <ion-icon slot="start" name="key"></ion-icon>
+                <span class="pipe">|&nbsp;</span>
+              </ion-input>
+
+              <ion-label
+                color="primary"
+                class="forgot"
+                style="margin-top: 5px"
+                tappable
+                (click)="forgotPassword()"
+              >
+                {{"Forgot password" | translate}}
+              </ion-label>
+              <br /><br />
+              <ion-button
+                expand="block"
+                size="default"
+                class="login-button"
+                [disabled]="!loginForm.valid"
+                (click)="login(emailCtrl.value, passCtrl.value)"
+              >
+                {{"Login"|translate}}
+              </ion-button>
+              <br />
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        size="2"
+        offset="5"
+        style="color: white; margin: 5px 0"
+        class="ion-text-center"
+      >
+        {{"OR"|translate}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="light"
+          class="outline-button"
+          shape="round"
+          (click)="toPhoneLogin()"
+          >Go back
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

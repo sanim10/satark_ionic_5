@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "488937344040",
+    "firebase_url": "https://satark-1088e.firebaseio.com",
+    "project_id": "satark-1088e",
+    "storage_bucket": "satark-1088e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488937344040:android:fd647143f3effe4efbf91d",
+        "android_client_info": {
+          "package_name": "com.satark.io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488937344040-hrocpoisvt9q7uinaorn7fvkbnid048g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.satark.io",
+            "certificate_hash": "347672dfbb3d1465e968b4c9adc76c736f2c41e9"
+          }
+        },
+        {
+          "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC55HqL8o9nsU0bxLp_4J7LrIZb72P-Fj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "488937344040-a8quh3soppr6nil4mnciqf74opjft9oa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "satark.app.io.ionic"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488937344040:android:625c262ca4742a27",
+        "android_client_info": {
+          "package_name": "satark.app.io.ionic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC55HqL8o9nsU0bxLp_4J7LrIZb72P-Fj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "488937344040-a8quh3soppr6nil4mnciqf74opjft9oa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "satark.app.io.ionic"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488937344040:android:d4cd726d6b8c0603",
+        "android_client_info": {
+          "package_name": "test.phone.io.ionic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC55HqL8o9nsU0bxLp_4J7LrIZb72P-Fj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488937344040-o71rcivv28gh4jngendce34gfcsko7u0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "488937344040-a8quh3soppr6nil4mnciqf74opjft9oa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "satark.app.io.ionic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

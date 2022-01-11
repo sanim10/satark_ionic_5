@@ -1,0 +1,208 @@
+// * {
+//   animation: easeIn 250ms;
+// }
+
+app-drawer {
+  animation: none;
+}
+.container {
+  padding: 0 10px;
+  margin: 0;
+  // height: calc(100% - 150px);
+  height: 100%;
+  // overflow: hidden;
+  // overflow: hidden;
+  position: fixed;
+  width: 100%;
+  color: #454545;
+}
+
+.backdrop {
+  width: 100%;
+  height: 100%;
+  // background: rgba(0, 0, 0, 0.747);
+  visibility: hidden;
+
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.52),
+    rgba(0, 0, 0, 0)
+  ) !important;
+  z-index: 3;
+  position: absolute;
+}
+
+.fade {
+  transition: 0.5s linear all;
+  opacity: 0;
+}
+
+.fade-in {
+  visibility: visible;
+  transition: 0.5s linear all;
+  opacity: 1;
+}
+
+ion-tabs {
+  z-index: 0;
+}
+
+ion-img {
+  // transform: scale(0.8);
+  margin-top: -20px;
+  position: absolute;
+}
+
+ion-button {
+  border: 100%;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 100%;
+}
+
+.md {
+  ion-button {
+    box-shadow: none;
+  }
+}
+// Buttons
+.weather,
+.ପାଣିପାଗ {
+  --background: url(../../../../assets/home/buttons/weather_ic.svg);
+}
+.lightning,
+.ବଜ୍ରପାତ {
+  --background: url(../../../../assets/home/buttons/lightning_ic.svg);
+}
+.heatwave,
+.ଗ୍ରୀଷ୍ମ {
+  --background: url(../../../../assets/home/buttons/heatwave_ic.svg);
+}
+.agriculture,
+.କୃଷି {
+  --background: url(../../../../assets/home/buttons/agriculture_ic.svg);
+}
+.flood,
+.ବନ୍ୟା {
+  --background: url(../../../../assets/home/buttons/flood_ic.svg);
+}
+.ocean,
+.ସମୁଦ୍ର {
+  --background: url(../../../../assets/home/buttons/occean_ic.svg);
+}
+.road,
+.ସଡକ {
+  --background: url(../../../../assets/home/buttons/road_ic.svg);
+}
+.snake,
+.ସର୍ପାଘାତ {
+  --background: url(../../../../assets/home/buttons/snake_ic.svg);
+}
+
+.report,
+.ବିବରଣୀ {
+  --background: url(../../../../assets/home/buttons/report_ic.svg);
+}
+
+.statistics,
+.ପରିସଂଖ୍ୟାନ {
+  --background: url(../../../../assets/home/buttons/stats_ic.svg);
+}
+
+.ios {
+  ion-button {
+    --background-activated: rgba(20, 20, 20, 0.096);
+  }
+  ion-card-header {
+    padding: 16px;
+  }
+  ion-card-content {
+    padding: 0 16px 13px;
+  }
+}
+
+.button-text {
+  font-size: 0.8rem;
+}
+
+.more-btn {
+  height: 20px;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+}
+
+ion-card {
+  min-height: 215px;
+}
+ion-card-header {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #454545;
+}
+
+.card-header-date {
+  font-size: 0.9rem;
+  float: right;
+  font-weight: 400;
+}
+
+.card-temperature {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+  font-size: 2.5rem;
+  font-family: "Alata", sans-serif !important;
+}
+
+.card-condition {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  font-size: 1.5rem;
+  min-width: 42px !important;
+}
+
+.card-location {
+  display: flex;
+  letter-spacing: 0.3px;
+  margin-top: 10px;
+  color: #454545;
+  z-index: 2;
+
+  ion-icon {
+    transform: scale(1.5);
+  }
+  p {
+    margin-left: 7px;
+  }
+}
+
+ion-label {
+  text-transform: capitalize;
+}
+
+.translate-btn {
+  box-shadow: none;
+  --border-radius: 0px !important;
+  --background-activated: rgba(20, 20, 20, 0.096);
+  position: absolute;
+  z-index: 100;
+  height: 25px;
+  margin: auto 20px;
+  // border-radius: 0px !important;
+}
+
+@media screen and (max-height: 740px) {
+  .container {
+    margin-bottom: 120px;
+    position: relative;
+  }
+  ion-content {
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (max-height: 568px) {
+  .container {
+    margin-bottom: 220px;
+  }
+}

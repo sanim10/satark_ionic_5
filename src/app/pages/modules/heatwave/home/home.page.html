@@ -1,0 +1,247 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Heatwave" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="/home"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card-desc"></div>
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card-desc"></div>
+  </div>
+
+  <ion-grid *ngIf="(heatwave | json) === '{}'">
+    <ion-row class="ion-padding-bottom">
+      <ion-col class="ion-no-padding">
+        <ion-card>
+          <ion-card-content class="ion-no-padding ion-text-center">
+            <ion-label style="font-size: 1.2rem"
+              ><br /><br />No data found<br /><br /><br />
+            </ion-label>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid
+    *ngIf=" (!loading) && ( imd_alert_data !=null)"
+    class="container ion-padding"
+  >
+    <ion-row>
+      <ion-col>
+        <ion-label class="ion-padding-start headers"
+          >{{"Status"|translate}}</ion-label
+        >
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-padding-bottom">
+      <ion-col class="ion-no-padding">
+        <ion-card>
+          <ion-card-content class="ion-no-padding">
+            <ion-grid>
+              <ion-row class="{{heatwaveData.condition}}">
+                <ion-col
+                  class="card-icon-bg ion-padding-top ion-padding-bottom"
+                  size="2.4"
+                >
+                  <div class="wrapper">
+                    <ion-icon></ion-icon>
+                  </div>
+                </ion-col>
+                <ion-col class="card-content-bg ion-no-padding" size="9.6">
+                  <ion-grid class="ion-no-padding">
+                    <ion-row>
+                      <ion-col class="ion-no-padding ion-text-center">
+                        <ion-label
+                          *ngIf="lHelper.lang ==='en'"
+                          class="card-content-location"
+                          >&nbsp;{{block}}, {{district}}
+                        </ion-label>
+                        <ion-label
+                          *ngIf="lHelper.lang ==='od'"
+                          class="card-content-location"
+                          >&nbsp;{{block_ory}}, {{district_ory}}
+                        </ion-label>
+                      </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-label
+                          >{{heatwaveData.condition | translate}}<span
+                            style="margin: 0 5px; opacity: 0.7"
+                            >|</span
+                          >
+                          <span class="temperature"
+                            >{{this.imd_alert_data[0].tx_dynamic}}°C</span
+                          >
+                        </ion-label>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-col>
+              </ion-row>
+
+              <ion-row
+                class="forecast ion-padding-top ion-padding-bottom"
+                size="12"
+              >
+                <ion-col
+                  *ngFor="let forecast of imd_alert_data"
+                  class="ion-text-center"
+                  size="2.4"
+                >
+                  <ion-label> {{convertDate(forecast.date)}}</ion-label
+                  ><br /><br />
+                  <ion-label
+                    class="temperature temperature-{{forecast.heat_wave_status}}"
+                  >
+                    {{forecast.tx_dynamic}}°C
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let advise of heatwaveData.advisory">
+      <ion-row class="ion-padding-start">
+        <ion-col>
+          <ion-label class="headers"
+            >{{advise.headerName | translate}}</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <swiper [config]="config" #swiper>
+        <ng-template swiperSlide *ngFor="let content of advise.content">
+          <ion-row class="ion-padding-bottom">
+            <ion-col class="ion-no-padding">
+              <ion-card>
+                <ion-card-content>
+                  <div style="height: 80px; display: flex">
+                    <ion-img
+                      style="margin: 5px auto; max-height: 80px"
+                      src="{{content.img}}"
+                      alt="img"
+                    >
+                    </ion-img>
+                  </div>
+
+                  <div class="swiper-pagination"></div>
+
+                  <ion-label style="font-size: 1.01rem; text-transform: none">
+                    {{content.text | translate}}
+                  </ion-label>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ng-template>
+      </swiper>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-label class="headers ion-padding-start"
+          >{{"Favourites" | translate}}</ion-label
+        >
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!imd_alert_fav_data?.length">
+      <ion-col>
+        <ion-label class="ion-padding">
+          <p style="text-align: center; font-size: 1.01rem">
+            You haven’t added any favourites yet.
+          </p>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row
+      class="ion-no-padding"
+      *ngFor=" let favourite of imd_alert_fav_data"
+      (click)="openFavLoc(favourite[0].block_id)"
+      details
+    >
+      <ion-col class="ion-no-padding favourites">
+        <ion-card class="ion-no-padding">
+          <ion-card-content class="ion-no-padding">
+            <ion-grid>
+              <ion-row class=" fav-{{favourite[0].heat_wave_status}}">
+                <ion-col class="card-icon-bg" size="2.4">
+                  <div class="wrapper">
+                    <ion-icon></ion-icon>
+                  </div>
+                </ion-col>
+                <ion-col class="card-content-bg ion-no-padding" size="9.6">
+                  <ion-grid class="ion-no-padding">
+                    <ion-row>
+                      <ion-col class="ion-no-padding ion-text-center">
+                        <ion-label
+                          *ngIf="lHelper.lang ==='en'"
+                          class="card-content-location"
+                          >&nbsp;{{favourite[0].block_name}}
+                        </ion-label>
+                        <ion-label
+                          *ngIf="lHelper.lang ==='od'"
+                          class="card-content-location"
+                          >&nbsp;{{favourite[0].block_name_ory}}
+                        </ion-label>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-label
+                          >{{getCondition(favourite[0].heat_wave_status)
+                          |translate}}<span style="margin: 0 5px; opacity: 0.7"
+                            >|</span
+                          >
+                          <span class="temperature"
+                            >{{favourite[0].tx_dynamic}}°C</span
+                          >
+                        </ion-label>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div
+                    style="
+                      position: absolute;
+                      float: right;
+                      width: 100%;
+                      top: 10px;
+                    "
+                  >
+                    <ion-icon
+                      src=" ../../../../../assets/modules/heatwave/more-next.svg"
+                      style="float: right; font-size: 1rem"
+                    >
+                    </ion-icon>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <br />
+  </ion-grid>
+</ion-content>

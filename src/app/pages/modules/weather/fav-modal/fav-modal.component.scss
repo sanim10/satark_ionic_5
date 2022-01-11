@@ -1,0 +1,192 @@
+ion-card-header {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #454545;
+  text-align: left;
+  z-index: 10;
+  padding-left: 30px;
+}
+
+.card-rain-level {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+  font-size: 2rem;
+  font-family: "Alata", sans-serif !important;
+}
+
+.card-condition {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.card-location {
+  display: flex;
+  letter-spacing: 0.3px;
+  margin-top: 10px;
+  color: #454545;
+  margin: auto;
+  z-index: 3;
+
+  ion-icon {
+    transform: scale(1.6);
+    padding-top: 2px;
+  }
+  p {
+    margin-left: 7px;
+    font-size: 1.001rem;
+  }
+}
+
+ion-label {
+  text-transform: capitalize;
+}
+
+.card-content-bg:first-child {
+  margin-left: 0px;
+}
+
+.card-content-bg:last-child {
+  margin-right: 0px;
+}
+
+.card-content-bg {
+  height: 100%;
+  width: 100%;
+  height: 100%;
+  margin: auto 5px;
+  color: #454545 !important;
+  border-radius: 6px;
+  position: relative;
+  text-align: center;
+  height: 60px;
+  padding: auto 10px;
+  font-family: "Alata", sans-serif !important;
+  display: flex;
+  font-size: 0.8rem;
+  align-content: center;
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.4rem;
+  }
+
+  div {
+    margin: auto;
+  }
+  .temp-high {
+    content: url("../../../../../assets/modules/weather/temp_high.svg");
+  }
+  .temp-low {
+    content: url("../../../../../assets/modules/weather/temp_Low.svg");
+  }
+  .cloud {
+    content: url("../../../../../assets/modules/weather/clouds.svg");
+  }
+  .rain {
+    content: url("../../../../../assets/modules/weather/rain.svg");
+  }
+  .wind {
+    content: url("../../../../../assets/modules/weather/wind.svg");
+  }
+  .humidity {
+    content: url("../../../../../assets/modules/weather/humidity.svg");
+  }
+
+  ion-label {
+    font-weight: 500;
+    margin: auto;
+    font-size: 1.4rem;
+  }
+}
+
+.card-content-bg {
+  // background: #e3e3e3;
+  background: var(--ion-color-primary);
+  ion-label {
+    font-weight: 400;
+    margin: auto;
+    color: white;
+    font-size: 0.8rem;
+  }
+}
+
+.card-icon-bg {
+  border-radius: 10px 0 0 10px;
+  height: 84px;
+  width: 25%;
+  background-color: var(--ion-color-primary);
+  display: flex;
+  align-items: center;
+
+  .wrapper {
+    margin: 0 auto;
+    ion-icon {
+      margin: auto;
+      width: 50px;
+      height: 50px;
+      // content: url("../../../../../assets/modules/weather/weather_ic.svg");
+      color: white !important;
+    }
+  }
+}
+
+.card-content-location {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-left: -11px;
+}
+.card-content-location::before {
+  content: url("../../../../../assets/modules/lightning/loc.svg");
+}
+.card-content-tempetature {
+  font-size: 1.5rem;
+  font-weight: 500;
+  span {
+    font-family: "Alata", sans-serif !important;
+  }
+}
+.headers {
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #454545;
+}
+.weather-icon {
+  max-width: 25px;
+  margin: 0 auto;
+}
+.weather-condition-img {
+  // content: url("../../../../../assets/home/card/light_rain.gif");
+  max-height: 100px;
+  transform: scale(1.5);
+  margin-top: -30px;
+}
+
+.weather-forcast {
+  text-transform: capitalize;
+}
+
+.weather-forcast-details {
+  font-size: 12.8px !important;
+}
+@media screen and (max-width: 320px) {
+  ion-card-header {
+    padding: 12px;
+  }
+  .weather-condition-img {
+    transform: scale(1.2);
+  }
+  .card-location {
+    margin-top: -20px;
+    ion-icon {
+      transform: scale(1);
+    }
+    p {
+      margin-left: 4px;
+    }
+  }
+  .weather-forcast-details {
+    font-size: 11px !important;
+  }
+}
