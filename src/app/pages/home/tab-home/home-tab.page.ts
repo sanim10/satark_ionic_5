@@ -8,6 +8,7 @@ import { HomeTabService } from './home-tab.service';
 import { AlertController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import * as moment from 'moment';
 import {
   ChangeDetectorRef,
   Component,
@@ -39,6 +40,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
   forecast_data;
   imd_alert_data;
   registered_loc_data;
+  date;
   constructor(
     private cdr: ChangeDetectorRef,
     private alertController: AlertController,
@@ -51,6 +53,9 @@ export class HomeTabPage implements OnInit, OnDestroy {
   ) {
     this.lHelper = langHelper;
     translateService.setDefaultLang(translateService.getBrowserLang());
+    var day = new Date();
+    var dayWrapper = moment(day);
+    this.date = dayWrapper.format('H:mm D-MMM-YY');
   }
   ngOnDestroy() {
     Network.removeAllListeners();
@@ -120,6 +125,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
       switch (url) {
         case 'ପାଣିପାଗ':
           url = 'weather';
+          break;
 
         case 'ବଜ୍ରପାତ':
           url = 'lightning';

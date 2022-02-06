@@ -2,20 +2,13 @@
   <ion-toolbar>
     <ion-title>{{"Weather Forecast" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button
-        class="back-button"
-        defaultHref="/home"
-      ></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="container">
-  <ion-refresher
-    slot="fixed"
-    (ionRefresh)="doRefresh($event)"
-    style="z-index: 10; margin-top: 10%"
-  >
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" style="z-index: 10; margin-top: 10%">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div *ngIf="loading" class="skeleton-container">
@@ -30,93 +23,59 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-card-header
-            >{{forecast_data[0].day_name}}, {{forecast_data[0].fcst_date}}
+          <ion-card-header>{{forecast_data[0]?.day_name}}, {{forecast_data[0]?.fcst_date}}
           </ion-card-header>
           <ion-card-content>
             <ion-grid>
               <ion-row>
                 <ion-col style="z-index: 10">
-                  <ion-label class="card-rain-level"
-                    >{{value_addtion_forecast_data[0].rainfall_dynamic}}mm
+                  <ion-label class="card-rain-level">{{value_addtion_forecast_data[0]?.rainfall_dynamic}}mm
                   </ion-label>
                   <br />
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '1'"
-                    >{{"No Rain" | translate}}</ion-label
-                  >
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '2'"
-                    >{{"Light Rain"| translate}}</ion-label
-                  >
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '3'"
-                    >{{"Moderate Rain" | translate}}</ion-label
-                  >
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '4'"
-                    >{{"Heavy Rain" | translate}}</ion-label
-                  >
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '5'"
-                    >{{"Very Heavy Rain"| translate}}</ion-label
-                  >
-                  <ion-label
-                    class="card-condition"
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '6'"
-                    >{{"Extremely Heavy Rain" | translate}}</ion-label
-                  >
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '1'">{{"No Rain" | translate}}
+                  </ion-label>
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '2'">{{"Light Rain"|
+                    translate}}</ion-label>
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '3'">{{"Moderate Rain" |
+                    translate}}</ion-label>
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '4'">{{"Heavy Rain" |
+                    translate}}</ion-label>
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '5'">{{"Very Heavy Rain"|
+                    translate}}</ion-label>
+                  <ion-label class="card-condition"
+                    *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '6'">{{"Extremely Heavy Rain" |
+                    translate}}</ion-label>
                 </ion-col>
                 <ion-col>
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '1'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/no_rain.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '1'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/no_rain.gif">
                   </ion-img>
 
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '2'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/light.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '2'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/light.gif">
                   </ion-img>
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '3'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/moderate.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '3'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/moderate.gif">
                   </ion-img>
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '4'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/heavy.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '4'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/heavy.gif">
                   </ion-img>
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '5'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/heavy.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '5'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/heavy.gif">
                   </ion-img>
-                  <ion-img
-                    *ngIf="value_addtion_forecast_data[0].rain_status_value_addition == '6'"
-                    class="weather-condition-img"
-                    src="../../../../../assets/modules/weather/condition/very_heavy.gif"
-                  >
+                  <ion-img *ngIf="value_addtion_forecast_data[0]?.rain_status_value_addition == '6'"
+                    class="weather-condition-img" src="../../../../../assets/modules/weather/condition/very_heavy.gif">
                   </ion-img>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-padding-top">
                 <div class="card-location">
-                  <ion-icon
-                    src="../../../assets/home/card/location.svg"
-                  ></ion-icon>
+                  <ion-icon src="../../../assets/home/card/location.svg"></ion-icon>
                   <p *ngIf="lHelper.lang=='en'">
                     {{current_location_block}}, {{current_location_district}}
                   </p>
@@ -133,44 +92,36 @@
                     <ion-col class="card-content-bg">
                       <div>
                         <ion-img class="weather-icon temp-high"> </ion-img>
-                        <ion-label *ngIf="forecast_data[0].temp_max != null"
-                          >{{forecast_data[0].temp_max}}° C
+                        <ion-label *ngIf="forecast_data[0]?.temp_max != null">{{forecast_data[0]?.temp_max}}° C
                         </ion-label>
-                        <ion-label *ngIf="forecast_data[0].temp_max == null"
-                          >{{"Available Soon" | translate}}
+                        <ion-label *ngIf="forecast_data[0]?.temp_max == null">{{"Available Soon" | translate}}
                         </ion-label>
                       </div>
                     </ion-col>
                     <ion-col class="card-content-bg">
                       <div>
                         <ion-img class="weather-icon temp-low"> </ion-img>
-                        <ion-label *ngIf="forecast_data[0].temp_min != null"
-                          >{{forecast_data[0].temp_min}}° C
+                        <ion-label *ngIf="forecast_data[0]?.temp_min != null">{{forecast_data[0]?.temp_min}}° C
                         </ion-label>
-                        <ion-label *ngIf="forecast_data[0].temp_min == null"
-                          >{{"Available Soon" | translate}}
+                        <ion-label *ngIf="forecast_data[0]?.temp_min == null">{{"Available Soon" | translate}}
                         </ion-label>
                       </div>
                     </ion-col>
                     <ion-col class="card-content-bg">
                       <div>
                         <ion-img class="weather-icon humidity"> </ion-img>
-                        <ion-label *ngIf="forecast_data[0].humidity != null"
-                          >{{forecast_data[0].humidity}}%
+                        <ion-label *ngIf="forecast_data[0]?.humidity != null">{{forecast_data[0]?.humidity}}%
                         </ion-label>
-                        <ion-label *ngIf="forecast_data[0].humidity == null"
-                          >{{"Available Soon" | translate}}
+                        <ion-label *ngIf="forecast_data[0]?.humidity == null">{{"Available Soon" | translate}}
                         </ion-label>
                       </div>
                     </ion-col>
                     <ion-col class="card-content-bg">
                       <div>
                         <ion-img class="weather-icon wind"> </ion-img>
-                        <ion-label *ngIf="forecast_data[0].humidity != null"
-                          >{{forecast_data[0].wind_speed}}km/s
+                        <ion-label *ngIf="forecast_data[0]?.humidity != null">{{forecast_data[0]?.wind_speed}}km/s
                         </ion-label>
-                        <ion-label *ngIf="forecast_data[0].humidity == null"
-                          >{{"Available Soon" | translate}}
+                        <ion-label *ngIf="forecast_data[0]?.humidity == null">{{"Available Soon" | translate}}
                         </ion-label>
                       </div>
                     </ion-col>
@@ -186,9 +137,7 @@
 
     <ion-row *ngIf=" (!loading) && (forecast_data!=null)">
       <ion-col>
-        <ion-label class="ion-padding-start"
-          >{{"Forecast for next 5 days" | translate}}</ion-label
-        >
+        <ion-label class="ion-padding-start">{{"Forecast for next 5 days" | translate}}</ion-label>
       </ion-col>
     </ion-row>
 
@@ -197,54 +146,32 @@
         <ion-card>
           <ion-grid>
             <ion-row style="color: var(--ion-color-primary)">
-              <ion-col
-                size="1.5"
-                class="ion-no-padding ion-text-center"
-                style="padding-top: 5px; padding-left: 2px"
-              >
+              <ion-col size="1.5" class="ion-no-padding ion-text-center" style="padding-top: 5px; padding-left: 2px">
                 {{"Day" | translate}}
               </ion-col>
               <ion-col class="ion-text-center">
-                <ion-icon
-                  style="font-size: 1.3rem"
-                  src="../../../../../assets/modules/weather/rain.svg"
-                >
+                <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/rain.svg">
                 </ion-icon>
               </ion-col>
               <ion-col class="ion-text-center">
-                <ion-icon
-                  style="font-size: 1.3rem"
-                  src="../../../../../assets/modules/weather/temp_high_b.svg"
-                >
+                <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/temp_high_b.svg">
                 </ion-icon>
               </ion-col>
               <ion-col class="ion-text-center">
-                <ion-icon
-                  style="font-size: 1.3rem"
-                  src="../../../../../assets/modules/weather/temp_low_b.svg"
-                >
+                <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/temp_low_b.svg">
                 </ion-icon>
               </ion-col>
               <ion-col class="ion-text-center">
-                <ion-icon
-                  style="font-size: 1.3rem"
-                  src="../../../../../assets/modules/weather/humidity_b.svg"
-                >
+                <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/humidity_b.svg">
                 </ion-icon>
               </ion-col>
               <ion-col class="ion-text-center">
-                <ion-icon
-                  style="font-size: 1.3rem"
-                  src="../../../../../assets/modules/weather/wind_b.svg"
-                >
+                <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/wind_b.svg">
                 </ion-icon>
               </ion-col>
             </ion-row>
 
-            <ion-row
-              *ngFor="let forcast of forecast_data"
-              class="ion-no-padding weather-forcast-details"
-            >
+            <ion-row *ngFor="let forcast of forecast_data" class="ion-no-padding weather-forcast-details">
               <ion-col size="1.5" style="color: #fe922d">
                 {{forcast.day_name}}
               </ion-col>
@@ -253,9 +180,7 @@
               <ion-col> {{forcast.temp_min}}°C </ion-col>
               <ion-col> {{forcast.humidity}}% </ion-col>
               <ion-col>
-                {{forcast.wind_speed}}km/<span style="text-transform: lowercase"
-                  >s</span
-                >
+                {{forcast.wind_speed}}km/<span style="text-transform: lowercase">s</span>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -265,9 +190,7 @@
 
     <ion-row *ngIf="!loading">
       <ion-col>
-        <ion-label class="ion-padding-start headers"
-          >{{"Favourites"|translate}}</ion-label
-        >
+        <ion-label class="ion-padding-start headers">{{"Favourites"|translate}}</ion-label>
       </ion-col>
     </ion-row>
 
@@ -281,76 +204,58 @@
       </ion-col>
     </ion-row>
 
-    <ion-row
-      class="ion-no-padding"
-      *ngFor=" let favourite of favLocData"
-      (click)="openFavLoc(favourite)"
-    >
-      <ion-col class="ion-no-padding favourites">
-        <ion-card class="ion-no-padding">
-          <ion-card-content class="ion-no-padding">
-            <ion-grid>
-              <ion-row>
-                <ion-col class="card-icon-bg" size="2.5">
-                  <div class="wrapper">
-                    <ion-icon
-                      src="../../../../../assets/modules/weather/weather_ic.svg"
-                    ></ion-icon>
-                  </div>
-                </ion-col>
-                <ion-col class="ion-no-padding" size="8.8">
-                  <ion-grid>
-                    <ion-row>
-                      <ion-col class="ion-no-padding ion-text-center">
-                        <ion-label
-                          *ngIf="lHelper.lang=='en'"
-                          class="card-content-location"
-                        >
-                          &nbsp;{{favourite.forecast[0].block_name}},
-                          {{favourite.forecast[0].district_name}}
-                        </ion-label>
+    <div *ngIf="favLocData!=null">
+      <ion-row class="ion-no-padding" *ngFor=" let favourite of favLocData" (click)="openFavLoc(favourite)">
+        <ion-col class="ion-no-padding favourites">
+          <ion-card class="ion-no-padding">
+            <ion-card-content class="ion-no-padding">
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="card-icon-bg" size="2.5">
+                    <div class="wrapper">
+                      <ion-icon src="../../../../../assets/modules/weather/weather_ic.svg"></ion-icon>
+                    </div>
+                  </ion-col>
+                  <ion-col class="ion-no-padding" size="8.8">
+                    <ion-grid *ngIf="favourite?.forecast !=null">
+                      <ion-row>
+                        <ion-col class=" ion-no-padding ion-text-center">
+                          <ion-label *ngIf="lHelper.lang=='en'" class="card-content-location">
+                            &nbsp;{{favourite?.forecast[0]?.block_name}},
+                            {{favourite?.forecast[0]?.district_name}}
+                          </ion-label>
 
-                        <ion-label
-                          *ngIf="lHelper.lang=='od'"
-                          class="card-content-location"
-                        >
-                          &nbsp;{{favourite.forecast[0].block_name_ory}},
-                          {{favourite.forecast[0].district_name_ory}}
-                        </ion-label>
-                      </ion-col>
-                    </ion-row>
+                          <ion-label *ngIf="lHelper.lang=='od'" class="card-content-location">
+                            &nbsp;{{favourite?.forecast[0].block_name_ory}},
+                            {{favourite?.forecast[0].district_name_ory}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
 
-                    <ion-row>
-                      <ion-col class="ion-text-center">
-                        <ion-label class="card-content-tempetature">
-                          <span>{{favourite.forecast[0].temp_max}}°C</span>
-                        </ion-label>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </ion-col>
+                      <ion-row>
+                        <ion-col class="ion-text-center">
+                          <ion-label class="card-content-tempetature">
+                            <span>{{favourite.forecast[0].temp_max}}°C</span>
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-col>
 
-                <ion-col
-                  class="ion-no-padding"
-                  size="0.7"
-                  style="display: flex; align-items: center"
-                >
-                  <ion-icon
-                    src="../../../../../assets/modules/heatwave/more-next.svg"
-                    style="margin: auto 0; font-size: 3rem"
-                  ></ion-icon>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+                  <ion-col class="ion-no-padding" size="0.7" style="display: flex; align-items: center">
+                    <ion-icon src="../../../../../assets/modules/heatwave/more-next.svg"
+                      style="margin: auto 0; font-size: 3rem">
+                    </ion-icon>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
   </ion-grid>
-  <p
-    style="font-size: 10px; text-align: center; color: rgb(167, 167, 167)"
-    class="ion-margin"
-  >
+  <p style="font-size: 10px; text-align: center; color: rgb(167, 167, 167)" class="ion-margin">
     {{"Forecast Data Source: Meteorological Centre Bhubaneswar, India
     Meteorological Department" | translate}}
   </p>

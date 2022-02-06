@@ -35,27 +35,28 @@
           </ion-card-header>
           <ion-card-content>
             <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-              <ion-input
-                name="phone"
-                ngModel
-                type="tel"
-                required
-                placeholder="{{'Your mobile number'| translate}}"
-                minlength="10"
-                maxlength="10"
-                #phoneCtrl="ngModel"
-                (focusout)="phoneCtrl.value==='' ? null: showErrorToast(phoneCtrl.value)"
-              >
+              <ion-item class="ion-no-padding ion-no-margin" lines="none">
                 <img
                   src="../../assets/login/india_ic.svg"
                   style="margin-left: 10px"
                 />
                 <ion-text color="primary" style="font-weight: 500">
-                  &nbsp;&nbsp;+91
+                  &nbsp;+91
                 </ion-text>
                 <span class="pipe">|&nbsp;</span>
-              </ion-input>
-
+                <ion-input
+                  name="phone"
+                  ngModel
+                  type="tel"
+                  required
+                  placeholder="{{'Your mobile number'| translate}}"
+                  minlength="10"
+                  maxlength="10"
+                  #phoneCtrl="ngModel"
+                  (focusout)="phoneCtrl.value==='' ? null: showErrorToast(phoneCtrl.value)"
+                >
+                </ion-input>
+              </ion-item>
               <ion-button
                 [disabled]="!loginForm.valid"
                 expand="block"

@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { AlertController, NavController } from '@ionic/angular';
 import { ApiService } from './../../../providers/api.service';
 import { AuthService } from './../../../guard/auth.service';
@@ -24,16 +25,16 @@ export class FeedbackTabPage implements OnInit {
   public user_data: any;
   lang;
   ngOnInit() {
-    this.user_id = localStorage.getItem('token');
     this.lang = localStorage.getItem('language');
+    this.token_id = localStorage.getItem('token');
+
+    this.checklogin(this.token_id);
   }
 
   checklogin(id: string) {
-    let param = {
-      token_value: id,
-    };
     this.apiService
-      .checklogin(param) //call api to check token
+      .checklogin(id) //call api to check token
+      .pipe(take(1))
       .subscribe((data) => {
         this.user_data = data['result'];
         console.log('user_data', this.user_data);
@@ -60,20 +61,17 @@ export class FeedbackTabPage implements OnInit {
       async (data) => {
         console.log('data', data);
         if (this.lang == 'en' || this.lang == null) {
-          let alert = this.alertCtrl.create({
-            header: 'Report Submitted',
-            message: 'Your feedback has been sucessfully submitted. Thank you.',
-            buttons: ['OK'],
-          });
-          (await alert).present();
+          this.authService.showAlert(
+            'Report Submitted',
+            'Your feedback has been sucessfully submitted. Thank you.'
+          );
+
           this.navctrl.navigateBack('/home', { replaceUrl: true });
         } else {
-          let alert = this.alertCtrl.create({
-            header: 'Report Submitted',
-            message: 'Your feedback has been sucessfully submitted. Thank you.',
-            buttons: ['OK'],
-          });
-          (await alert).present();
+          this.authService.showAlert(
+            'Report Submitted',
+            'Your feedback has been sucessfully submitted. Thank you.'
+          );
           this.navctrl.navigateBack('/home', { replaceUrl: true });
         }
       },

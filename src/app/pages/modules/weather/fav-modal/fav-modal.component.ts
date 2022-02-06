@@ -80,7 +80,7 @@ export class FavModalComponent implements OnInit {
         (data) => {
           console.log(data);
           this.value_addtion_forecast_data = data;
-          if (this.value_addtion_forecast_data.length == 0) {
+          if (this.value_addtion_forecast_data?.length == 0) {
             this.value_addtion_forecast_data = null;
           } else {
           }
@@ -106,7 +106,7 @@ export class FavModalComponent implements OnInit {
         (data) => {
           this.forecast_data = data;
           console.log('newww', this.forecast_data);
-          if (this.forecast_data.length == 0) {
+          if (this.forecast_data?.length == 0) {
             this.forecast_data = null;
           } else {
             this.current_location_block = this.forecast_data[0].block_name;

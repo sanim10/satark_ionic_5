@@ -253,7 +253,7 @@ export class FavModalComponent implements OnInit {
       .subscribe(
         (data) => {
           this.imd_alert_data = data;
-          if (this.imd_alert_data.length != 0) {
+          if (this.imd_alert_data?.length != 0) {
             console.log(this.imd_alert_data);
 
             switch (this.imd_alert_data[0].heat_wave_status) {

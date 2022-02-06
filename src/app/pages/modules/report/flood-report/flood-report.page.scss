@@ -1,0 +1,31 @@
+ion-content {
+  --background: #ececec;
+}
+.header {
+  font-weight: 600;
+  padding: 4;
+  color: var(--ion-color-primary);
+}
+
+ion-list {
+  background-color: #ececec;
+}
+
+ion-input,
+ion-textarea,
+ion-datetime,
+ion-select {
+  border-radius: 5px;
+  margin: 7px 0;
+  background-color: #fff;
+  color: var(--ion-color-primary);
+  ion-icon {
+    position: absolute;
+    right: 10px;
+    opacity: 0.5;
+  }
+}
+
+ion-textarea {
+  min-height: 80px;
+}

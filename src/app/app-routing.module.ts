@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'splash',
-    // redirectTo: 'home',
+    // redirectTo: 'weather/weather-map',
     pathMatch: 'full',
   },
   {
@@ -88,6 +88,13 @@ const routes: Routes = [
         (m) => m.HomePageModule
       ),
   },
+  {
+    path: 'lightning/lightning-map',
+    loadChildren: () =>
+      import(
+        './pages/modules/lightning/lightning-map/lightning-map.module'
+      ).then((m) => m.LightningMapPageModule),
+  },
 
   {
     path: 'weather',
@@ -102,6 +109,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/modules/weather/home/home.module').then(
         (m) => m.HomePageModule
+      ),
+  },
+  {
+    path: 'weather/weather-map',
+    loadChildren: () =>
+      import('./pages/modules/weather/weather-map/weather-map.module').then(
+        (m) => m.WeatherMapPageModule
       ),
   },
 
@@ -126,6 +140,7 @@ const routes: Routes = [
       import(
         './pages/login/setup-profile-phone/setup-profile-phone.module'
       ).then((m) => m.SetupProfilePhonePageModule),
+    // canActivate: [AuthGuard],
   },
   {
     path: 'setup-profile-email',
@@ -133,6 +148,39 @@ const routes: Routes = [
       import(
         './pages/login/setup-profile-email/setup-profile-email.module'
       ).then((m) => m.SetupProfileEmailPageModule),
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'report',
+    loadChildren: () =>
+      import('./pages/modules/report/report.module').then(
+        (m) => m.ReportPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'statistics',
+    loadChildren: () =>
+      import('./pages/modules/statistics/statistics.module').then(
+        (m) => m.StatisticsPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'flood',
+    loadChildren: () =>
+      import('./pages/modules/flood/flood.module').then(
+        (m) => m.FloodPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'ocean',
+    loadChildren: () =>
+      import('./pages/modules/ocean/ocean.module').then(
+        (m) => m.OceanPageModule
+      ),
+    canActivate: [AuthGuard],
   },
 ];
 

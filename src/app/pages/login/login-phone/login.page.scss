@@ -58,14 +58,12 @@
 
 .languageBtn {
   height: 25px;
-  // padding: 0 -2px;
   position: absolute;
-  margin-top: 20px;
   font-size: 0.7rem;
   z-index: 5;
   --background: #0066a6;
   --border-radius: 4px !important;
-  color: #fff;
+  --color: #ffffff;
 }
 
 ion-card-header {
@@ -73,11 +71,16 @@ ion-card-header {
   text-align: center;
 }
 
+ion-item {
+  --background: #e7e7e7;
+  --border-radius: 4px;
+  --padding-end: 0px;
+  --inner-padding-end: 0px;
+  --border-color: #a5a5a5;
+}
 ion-input {
   align-items: center;
-  background: #e7e7e7;
   color: #686868;
-  border-radius: 4px;
   border: none;
   font-weight: 500;
 }
@@ -85,7 +88,7 @@ ion-input {
 ion-icon {
   transform: scale(2);
   margin-left: 20px;
-  color: 0.454545;
+  color: #454545;
 }
 
 ion-card {

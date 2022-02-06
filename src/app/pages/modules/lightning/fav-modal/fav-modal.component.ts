@@ -83,7 +83,7 @@ export class FavModalComponent implements OnInit {
     this.apiService.getRegisteredLocLightningData(param).subscribe(
       (data) => {
         this.registered_loc_data = data['advisory'];
-        if (this.registered_loc_data.length != 0) {
+        if (this.registered_loc_data?.length != 0) {
           console.log('registered_loc_data', this.registered_loc_data);
         } else {
           // this.registered_loc_data = null;

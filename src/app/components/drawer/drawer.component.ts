@@ -56,11 +56,12 @@ export class DrawerComponent implements OnInit, AfterViewInit {
       el: drawer,
       gestureName: 'flipUp',
       direction: 'y',
+
       onEnd: (ev) => {
-        if (ev.deltaY < -20 && !this.drawerUp) {
+        if (ev.deltaY < -0.1 && !this.drawerUp) {
           this.drawerUp = true;
           this.openState.emit(true);
-        } else if (ev.deltaY > 20 && this.drawerUp) {
+        } else if (ev.deltaY > 0.1 && this.drawerUp) {
           this.drawerUp = false;
           drawer.style.transition = '.4s ease-out';
           drawer.style.transform = ``;

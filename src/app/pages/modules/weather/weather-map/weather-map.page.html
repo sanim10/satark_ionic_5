@@ -1,0 +1,101 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title *ngIf="fab == 'pr'">{{"Rainfall Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'cloud'">{{"Cloud Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'tmax'">{{"Maximum Temperature Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'tmin'">{{"Minimum Temperature Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'rh'">{{"Relative Humidity Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'min_rh'">{{"Minimum Humidity Forecast" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'ws'">{{"Wind Speed Forecast" | translate }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content scrollY="false">
+
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'pr'? 'fab-active' :''"
+        (click)="updateFAB('pr')">
+        <ion-label>{{"Rainfall" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/rain_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'cloud'? 'fab-active' :''"
+        (click)="updateFAB('cloud')">
+        <ion-label>{{"Cloud" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/cloud_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'tmax'? 'fab-active' :''"
+        (click)="updateFAB('tmax')">
+        <ion-label>{{"Maximum Temperature" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/temp_h_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'tmin'? 'fab-active' :''"
+        (click)="updateFAB('tmin')">
+        <ion-label>{{"Minimum Temperature" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/temp_l_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'rh'? 'fab-active' :''"
+        (click)="updateFAB('rh')">
+        <ion-label>{{"Relative Humidity" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/humidity_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'ws'? 'fab-active':''"
+        (click)="updateFAB('ws')">
+        <ion-label>{{"Wind Speed" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/weather/map/wind_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-footer [ngClass]="swell? 'bottom-zero' : ''">
+    <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
+      <ion-icon name="play"></ion-icon>
+    </ion-button>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="pause()" *ngIf="run">
+      <ion-icon name="pause"></ion-icon>
+    </ion-button>
+
+    <ion-grid #content class="ion-no-padding time-holder">
+      <ion-col *ngFor="let date of date_10_data;let i=index;" id="{{date.index}}" class=" ion-no-padding
+        ion-text-center">
+        <ion-button class="time-button" [class.focus]="scrollTo ==i" (click)="fcDateClicked($event,i);scrollTo =i">
+          {{date}}
+        </ion-button>
+      </ion-col>
+    </ion-grid>
+  </ion-footer>
+
+  <div class="legend">
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 40px; border-radius: 0"
+      *ngIf="this.footer_image==null"> </div>
+    <img src="{{this.footer_image}}" /><br>
+    <ion-label *ngIf="fab == 'pr'"> {{"Rainfall" | translate}}[mm]</ion-label>
+    <ion-label *ngIf="fab == 'tmax' || forecast =='tmin'"> {{"Temperature" | translate}}[<sup>°</sup>C]</ion-label>
+    <ion-label *ngIf="fab == 'cloud'"> {{"Cloud" | translate}}[ockta]</ion-label>
+    <ion-label *ngIf="fab == 'rh'"> {{"Relative Humidity" | translate}}[%]</ion-label>
+    <ion-label *ngIf="fab == 'ws'"> {{"Wind Speed" | translate}}[km/hr]</ion-label>
+
+  </div>
+
+</ion-content>

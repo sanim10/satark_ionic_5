@@ -224,7 +224,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.apiService.getRegisteredLocLightningData(param).subscribe(
       (data) => {
         this.registered_loc_data = data['advisory'];
-        if (this.registered_loc_data.length != 0) {
+        if (this.registered_loc_data?.length != 0) {
           console.log('registered_loc_data', this.registered_loc_data);
         } else {
           // this.registered_loc_data = null;
@@ -248,7 +248,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.apiService.getFavLocLightningData(param).subscribe(
       (data) => {
         this.fav_loc_lightning_data = data['advisory'];
-        if (this.fav_loc_lightning_data.length != 0) {
+        if (this.fav_loc_lightning_data?.length != 0) {
           console.log('fav_loc_lightning_data', this.fav_loc_lightning_data);
           // this.fav_loc_lightning_data[0].l_type = 'High';
           // this.fav_loc_lightning_data.forEach((element) => {
@@ -277,7 +277,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.apiService.getDtaBlockNames(param).subscribe(
       (data) => {
         this.dta_data = data;
-        if (this.dta_data.length != 0) {
+        if (this.dta_data?.length != 0) {
           console.log('dta blocks...', this.dta_data);
           // for(var i = 0; i <= this.dta_data.length; ++i){
           //   if(this.block_id === this.dta_data[i].block_id){
@@ -309,7 +309,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.apiService.getDtaFavBlockNames(param).subscribe(
       (data) => {
         this.dta_fav_data = data;
-        if (this.dta_fav_data.length != 0) {
+        if (this.dta_fav_data?.length != 0) {
           console.log('dta blocks fav...', this.dta_fav_data);
           // for(var i = 0; i <= this.dta_data.length; ++i){
           //   if(this.block_id === this.dta_data[i].block_id){

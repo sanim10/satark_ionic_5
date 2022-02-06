@@ -13,14 +13,16 @@ export class NoConnectionPage implements OnInit {
     private toastCtrl: ToastController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.checkConnection();
+  }
 
   checkConnection() {
     Network.getStatus().then((status) => {
       console.log(status);
       if (status.connected) {
         console.log('click');
-        this.navCtrl.pop();
+        this.navCtrl.back();
       } else {
         this.showErrorToast('No connection found');
       }

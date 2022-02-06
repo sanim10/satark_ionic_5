@@ -1,0 +1,214 @@
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  text-transform: capitalize;
+}
+
+.headers {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+ion-select,
+ion-input {
+  border-radius: 5px;
+  margin: 7px 0;
+  background-color: #e7e7e7;
+  // color: var(--ion-color-primary);
+  // ion-icon {
+  //   position: absolute;
+  //   right: 10px;
+  //   opacity: 0.5;
+  // }
+}
+
+.water-level {
+  ion-card {
+    min-height: 60px;
+    // width: 90%;
+    margin: auto;
+    ion-col {
+      border-right: 1.5px solid #cccccc;
+    }
+
+    ion-col:last-child {
+      border: none;
+    }
+
+    .water-level-header {
+      opacity: 0.6;
+    }
+    .water-level-details {
+      font-weight: 600;
+    }
+  }
+}
+
+.water-levels {
+  margin-top: 5px;
+
+  ion-card {
+    min-height: 180px;
+    margin: auto;
+  }
+
+  .water-level-container {
+    height: 142px;
+    background-color: #e7e7e7;
+    border-radius: 6px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .water-level-text {
+      font-weight: 500;
+      z-index: 3;
+    }
+    .water-level-recorded {
+      font-weight: 400;
+      font-size: 0.6rem;
+      position: absolute;
+      padding: 4px !important;
+      bottom: 10px;
+      z-index: 3;
+      width: 90%;
+      color: #114d61;
+    }
+    .water-level-fill-container {
+      position: absolute;
+      width: calc(100% - 10px);
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      height: 142px;
+      justify-content: flex-end;
+    }
+    .water-level-fill {
+      width: auto;
+      transition: height 2s;
+      bottom: 0;
+    }
+  }
+
+  ._10 {
+    .water-level-fill-container {
+      .water-level-fill {
+        // height: 80%;
+        background-color: #74dd74;
+      }
+    }
+
+    .water-level-text {
+      color: #249425;
+    }
+    .wave {
+      fill: #74dd74;
+    }
+    .wave2 {
+      fill: #66b866;
+    }
+  }
+
+  ._20 {
+    .water-level-fill-container {
+      .water-level-fill {
+        // height: 80%;
+        background-color: rgb(79, 147, 249);
+      }
+    }
+
+    .water-level-text {
+      color: rgb(47, 98, 175);
+    }
+    .wave {
+      fill: rgb(79, 147, 249);
+    }
+    .wave2 {
+      fill: rgb(174, 206, 253);
+    }
+  }
+
+  ._75 {
+    .water-level-fill-container {
+      .water-level-fill {
+        height: 85%;
+        background-color: #ff5151;
+      }
+    }
+
+    .water-level-text {
+      color: #b90000;
+    }
+    .wave {
+      fill: #ff5151;
+    }
+    .wave2 {
+      fill: #ff9f9f;
+    }
+  }
+  ._90 {
+    .water-level-fill-container {
+      .water-level-fill {
+        height: 85%;
+        background-color: #cc0000;
+      }
+    }
+
+    .water-level-text {
+      color: #440b0b;
+    }
+    .wave {
+      fill: #cc0000;
+    }
+    .wave2 {
+      fill: #d68686;
+    }
+  }
+  ._else {
+    .water-level-fill-container {
+      .water-level-fill {
+        height: 85%;
+        background-color: #990000;
+      }
+    }
+
+    .water-level-text {
+      color: #ffffff;
+    }
+    .wave {
+      fill: #990000;
+    }
+    .wave2 {
+      fill: #ec6d6d;
+    }
+  }
+
+  .wave {
+    position: absolute;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    // top: 4px;
+    // bottom: 0;
+  }
+  .wave2 {
+    // position: absolute;
+    // left: 0;
+    // right: 0;
+    // top: -5px;
+    // bottom: 0;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+}
+
+.water-level-fill {
+  height: var(--h);
+}

@@ -1,0 +1,17 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Flood" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/flood"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+
+</ion-content>

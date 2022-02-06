@@ -2,20 +2,22 @@
   <!-- <div>
     <img class="top-cloud" src="./../../../assets/splash/clouds.svg" />
 
-    <img class="rect" src="./../../../assets/splash/rect_min.svg" />
-    <div
-      style="
+    <img class="rect" src="../../../assets/splash/rect_min.svg" />
+    <div style="
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-      "
-    >
-      <img class="state" src="../../../assets/splash/state.png" />
-      <img class="logo" src="../../../assets/splash/logo.png" />
-      <img class="text" src="../../../assets/splash/text.png" />
+      ">
+      <img class="state" src="../../../assets/splash/state.svg" />
+      <img class="logo" src="../../../assets/splash/logo.svg" />
+      <img class="text" src="../../../assets/splash/text.svg" />
     </div>
   </div> -->
 
-  <img />
+  <img *ngIf="_ios" />
+
+  <video autoplay id="video" #video *ngIf="_android">
+    <source src=" ../../../assets/splash/splash.mp4" type="video/mp4">
+  </video>
 </ion-content>

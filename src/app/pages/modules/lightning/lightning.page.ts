@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AuthService } from './../../../guard/auth.service';
 import { ApiService } from './../../../providers/api.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,7 +11,11 @@ import { Component, OnInit } from '@angular/core';
 export class LightningPage implements OnInit {
   loading = true;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
+
+  routeTo() {
+    this.router.navigateByUrl('lightning/lightning-map');
+  }
 }

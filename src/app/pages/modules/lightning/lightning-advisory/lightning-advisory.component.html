@@ -1,0 +1,124 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>Lightning Advisory</ion-title>
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-grid>
+
+
+    <div *ngIf="advisory_data == null">
+      <ion-row>
+        <ion-col>
+          <ion-card style="box-shadow: none;">
+            <ion-card-content class="ion-padding">
+              {{"Advisory not available" | translate}}
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngIf="advisory_data !=null">
+      <h2>{{"Location" | translate}}:
+        <span style="color: var(--ion-color-sec); padding: 5px;" *ngIf="lang=='en'">{{advisory_data.block_name}}</span>
+        <span style="color: var(--ion-color-sec); padding: 5px;" *ngIf="lang=='od'">{{advisory_data.block_name}}</span>
+      </h2>
+      <ion-row>
+        <p>{{"There is a likely chance of" | translate}} <span style="color: red;">{{advisory_data.l_type}}</span>
+          {{"lightning
+          in the next 30 minutes in your area. You are advised to follow below mentioned do's and dont's." |
+          translate}}<br />
+        </p>
+      </ion-row>
+      <div *ngIf="advisory_data?.do !=null">
+        <ion-row class="ion-padding-start">
+          <ion-col>
+            <ion-label class="headers">{{"Do's" | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <div *ngIf="lang=='en'">
+          <div *ngFor="let data of advisory_data.do">
+            <ol *ngIf="data != ''">
+              <li>{{data}}</li>
+            </ol>
+          </div>
+        </div>
+        <div *ngIf="lang=='od'">
+          <div *ngFor="let data of advisory_data.do_in_oriya">
+            <ol *ngIf="data != ''">
+              <li>{{data}}</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="advisory_data?.dont !=null">
+        <ion-row class="ion-padding-start">
+          <ion-col>
+            <ion-label class="headers">{{"Dont's" | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <div *ngIf="lang=='en'">
+          <div *ngFor="let data of advisory_data.dont">
+            <ol *ngIf="data != ''">
+              <li>{{data}}</li>
+            </ol>
+          </div>
+        </div>
+        <div *ngIf="lang=='od'">
+          <div *ngFor="let data of advisory_data.dont_in_oriya">
+            <ol *ngIf="data != ''">
+              <li>{{data}}</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <swiper [config]="config" (swiper)="onSwiper($event)" (slideChange)="onSlideChange()" #swiper>
+      <ng-template swiperSlide *ngFor="let content of advisory_img">
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-card>
+              <ion-card-content>
+                <div style="height: 80px; display: flex">
+                  <ion-img style="margin: 5px auto; max-height: 80px" src="{{content.img}}" alt="img">
+                  </ion-img>
+                </div>
+
+                <div class="swiper-pagination"></div>
+
+                <ion-label style="font-size: 1.01rem; text-transform: none">
+                  {{content.text | translate}}
+                </ion-label>
+              </ion-card-content>
+            </ion-card>
+
+
+          </ion-col>
+        </ion-row>
+      </ng-template>
+    </swiper>
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <ion-button size="default" style="margin:15px" (click)="slidePrev()" *ngIf="activeSlide!=0">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button size="default" style="margin:15px" (click)="slideNext()" *ngIf="activeSlide!=5">
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-grid>
+
+
+</ion-content>

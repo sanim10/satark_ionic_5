@@ -64,31 +64,33 @@ export class EmailRegistrationPage implements OnInit {
     var email = this.mail;
     console.log(email);
 
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
-      createUserWithEmailAndPassword(getAuth(), email, password)
-        .then((data) => {
-          console.log(data);
-          localStorage.setItem('token', data.user.uid);
-          localStorage.setItem('email', data.user.email);
-          localStorage.setItem('new_user', 'yes_email');
-          this.authService.isAuthenticated.next(true);
-          this.authService.setLoginState('true');
-          this.navCtrl.navigateForward('setup-profile-email', {
-            replaceUrl: true,
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        createUserWithEmailAndPassword(getAuth(), email, password)
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem('token', data.user.uid);
+            localStorage.setItem('email', data.user.email);
+            localStorage.setItem('new_user', 'yes_email');
+            this.authService.isAuthenticated.next(true);
+            this.authService.setLoginState('true');
+            this.navCtrl.navigateForward('setup-profile-email', {
+              replaceUrl: true,
+            });
+            loadingEl.dismiss();
+          })
+          .catch((error) => {
+            console.log('got error', error);
+            this.authService.showAlert(
+              'Registration Fail!',
+              'Email already in use!!'
+            );
+            loadingEl.dismiss();
+            this.authService.isAuthenticated.next(false);
+            this.authService.setLoginState('false');
           });
-          loadingEl.dismiss();
-        })
-        .catch((error) => {
-          console.log('got error', error);
-          this.authService.showAlert(
-            'Registration Fail!',
-            'Email already in use!!'
-          );
-          loadingEl.dismiss();
-          this.authService.isAuthenticated.next(false);
-          this.authService.setLoginState('false');
-        });
-    });
+      });
   }
 }

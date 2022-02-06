@@ -1,0 +1,311 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Flood" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card-desc"></div>
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-card-desc"></div>
+  </div>
+
+  <ion-grid *ngIf="user_data && !loading" class="ion-padding">
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-label class="headers">{{"Current Location"|translate}}</ion-label>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-icon src="../../../../../assets/home/card/location.svg"></ion-icon>
+        <ion-label *ngIf="lang=='en'">
+          &nbsp;{{user_data[0].block_name}},
+          {{user_data[0].district_name}}</ion-label>
+        <ion-label *ngIf="lang=='od'">
+          &nbsp;{{user_data[0].block_name_ory}},
+          {{user_data[0].district_name_ory}}</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-label class="headers"> {{"Select River"|translate}}</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="padding-top: 0; padding-bottom: 0">
+        <ion-input #river_name="ngModel" [(ngModel)]="rivername" (click)="showRiverSelector()"
+          (ionChange)="getRiverId()" readonly>
+          &nbsp;&nbsp;
+          <ion-icon name="caret-down-outline" style="position: absolute; right: 10px; opacity: 0.4"></ion-icon>
+        </ion-input>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-label class="headers"> {{"Select Station"|translate}}</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="padding-top: 0; padding-bottom: 0">
+        <ion-input *ngIf="rivername != null" #station_name (ionChange)="getStationId()" (click)="showStationSelector()"
+          interface="action-sheet" [(ngModel)]="this.stationname" readonly>
+          &nbsp;&nbsp; <ion-icon name="caret-down-outline" style="position: absolute; right: 10px; opacity: 0.4">
+          </ion-icon>
+        </ion-input>
+      </ion-col>
+    </ion-row>
+    <div *ngIf="stn_waterlvl_data != null">
+      <ion-row class="ion-padding-top">
+        <ion-col class="ion-text-center">
+          <ion-label class="headers">{{"Water Level Details" | translate}}</ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="water-level" style="top: 7px;">
+          <ion-card>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6" class="ion-text-center">
+                  <ion-label class="water-level-header">{{"Station" | translate}} </ion-label>
+                </ion-col>
+                <ion-col size="6" class="ion-text-center">
+                  <ion-label class="water-level-header"> {{"As observerd on" | translate}} </ion-label>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="6" class="ion-text-center">
+                  <ion-label *ngIf="lang=='en'" class="water-level-details">{{stn_waterlvl_data[0].location_name}}
+                  </ion-label>
+                  <ion-label *ngIf="lang=='od'" class="water-level-details">{{stn_waterlvl_data[0].location_name_ory}}
+                  </ion-label>
+                </ion-col>
+                <ion-col size="6" class="ion-text-center">
+                  <ion-label class="water-level-details">
+                    {{stn_waterlvl_data[0].observed_date}}
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row class="ion-padding-top water-levels">
+        <ion-col>
+          <ion-card>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3" class="ion-text-center">
+                  <ion-label class="water-level-header">{{"Current" | translate}} </ion-label>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center">
+                  <ion-label class="water-level-header"> {{"Warning"| translate}} </ion-label>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center">
+                  <ion-label class="water-level-header"> {{"Danger"| translate}} </ion-label>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center">
+                  <ion-label class="water-level-header"> {{"Highest"| translate}} </ion-label>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="3" class="ion-text-center">
+                  <div class="water-level-container {{getLevelColor()}}">
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.value !=null" class="water-level-text">
+                      {{stn_waterlvl_data[0]?.value}}m</ion-label>
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.value ==null" class="water-level-text">----
+                    </ion-label>
+                    <div class="water-level-fill-container">
+                      <div style="
+                          display: flex;
+                          align-items: center;
+                          flex-direction: column;
+                          justify-content: center;
+                        ">
+                        <svg preserveAspectRatio="none" class="wave2" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                            M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z" />
+                          </path>
+                        </svg>
+                        <svg preserveAspectRatio="none" class="wave" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                      M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z" />
+                          </path>
+                        </svg>
+                      </div>
+                      <div class="water-level-fill" style=" --h:{{ getLevel() }}%">
+                      </div>
+                    </div>
+                  </div>
+                </ion-col>
+
+                <ion-col size=" 3" class="ion-text-center">
+                  <div class="water-level-container warning">
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.warning_lvl !=null" class="water-level-text">
+                      {{stn_waterlvl_data[0].warning_lvl}}m</ion-label>
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.warning_lvl ==null" class="water-level-text">
+                      ----</ion-label>
+                    <div class="water-level-fill-container">
+                      <div style="
+                          display: flex;
+                          align-items: center;
+                          flex-direction: column;
+                          justify-content: center;
+                        ">
+                        <svg preserveAspectRatio="none" class="wave2" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                      M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z" />
+                          </path>
+                        </svg>
+                        <svg preserveAspectRatio="none" class="wave" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                            M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z" />
+                          </path>
+                        </svg>
+                      </div>
+                      <div class="water-level-fill"></div>
+                    </div>
+                  </div>
+                </ion-col>
+
+                <ion-col size="3" class="ion-text-center">
+                  <div class="water-level-container danger">
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.danger_lvl !=null" class="water-level-text">
+                      {{stn_waterlvl_data[0].danger_lvl}}m</ion-label>
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.danger_lvl ==null" class="water-level-text">
+                      ----</ion-label>
+                    <div class="water-level-fill-container">
+                      <div style="
+                          display: flex;
+                          align-items: center;
+                          flex-direction: column;
+                          justify-content: center;
+                        ">
+                        <svg preserveAspectRatio="none" class="wave2" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                            M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z" />
+                          </path>
+                        </svg>
+                        <svg preserveAspectRatio="none" class="wave" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                      M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z" />
+                          </path>
+                        </svg>
+                      </div>
+                      <div class="water-level-fill"></div>
+                    </div>
+                  </div>
+                </ion-col>
+
+                <ion-col size="3" class="ion-text-center">
+                  <div class="water-level-container highest">
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.highest_lvl !=null" class="water-level-text">
+                      {{splitLevel(stn_waterlvl_data[0].highest_lvl)}}
+                    </ion-label>
+
+                    <ion-label *ngIf="stn_waterlvl_data[0]?.highest_lvl ==null" class="water-level-text">----
+                    </ion-label>
+                    <p *ngIf="stn_waterlvl_data[0]?.highest_lvl !=null" class="water-level-recorded">
+                      {{splitDate(stn_waterlvl_data[0].highest_lvl)}}
+                    </p>
+                    <p *ngIf="stn_waterlvl_data[0]?.highest_lvl ==null" class="water-level-recorded">
+                      ----
+                    </p>
+                    <div class="water-level-fill-container">
+                      <div style="
+                          display: flex;
+                          align-items: center;
+                          flex-direction: column;
+                          justify-content: center;
+                        ">
+                        <svg preserveAspectRatio="none" class="wave2" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                      M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z" />
+                          </path>
+                        </svg>
+                        <svg preserveAspectRatio="none" class="wave" viewBox="0 0 12960 2085">
+                          <path
+                            d="M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z">
+                            <animate dur="5s" repeatCount="indefinite" attributeName="d"
+                              values="
+                       M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z;
+                        M9720 595.714C8100 595.714 8100 0 6480 0C4860 0 4860 595.714 3240 595.714C1620 595.714 1620 0 0 0V2085H12960V0C11340 0 11340 595.714 9720 595.714Z;
+                            M9720 0C8100 0 7969 1017 6349 1017C4729 1017 4860 0 3240 0C1620 0 1620 1017 0 1017V2085H12960V1017C11340 1017 11340 0 9720 0Z" />
+                          </path>
+                        </svg>
+                      </div>
+                      <div class="water-level-fill"></div>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngIf="stn_waterlvl_data == null">
+      <ion-row>
+        <ion-col class="ion-padding-top">
+          <ion-card class="ion-text-center ion-padding" style="border-radius: 10px;">
+            {{"Data not available" | translate}}
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
+
+  </ion-grid>
+</ion-content>

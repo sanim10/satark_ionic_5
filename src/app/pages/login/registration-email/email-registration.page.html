@@ -45,21 +45,23 @@
               </ion-row>
               <ion-row>
                 <ion-col>
-                  <ion-input
-                    name="email"
-                    type="email"
-                    placeholder="{{'Your email id' | translate}}"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                    required
-                    ngModel
-                    #emailCtrl="ngModel"
-                  >
+                  <ion-item class="ion-no-padding ion-no-margin" lines="none">
                     <img
                       src="../../assets/login/mail_ic.svg"
                       style="margin-left: 10px"
                     />
                     <span class="pipe">|&nbsp;</span>
-                  </ion-input>
+                    <ion-input
+                      name="email"
+                      type="email"
+                      placeholder="{{'Your email id' | translate}}"
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                      required
+                      ngModel
+                      #emailCtrl="ngModel"
+                    >
+                    </ion-input>
+                  </ion-item>
                   <br />
 
                   <ion-button
@@ -103,22 +105,26 @@
                 </ion-row>
                 <ion-row>
                   <ion-col>
-                    <ion-input
-                      name="password"
-                      type="password"
-                      placeholder="{{'Password' | translate}}"
-                      minlength="12"
-                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>_/]).{8,}"
-                      required
-                      ngModel
-                      #passwordCtrl="ngModel"
-                    >
+                    <ion-item class="ion-no-padding ion-no-margin" lines="none">
                       <img
                         src="../../assets/login/password_ic.svg"
                         style="margin-left: 10px"
                       />
                       <span class="pipe">|&nbsp;</span>
-                    </ion-input>
+
+                      <ion-input
+                        name="password"
+                        type="password"
+                        placeholder="{{'Password' | translate}}"
+                        minlength="12"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>_/]).{8,}"
+                        required
+                        ngModel
+                        #passwordCtrl="ngModel"
+                      >
+                      </ion-input>
+                    </ion-item>
+
                     <ion-text class="ion-text-center">
                       <p style="margin: 10px auto; color: rgb(156, 156, 156)">
                         {{"Passwords must be at least 12 characters, contain at

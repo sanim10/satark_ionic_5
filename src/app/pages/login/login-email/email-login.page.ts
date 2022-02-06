@@ -62,7 +62,7 @@ export class EmailLoginPage implements OnInit {
               text: 'Reset',
               handler: (data) => {
                 this.loadingCtrl
-                  .create({ keyboardClose: true })
+                  .create({ keyboardClose: true, mode: 'ios' })
                   .then((loadingEl) => {
                     if (!data.email) {
                       this.authService.showErrorToast('Please enter email');
@@ -118,7 +118,7 @@ export class EmailLoginPage implements OnInit {
               text: 'ପଠାଗଲା',
               handler: (data) => {
                 this.loadingCtrl
-                  .create({ keyboardClose: true })
+                  .create({ keyboardClose: true, mode: 'ios' })
                   .then((loadingEl) => {
                     if (!data.email) {
                       this.authService.showErrorToast(

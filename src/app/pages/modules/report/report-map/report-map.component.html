@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Pick Location</ion-title>
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding-start ion-padding-end" [scrollY]="false">
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div
+      id="skeleton"
+      class="skeleton skeleton-card"
+      style="height: 100vh; border-radius: 0"
+    ></div>
+  </div>
+  <div class="footer">
+    <ion-button expand="block" (click)="setlocation()">Set location</ion-button>
+  </div>
+</ion-content>

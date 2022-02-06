@@ -11,7 +11,6 @@
 
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
-
 /* Basic CSS for apps built with Ionic */
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
@@ -28,6 +27,8 @@
 @import "~swiper/scss";
 // @import "~swiper/scss/navigation";
 @import "~swiper/scss/pagination";
+
+@import "~leaflet/dist/leaflet.css";
 
 .alert-wrapper {
   --backdrop-opacity: 0;
@@ -48,6 +49,15 @@
       margin-top: -5px;
     }
   }
+  ion-tab-button {
+    ion-icon {
+      margin-top: 5px !important;
+      transform: scale(0.8) !important;
+    }
+    ion-label {
+      margin-top: -3px !important;
+    }
+  }
 }
 ion-card {
   border-radius: 15px;
@@ -58,6 +68,7 @@ ion-card {
 * {
   font-family: "Roboto";
   font-weight: 400;
+
   // -webkit-user-select: none;
   // -webkit-touch-callout: none;
   // -moz-user-select: none;
@@ -127,7 +138,7 @@ ion-modal {
 
 @media (prefers-color-scheme: statusbar) {
   :root {
-    --ion-color-primary-contrast: #454545;
+    --ion-color-primary-contrast: #a08a8a;
   }
 }
 
@@ -199,4 +210,23 @@ ion-modal {
   to {
     opacity: 1;
   }
+}
+
+.mapboxgl-popup .mapboxgl-popup-content {
+  padding-left: 10px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 15px 0px #00000031;
+  z-index: 2;
+  min-width: 320px;
+  // padding-bottom: 10px;
+  text-align: center;
+  .mapboxgl-popup-close-button {
+    right: 5px;
+    top: 5px;
+  }
+}
+
+.mapboxgl-popup-tip {
+  box-shadow: 0px 0px 15px 0px #00000031;
+  z-index: 1;
 }

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,8 +14,9 @@ import { EditFavoritesPage } from './edit-favorites.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    EditFavoritesPageRoutingModule
+    EditFavoritesPageRoutingModule,
+    TranslateModule,
   ],
-  declarations: [EditFavoritesPage]
+  declarations: [EditFavoritesPage],
 })
 export class EditFavoritesPageModule {}

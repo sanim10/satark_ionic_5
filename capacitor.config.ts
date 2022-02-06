@@ -3,16 +3,14 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
-      launchShowDuration: 4000,
       launchAutoHide: false,
-      splashFullScreen: true,
+      splashFullScreen: false,
     },
   },
-  appId: 'satark.app.io.ionic',
+  appId: 'satark.app.io.ionicc',
   appName: 'Satark',
   webDir: 'www',
   bundledWebRuntime: false,
-
 };
 
 export default config;

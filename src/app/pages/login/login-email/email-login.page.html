@@ -17,34 +17,37 @@
 
           <ion-card-content>
             <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-              <ion-input
-                name="email"
-                ngModel
-                type="email"
-                required
-                placeholder="{{'Your email id'|translate}}"
-                #emailCtrl="ngModel"
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                (focusout)="emailCtrl.value==='' ? null: showErrorToastEmail(emailCtrl.value)"
-              >
-                <ion-icon slot="start" name="mail"></ion-icon>
+              <ion-item class="ion-no-padding ion-no-margin" lines="none">
+                <ion-icon name="mail"></ion-icon>
                 <span class="pipe">|&nbsp;</span>
-              </ion-input>
+                <ion-input
+                  name="email"
+                  ngModel
+                  type="email"
+                  required
+                  placeholder="{{'Your email id'|translate}}"
+                  #emailCtrl="ngModel"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                  (focusout)="emailCtrl.value==='' ? null: showErrorToastEmail(emailCtrl.value)"
+                >
+                </ion-input>
+              </ion-item>
               <br />
-              <ion-input
-                name="password"
-                ngModel
-                type="password"
-                required
-                placeholder="{{'Password' | translate}}"
-                minlength="6"
-                #passCtrl="ngModel"
-                (focusout)="passCtrl.value==='' ? null: showErrorToastPassword(passCtrl.value)"
-              >
-                <ion-icon slot="start" name="key"></ion-icon>
+              <ion-item class="ion-no-padding ion-no-margin" lines="none">
+                <ion-icon name="key"></ion-icon>
                 <span class="pipe">|&nbsp;</span>
-              </ion-input>
-
+                <ion-input
+                  name="password"
+                  ngModel
+                  type="password"
+                  required
+                  placeholder="{{'Password' | translate}}"
+                  minlength="6"
+                  #passCtrl="ngModel"
+                  (focusout)="passCtrl.value==='' ? null: showErrorToastPassword(passCtrl.value)"
+                >
+                </ion-input>
+              </ion-item>
               <ion-label
                 color="primary"
                 class="forgot"

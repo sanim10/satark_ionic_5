@@ -1,0 +1,21 @@
+<ion-content class="ion-padding-start ion-padding-end" scrollY="false">
+  <div
+    *ngIf="!graphData"
+    class="ion-padding-start ion-padding-end ion-padding-top"
+    style="height: 100vh"
+  >
+    <div class="skeleton skeleton-card"></div>
+  </div>
+  <ion-card>
+    <ion-card-header class="ion-text-center">
+      <ion-icon src="../../../../../assets/home/card/location.svg"></ion-icon>
+      <ion-label *ngIf="lHelper.lang == 'en'"> {{ district }}</ion-label>
+      <ion-label *ngIf="lHelper.lang == 'od'"> {{ district_ory }}</ion-label>
+    </ion-card-header>
+    <canvas id="myChart" width="500" height="400"></canvas>
+    <ion-card-content>
+      <div></div>
+      <p>Number of Deaths</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,187 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Report Heatwave Event" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="report"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-label class="header">
+    To report regarding heatwave, please fill out this form
+  </ion-label>
+  <br />
+  <br />
+  <form>
+    <ion-list>
+      <ion-label> District </ion-label>
+      <ion-input disabled>
+        <ion-icon name="lock-closed"></ion-icon>
+        <span *ngIf="user_data" style="margin-left: 18px">
+          {{ lang =='en'? user_data[0]?.district_name:
+          user_data[0]?.district_name_ory}}
+        </span>
+      </ion-input>
+
+      <br />
+
+      <ion-label> Block </ion-label>
+      <ion-input disabled>
+        <ion-icon name="lock-closed"> </ion-icon>
+        <span *ngIf="user_data" style="margin-left: 18px">
+          {{ lang =='en'? user_data[0]?.block_name:
+          user_data[0]?.block_name_ory}}
+        </span>
+      </ion-input>
+      <br />
+
+      <ion-label> Location </ion-label>
+      <ion-input
+        name="location"
+        ngModel
+        #locationCtrl="ngModel"
+        [(ngModel)]="this.address"
+        type="text"
+        required
+      ></ion-input>
+      <ion-button size="small" (click)="presentMapModal()"
+        ><ion-icon name="location" slot="start" required></ion-icon>Select from
+        map</ion-button
+      >
+      <br />
+      <br />
+
+      <ion-label> Choose Date </ion-label>
+      <ion-datetime
+        displayFormat="DD-MM-YYYY"
+        pickerFormat="DD MMMM YYYY"
+        min="2020"
+        [max]="today"
+        [(ngModel)]="this.today"
+        name="date"
+        ngModel
+        #dateCtrl="ngModel"
+        required
+      ></ion-datetime>
+
+      <br />
+
+      <ion-label> Choose Time </ion-label>
+      <ion-datetime
+        displayFormat="HH:mm"
+        pickerFormat="HH:mm"
+        [(ngModel)]="this.now_time"
+        name="time"
+        ngModel
+        #timeCtrl="ngModel"
+        required
+      ></ion-datetime>
+
+      <br />
+
+      <ion-label> Feels like (In degrees) </ion-label>
+      <ion-select
+        name="feel"
+        #feelCtrl="ngModel"
+        ngModel
+        interface="action-sheet"
+        mode="ios"
+        required
+      >
+        <ion-select-option value="30">30</ion-select-option>
+        <ion-select-option value="31">31</ion-select-option>
+        <ion-select-option value="32">32</ion-select-option>
+        <ion-select-option value="33">33</ion-select-option>
+        <ion-select-option value="34">34</ion-select-option>
+        <ion-select-option value="35">35</ion-select-option>
+        <ion-select-option value="36">36</ion-select-option>
+        <ion-select-option value="37">37</ion-select-option>
+        <ion-select-option value="38">38</ion-select-option>
+        <ion-select-option value="39">39</ion-select-option>
+        <ion-select-option value="40">40</ion-select-option>
+        <ion-select-option value="41">42</ion-select-option>
+        <ion-select-option value="43">43</ion-select-option>
+        <ion-select-option value="44">44</ion-select-option>
+        <ion-select-option value="45">45</ion-select-option>
+        <ion-select-option value="46">46</ion-select-option>
+        <ion-select-option value="47">47</ion-select-option>
+        <ion-select-option value="48">48</ion-select-option>
+        <ion-select-option value="49">49</ion-select-option>
+        <ion-select-option value="50">50</ion-select-option>
+      </ion-select>
+      <br />
+
+      <ion-label> Heat Stress Level</ion-label>
+
+      <ion-select
+        #heatCtrl="ngModel"
+        name="heat"
+        ngModel
+        interface="action-sheet"
+        mode="ios"
+        required
+        cancelText="{{lang=='en'? 'Cancel': 'ବାତିଲ କରନ୍ତୁ'}}"
+      >
+        <ion-select-option value="Feels like normal"
+          >{{"Feels like normal" | translate}}</ion-select-option
+        >
+        <ion-select-option value="Comfortable"
+          >{{"It's comfortable" | translate}}</ion-select-option
+        >
+        <ion-select-option value="Unbearable"
+          >{{"It's unbearable" | translate}}</ion-select-option
+        >
+      </ion-select>
+      <br />
+
+      <ion-label> Issue</ion-label>
+      <ion-select
+        interface="action-sheet"
+        mode="ios"
+        name="issue"
+        ngModel
+        #issueCtrl="ngModel"
+        required
+      >
+        <ion-select-option value="No water"
+          >{{"No water" | translate}}</ion-select-option
+        >
+        <ion-select-option value="No shades"
+          >{{"No shades" | translate}}</ion-select-option
+        >
+      </ion-select>
+
+      <ion-button size="small" (click)="getPhoto()"
+        ><ion-icon name="camera" slot="start"></ion-icon>Choose
+        Image</ion-button
+      >
+      <br />
+      <br />
+
+      <ion-label>
+        Please write your message below<br />
+        <span style="opacity: 0.5">Optional </span>
+      </ion-label>
+      <ion-textarea
+        name="message"
+        ngModel
+        #msgCtrl="ngModel"
+        type="text"
+      ></ion-textarea>
+
+      <br />
+
+      <ion-button
+        expand="block"
+        [disabled]="!locationCtrl.valid || !dateCtrl.valid || !timeCtrl.valid ||!feelCtrl.valid ||!heatCtrl.valid || !issueCtrl.valid"
+        (click)="Submit_form(feelCtrl.value,locationCtrl.value,issueCtrl.value,heatCtrl.value,dateCtrl.value,timeCtrl.value,msgCtrl.value)"
+        >Submit</ion-button
+      >
+
+      <br />
+    </ion-list>
+  </form>
+</ion-content>

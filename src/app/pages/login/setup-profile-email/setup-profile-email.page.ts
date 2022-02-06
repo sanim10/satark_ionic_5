@@ -118,53 +118,55 @@ export class SetupProfileEmailPage implements OnInit {
     }
   }
   async signUp() {
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
-      if (this.Form.valid) {
-        this.token_id = localStorage.getItem('token');
-        this.device_id = localStorage.getItem('deviceid');
-        var email = localStorage.getItem('email');
-        var url = 'https://satark.rimes.int/api_user/users_ios_post';
-        var params = JSON.stringify({
-          token_id: this.token_id,
-          email_id: email,
-          name: this.name.value,
-          district: this.district.value,
-          dis_id: this.district_id,
-          block: this.blocks.value,
-          blk_id: this.block_id,
-          device: this.device_id,
-          phonenum: this.phone.value,
-          extra_param: 'insert_user',
-          role: '4',
-        });
-        console.log('param', params);
-        this.httpClient
-          .post(url, params, { responseType: 'text' })
-          .pipe(take(1))
-          .subscribe(
-            (data) => {
-              localStorage.removeItem('new_user');
-              loadingEl.dismiss();
-              this.authService.showAlert(
-                'Success!',
-                'You have successfully registered.'
-              );
-              this.navCtrl.navigateForward('/home', { replaceUrl: true });
-            },
-            (err) => {
-              console.log('ERROR!: ', err);
-              loadingEl.dismiss();
-              // this.navCtrl.navigateBack('/login', { replaceUrl: true });
-              this.authService.showAlert('Failed!', 'Try again');
-            }
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        if (this.Form.valid) {
+          this.token_id = localStorage.getItem('token');
+          this.device_id = localStorage.getItem('deviceid');
+          var email = localStorage.getItem('email');
+          var url = 'https://satark.rimes.int/api_user/users_ios_post';
+          var params = JSON.stringify({
+            token_id: this.token_id,
+            email_id: email,
+            name: this.name.value,
+            district: this.district.value,
+            dis_id: this.district_id,
+            block: this.blocks.value,
+            blk_id: this.block_id,
+            device: this.device_id,
+            phonenum: this.phone.value,
+            extra_param: 'insert_user',
+            role: '4',
+          });
+          console.log('param', params);
+          this.httpClient
+            .post(url, params, { responseType: 'text' })
+            .pipe(take(1))
+            .subscribe(
+              (data) => {
+                localStorage.removeItem('new_user');
+                loadingEl.dismiss();
+                this.authService.showAlert(
+                  'Success!',
+                  'You have successfully registered.'
+                );
+                this.navCtrl.navigateForward('/home', { replaceUrl: true });
+              },
+              (err) => {
+                console.log('ERROR!: ', err);
+                loadingEl.dismiss();
+                // this.navCtrl.navigateBack('/login', { replaceUrl: true });
+                this.authService.showAlert('Failed!', 'Try again');
+              }
+            );
+        } else {
+          loadingEl.dismiss();
+          this.authService.showErrorToast(
+            'Fill the mandatory details and accept terms and conditons'
           );
-      } else {
-        loadingEl.dismiss();
-        this.authService.showErrorToast(
-          'Fill the mandatory details and accept terms and conditons'
-        );
-      }
-    });
+        }
+      });
   }
 }

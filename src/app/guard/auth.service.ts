@@ -59,142 +59,29 @@ export class AuthService {
     this.lang = localStorage.getItem('language');
     this.device_id = localStorage.getItem('deviceid');
 
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
 
-      let new_mobile_number = '91' + phone + '@rimes.int';
+        let new_mobile_number = '91' + phone + '@rimes.int';
 
-      const auth = getAuth();
+        const auth = getAuth();
 
-      signInWithEmailAndPassword(auth, new_mobile_number, 'rimes@123')
-        .then((data) => {
-          localStorage.setItem('token', data.user.uid);
-          console.log(data);
+        signInWithEmailAndPassword(auth, new_mobile_number, 'rimes@123')
+          .then((data) => {
+            localStorage.setItem('token', data.user.uid);
+            console.log(data);
 
-          this.api.checklogin(data.user.uid).subscribe((response) => {
-            this.success = response['success'];
-            console.log('success', this.success);
-
-            if (this.success) {
-              this.router.navigateByUrl('/home', { replaceUrl: true });
-              this.isAuthenticated.next(true);
-              this.setLoginState('true');
-              this.user_token = localStorage.getItem('token');
-              var usr_data = response.result[0];
-              console.log('success', usr_data);
-
-              localStorage.setItem('block_id', usr_data.block_id);
-              localStorage.setItem('district_id', usr_data.district_id);
-              localStorage.setItem('block_name', usr_data.block_name);
-              localStorage.setItem('block_name_ory', usr_data.block_name_ory);
-              localStorage.setItem('district_name', usr_data.district_name);
-              localStorage.setItem(
-                'notification_lang',
-                usr_data.notification_lng
-              );
-              localStorage.setItem(
-                'district_name_ory',
-                usr_data.district_name_ory
-              );
-              if (this.lang == 'en' || this.lang === null) {
-                this.showAlert(
-                  'Login Success!',
-                  'You have successfully logged in'
-                );
-              } else {
-                this.showAlert(
-                  'ଲଗ ଇନ କୃତକାର୍ଯ୍ୟ ହେଲା!',
-                  'ଆପଣଙ୍କ ଲଗ ଇନ ସଫଳ ହେଲା',
-                  'ଠିକ'
-                );
-              }
-
-              var url = 'https://satark.rimes.int/api_user/users_post';
-              var params = JSON.stringify({
-                token_id: this.user_token,
-                device: this.device_id,
-                extra_param: 'update_device_id',
-              });
-
-              this.httpClinet.post(url, params).subscribe(
-                (data) => {
-                  // console.log(data);
-                  // alert(data);
-                },
-                (err) => {
-                  console.log('ERROR!: ', err);
-                }
-              );
-            } else {
-              // this.router.navigateByUrl('login/registration');
-              this.isAuthenticated.next(false);
-              this.setLoginState('false');
-              if (this.lang === 'en' || this.lang === null) {
-                this.showAlert(
-                  'Login Fail!',
-                  'You have not registered yet. Please register to log in.'
-                );
-              } else {
-                this.showAlert(
-                  'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
-                  'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
-                  'ଠିକ'
-                );
-              }
-            }
-            loadingEl.dismiss();
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          loadingEl.dismiss;
-          this.isAuthenticated.next(false);
-          this.setLoginState('false');
-          loadingEl.dismiss();
-
-          if (this.lang === 'en' || this.lang === null) {
-            this.showAlert(
-              'Login Fail!',
-              'You have not registered yet. Please register to log in.'
-            );
-          } else {
-            this.showAlert(
-              'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
-              'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
-              'ଠିକ'
-            );
-          }
-        });
-    });
-  }
-
-  //Login using email
-  loginEmail(email: String, password: String) {
-    this.lang = localStorage.getItem('language');
-    this.device_id = localStorage.getItem('deviceid');
-
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
-
-      let new_email = email.trim();
-      let new_password = password.trim();
-      signInWithEmailAndPassword(getAuth(), new_email, new_password)
-        .then((data) => {
-          localStorage.setItem('token', data.user.uid);
-          this.user_token = localStorage.getItem('token');
-
-          this.api
-            .checklogin(data.user.uid)
-            .pipe(take(1))
-            .subscribe((response) => {
+            this.api.checklogin(data.user.uid).subscribe((response) => {
               this.success = response['success'];
               console.log('success', this.success);
 
               if (this.success) {
-                this.router.navigateByUrl('home', { replaceUrl: true });
+                this.router.navigateByUrl('/home', { replaceUrl: true });
                 this.isAuthenticated.next(true);
                 this.setLoginState('true');
-                loadingEl.dismiss();
+                this.user_token = localStorage.getItem('token');
                 var usr_data = response.result[0];
                 console.log('success', usr_data);
 
@@ -204,14 +91,13 @@ export class AuthService {
                 localStorage.setItem('block_name_ory', usr_data.block_name_ory);
                 localStorage.setItem('district_name', usr_data.district_name);
                 localStorage.setItem(
-                  'district_name_ory',
-                  usr_data.district_name_ory
-                );
-                localStorage.setItem(
                   'notification_lang',
                   usr_data.notification_lng
                 );
-
+                localStorage.setItem(
+                  'district_name_ory',
+                  usr_data.district_name_ory
+                );
                 if (this.lang == 'en' || this.lang === null) {
                   this.showAlert(
                     'Login Success!',
@@ -231,62 +117,183 @@ export class AuthService {
                   device: this.device_id,
                   extra_param: 'update_device_id',
                 });
-                this.httpClinet
-                  .post(url, params)
-                  .pipe(take(1))
-                  .subscribe(
-                    (data) => {
-                      console.log(data);
-                    },
-                    (err) => {
-                      console.log('ERROR!: ', err);
-                    }
-                  );
-              } else {
-                console.log('in', 'else');
 
+                this.httpClinet.post(url, params).subscribe(
+                  (data) => {
+                    // console.log(data);
+                    // alert(data);
+                  },
+                  (err) => {
+                    console.log('ERROR!: ', err);
+                  }
+                );
+              } else {
                 // this.router.navigateByUrl('login/registration');
                 this.isAuthenticated.next(false);
                 this.setLoginState('false');
-                loadingEl.dismiss();
-
                 if (this.lang === 'en' || this.lang === null) {
                   this.showAlert(
                     'Login Fail!',
-                    'Please check if you have entered the correct email/password'
+                    'You have not registered yet. Please register to log in.'
                   );
                 } else {
                   this.showAlert(
-                    'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା',
-                    'ଦୟାକରି ଆପଣ ଦେଇଥିବା ଇମେଲ/ ପାସୱାର୍ଡ ସଠିକ ନା ନୁହେଁ ପରଖି ନିଅନ୍ତୁ.',
+                    'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
+                    'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
                     'ଠିକ'
                   );
                 }
               }
+              loadingEl.dismiss();
             });
-        })
-        .catch((error) => {
-          console.log('in', error);
+          })
+          .catch((err) => {
+            console.log(err);
+            loadingEl.dismiss;
+            this.isAuthenticated.next(false);
+            this.setLoginState('false');
+            loadingEl.dismiss();
 
-          // this.router.navigateByUrl('login/registration');
-          this.isAuthenticated.next(false);
-          this.setLoginState('false');
-          loadingEl.dismiss();
+            if (this.lang === 'en' || this.lang === null) {
+              this.showAlert(
+                'Login Fail!',
+                'You have not registered yet. Please register to log in.'
+              );
+            } else {
+              this.showAlert(
+                'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
+                'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
+                'ଠିକ'
+              );
+            }
+          });
+      });
+  }
 
-          if (this.lang == 'en' || this.lang === null) {
-            this.showAlert(
-              'Login Fail!',
-              'Please check if you have entered the correct email/password'
-            );
-          } else {
-            this.showAlert(
-              'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା',
-              'ଦୟାକରି ଆପଣ ଦେଇଥିବା ଇମେଲ/ ପାସୱାର୍ଡ ସଠିକ ନା ନୁହେଁ ପରଖି ନିଅନ୍ତୁ.',
-              'ଠିକ'
-            );
-          }
-        });
-    });
+  //Login using email
+  loginEmail(email: String, password: String) {
+    this.lang = localStorage.getItem('language');
+    this.device_id = localStorage.getItem('deviceid');
+
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
+
+        let new_email = email.trim();
+        let new_password = password.trim();
+        signInWithEmailAndPassword(getAuth(), new_email, new_password)
+          .then((data) => {
+            localStorage.setItem('token', data.user.uid);
+            this.user_token = localStorage.getItem('token');
+
+            this.api
+              .checklogin(data.user.uid)
+              .pipe(take(1))
+              .subscribe((response) => {
+                this.success = response['success'];
+                console.log('success', this.success);
+
+                if (this.success) {
+                  this.router.navigateByUrl('home', { replaceUrl: true });
+                  this.isAuthenticated.next(true);
+                  this.setLoginState('true');
+                  loadingEl.dismiss();
+                  var usr_data = response.result[0];
+                  console.log('success', usr_data);
+
+                  localStorage.setItem('block_id', usr_data.block_id);
+                  localStorage.setItem('district_id', usr_data.district_id);
+                  localStorage.setItem('block_name', usr_data.block_name);
+                  localStorage.setItem(
+                    'block_name_ory',
+                    usr_data.block_name_ory
+                  );
+                  localStorage.setItem('district_name', usr_data.district_name);
+                  localStorage.setItem(
+                    'district_name_ory',
+                    usr_data.district_name_ory
+                  );
+                  localStorage.setItem(
+                    'notification_lang',
+                    usr_data.notification_lng
+                  );
+
+                  if (this.lang == 'en' || this.lang === null) {
+                    this.showAlert(
+                      'Login Success!',
+                      'You have successfully logged in'
+                    );
+                  } else {
+                    this.showAlert(
+                      'ଲଗ ଇନ କୃତକାର୍ଯ୍ୟ ହେଲା!',
+                      'ଆପଣଙ୍କ ଲଗ ଇନ ସଫଳ ହେଲା',
+                      'ଠିକ'
+                    );
+                  }
+
+                  var url = 'https://satark.rimes.int/api_user/users_post';
+                  var params = JSON.stringify({
+                    token_id: this.user_token,
+                    device: this.device_id,
+                    extra_param: 'update_device_id',
+                  });
+                  this.httpClinet
+                    .post(url, params)
+                    .pipe(take(1))
+                    .subscribe(
+                      (data) => {
+                        console.log(data);
+                      },
+                      (err) => {
+                        console.log('ERROR!: ', err);
+                      }
+                    );
+                } else {
+                  console.log('in', 'else');
+
+                  // this.router.navigateByUrl('login/registration');
+                  this.isAuthenticated.next(false);
+                  this.setLoginState('false');
+                  loadingEl.dismiss();
+
+                  if (this.lang === 'en' || this.lang === null) {
+                    this.showAlert(
+                      'Login Fail!',
+                      'Please check if you have entered the correct email/password'
+                    );
+                  } else {
+                    this.showAlert(
+                      'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା',
+                      'ଦୟାକରି ଆପଣ ଦେଇଥିବା ଇମେଲ/ ପାସୱାର୍ଡ ସଠିକ ନା ନୁହେଁ ପରଖି ନିଅନ୍ତୁ.',
+                      'ଠିକ'
+                    );
+                  }
+                }
+              });
+          })
+          .catch((error) => {
+            console.log('in', error);
+
+            // this.router.navigateByUrl('login/registration');
+            this.isAuthenticated.next(false);
+            this.setLoginState('false');
+            loadingEl.dismiss();
+
+            if (this.lang == 'en' || this.lang === null) {
+              this.showAlert(
+                'Login Fail!',
+                'Please check if you have entered the correct email/password'
+              );
+            } else {
+              this.showAlert(
+                'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା',
+                'ଦୟାକରି ଆପଣ ଦେଇଥିବା ଇମେଲ/ ପାସୱାର୍ଡ ସଠିକ ନା ନୁହେଁ ପରଖି ନିଅନ୍ତୁ.',
+                'ଠିକ'
+              );
+            }
+          });
+      });
     // return;
   }
 
@@ -351,8 +358,19 @@ export class AuthService {
     this.toastCtrl
       .create({
         message: txt,
-        duration: 3000,
+        duration: 1500,
         position: 'bottom',
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
+  }
+  showErrorToastTop(txt) {
+    this.toastCtrl
+      .create({
+        message: txt,
+        duration: 1500,
+        position: 'top',
       })
       .then((toastEl) => {
         toastEl.present();

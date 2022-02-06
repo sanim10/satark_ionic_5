@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Rainfall Forecast" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/flood"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content scrollY="false">
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="WRF? 'fab-active':''"
+        (click)="updateDatesFAB('three')">
+        <ion-label>{{"WRF" | translate}} </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/basin_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="ECMWF? ' fab-active':''"
+        (click)="updateDatesFAB('ten')">
+        <ion-label>{{"ECMWF" | translate}} </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/river_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-img src="../../../../../assets/modules/flood/legend.png" class="legend"></ion-img>
+
+  <ion-footer>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
+      <ion-icon name="play"></ion-icon>
+    </ion-button>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="pause()" *ngIf="run">
+      <ion-icon name="pause"></ion-icon>
+    </ion-button>
+
+
+
+    <ion-grid #content class="ion-no-padding time-holder">
+      <ion-col *ngFor="let date of date_options;let i=index;" id="{{i}}" class="ion-no-padding ion-text-center">
+        <ion-button class="time-button" [class.focus]="scrollTo ==i" (click)="showData(i)">
+          {{date}}
+        </ion-button>
+      </ion-col>
+    </ion-grid>
+
+
+
+  </ion-footer>
+</ion-content>

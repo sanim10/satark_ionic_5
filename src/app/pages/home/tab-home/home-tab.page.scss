@@ -14,7 +14,6 @@ app-drawer {
   // overflow: hidden;
   position: fixed;
   width: 100%;
-  color: #454545;
 }
 
 .backdrop {
@@ -138,7 +137,7 @@ ion-card {
 ion-card-header {
   font-size: 1.3rem;
   font-weight: 500;
-  color: #454545;
+  color: rgb(12, 12, 12);
 }
 
 .card-header-date {
@@ -165,7 +164,6 @@ ion-card-header {
   display: flex;
   letter-spacing: 0.3px;
   margin-top: 10px;
-  color: #454545;
   z-index: 2;
 
   ion-icon {
@@ -178,6 +176,11 @@ ion-card-header {
 
 ion-label {
   text-transform: capitalize;
+}
+.last-update {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  margin-left: 5px;
 }
 
 .translate-btn {
@@ -193,11 +196,16 @@ ion-label {
 
 @media screen and (max-height: 740px) {
   .container {
-    margin-bottom: 120px;
+    margin-bottom: 60px;
     position: relative;
   }
   ion-content {
     overflow-y: scroll;
+  }
+}
+@media screen and (max-height: 640px) {
+  .container {
+    margin-bottom: 150px;
   }
 }
 

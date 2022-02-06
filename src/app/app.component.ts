@@ -21,7 +21,6 @@ import {
 } from '@capacitor/push-notifications';
 import { Storage } from '@capacitor/storage';
 import { Network } from '@capacitor/network';
-import { Http, HttpResponse } from '@capacitor-community/http';
 import { initializeApp } from 'firebase/app';
 import {
   getAuth,
@@ -84,8 +83,11 @@ export class AppComponent implements OnInit {
       value: token,
     });
   }
+
   initializeApp() {
     this.platform.ready().then(async () => {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+
       StatusBar.setBackgroundColor({ color: '#ffffff' });
       StatusBar.setStyle({ style: Style.Light });
 
@@ -95,42 +97,34 @@ export class AppComponent implements OnInit {
         this.navController.navigateForward('setup-profile-email');
       }
 
-      // Request permission to use push notifications
-      // iOS will prompt user and return if they granted permission or not
-      // Android will just grant without prompting
       PushNotifications.requestPermissions().then((result) => {
         if (result.receive === 'granted') {
-          // Register with Apple / Google to receive push via APNS/FCM
           PushNotifications.register();
-          // alert('permission grant');
         } else {
-          // Show some error
-          // alert('permission error');
+          console.log('Permission error');
         }
       });
 
       PushNotifications.addListener('registration', (token: Token) => {
-        // alert('Push registration success, token: ' + token.value);
         localStorage.setItem('deviceid', token.value);
         this.setToken(token.value);
       });
 
       PushNotifications.addListener('registrationError', (error: any) => {
-        // alert('Error on registration: ' + JSON.stringify(error));
+        console.log('Error on registration: ' + JSON.stringify(error));
       });
 
       PushNotifications.addListener(
         'pushNotificationReceived',
         (notification: PushNotificationSchema) => {
-          alert('Push received: ' + JSON.stringify(notification));
-          // alert('Push received: ' + JSON.stringify(notification));
+          console.log('Push received: ' + JSON.stringify(notification));
         }
       );
 
       PushNotifications.addListener(
         'pushNotificationActionPerformed',
         (notification: ActionPerformed) => {
-          alert('Push action performed: ' + JSON.stringify(notification));
+          console.log('Push action performed: ' + JSON.stringify(notification));
         }
       );
 

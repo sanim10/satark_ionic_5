@@ -8,7 +8,6 @@ import { Component, ViewChild } from '@angular/core';
 import { SwiperOptions } from 'swiper';
 import SwiperCore, { Navigation } from 'swiper';
 import {
-  AlertController,
   IonBackButtonDelegate,
   LoadingController,
   NavController,
@@ -137,33 +136,35 @@ export class RegistrationPage {
     this.phone = phone;
     let fullMobileNumber = '91' + phone;
 
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
-      var url = 'https://satark.rimes.int/api_user/users_ios_post';
-      var params = JSON.stringify({
-        phone: fullMobileNumber,
-        device: this.device_id,
-        lng: this.lang,
-        extra_param: 'sendotp',
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        var url = 'https://satark.rimes.int/api_user/users_ios_post';
+        var params = JSON.stringify({
+          phone: fullMobileNumber,
+          device: this.device_id,
+          lng: this.lang,
+          extra_param: 'sendotp',
+        });
+        this.httpClinet
+          .post(url, params, { responseType: 'text' })
+          .pipe(take(1))
+          .subscribe(
+            (data) => {
+              this.slideNext();
+              console.log(data);
+              loadingEl.dismiss();
+            },
+            (err) => {
+              loadingEl.dismiss();
+              console.log('ERROR!: ', err);
+              this.authService.showErrorToast(
+                'Error getting OTP. Please try again'
+              );
+            }
+          );
       });
-      this.httpClinet
-        .post(url, params, { responseType: 'text' })
-        .pipe(take(1))
-        .subscribe(
-          (data) => {
-            this.slideNext();
-            console.log(data);
-            loadingEl.dismiss();
-          },
-          (err) => {
-            loadingEl.dismiss();
-            console.log('ERROR!: ', err);
-            this.authService.showErrorToast(
-              'Error getting OTP. Please try again'
-            );
-          }
-        );
-    });
   }
 
   ///verify the OTP recceived through SMS
@@ -180,59 +181,61 @@ export class RegistrationPage {
       phone: fullMobileNumber,
     };
     console.log(param.otp);
-    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
-      loadingEl.present();
-      this.apiService
-        .verifyOtp(param)
-        .pipe(take(1))
-        .subscribe(
-          (response) => {
-            this.success = response['success'];
-            if (this.success) {
-              let new_mobile_number = fullMobileNumber + '@rimes.int';
-              console.log('changed phone to email', new_mobile_number);
-              createUserWithEmailAndPassword(
-                getAuth(),
-                new_mobile_number,
-                'rimes@123'
-              )
-                .then((data) => {
-                  console.log(data);
-                  localStorage.setItem('token', data.user.uid);
-                  localStorage.setItem('email', data.user.email);
-                  localStorage.setItem('new_user', 'yes_ph');
-                  this.authService.isAuthenticated.next(true);
-                  this.authService.setLoginState('true');
-                  this.navCtrl.navigateForward('setup-profile-phone', {
-                    replaceUrl: true,
+    this.loadingCtrl
+      .create({ keyboardClose: true, mode: 'ios' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        this.apiService
+          .verifyOtp(param)
+          .pipe(take(1))
+          .subscribe(
+            (response) => {
+              this.success = response['success'];
+              if (this.success) {
+                let new_mobile_number = fullMobileNumber + '@rimes.int';
+                console.log('changed phone to email', new_mobile_number);
+                createUserWithEmailAndPassword(
+                  getAuth(),
+                  new_mobile_number,
+                  'rimes@123'
+                )
+                  .then((data) => {
+                    console.log(data);
+                    localStorage.setItem('token', data.user.uid);
+                    localStorage.setItem('email', data.user.email);
+                    localStorage.setItem('new_user', 'yes_ph');
+                    this.authService.isAuthenticated.next(true);
+                    this.authService.setLoginState('true');
+                    this.navCtrl.navigateForward('setup-profile-phone', {
+                      replaceUrl: true,
+                    });
+                    loadingEl.dismiss();
+                  })
+                  .catch((error) => {
+                    console.log('got error', error);
+                    this.authService.showAlert(
+                      'Login Failed!',
+                      'Please check phone number or the number is already registered '
+                    );
+                    loadingEl.dismiss();
+                    this.authService.isAuthenticated.next(false);
+                    this.authService.setLoginState('false');
                   });
-                  loadingEl.dismiss();
-                })
-                .catch((error) => {
-                  console.log('got error', error);
-                  this.authService.showAlert(
-                    'Login Failed!',
-                    'Please check phone number or the number is already registered '
-                  );
-                  loadingEl.dismiss();
-                  this.authService.isAuthenticated.next(false);
-                  this.authService.setLoginState('false');
-                });
-            } else {
+              } else {
+                loadingEl.dismiss();
+                this.authService.showErrorToast(
+                  'Incorrect OTP. Please try again'
+                );
+              }
+            },
+            (err) => {
+              console.log(err);
               loadingEl.dismiss();
               this.authService.showErrorToast(
-                'Incorrect OTP. Please try again'
+                'Error verifying OTP. Please try again'
               );
             }
-          },
-          (err) => {
-            console.log(err);
-            loadingEl.dismiss();
-            this.authService.showErrorToast(
-              'Error verifying OTP. Please try again'
-            );
-          }
-        );
-    });
+          );
+      });
   }
 }

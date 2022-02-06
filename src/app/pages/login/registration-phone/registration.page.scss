@@ -16,15 +16,19 @@
       ion-text {
         P {
           font-size: 1rem;
-          color: #454545;
         }
       }
     }
+
+    ion-item {
+      --background: #e7e7e7;
+      --border-radius: 4px;
+      --padding-end: 0px;
+      --inner-padding-end: 0px;
+    }
     ion-input {
       align-items: center;
-      background: #e7e7e7;
       color: #686868;
-      border-radius: 4px;
       border: none;
       font-weight: 500;
     }

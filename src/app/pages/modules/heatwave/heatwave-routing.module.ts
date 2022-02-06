@@ -20,6 +20,10 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'heatwave-map',
+    loadChildren: () => import('./heatwave-map/heatwave-map.module').then( m => m.HeatwaveMapPageModule)
+  },
 ];
 
 @NgModule({

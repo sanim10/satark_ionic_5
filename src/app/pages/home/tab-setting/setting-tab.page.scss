@@ -1,9 +1,6 @@
 * {
   animation: easeIn 250ms;
 }
-ion-content {
-  color: #454545;
-}
 
 ion-item {
   --detail-icon-color: var(--ion-color-primary);
@@ -29,5 +26,13 @@ ion-icon {
 .option-detail {
   color: var(--ion-color-primary);
   margin-top: 4px;
+  margin-bottom: 4px;
   font-size: 0.8rem;
+}
+
+.ios {
+  ion-toggle {
+    transform: scale(0.8);
+    min-width: 60px;
+  }
 }

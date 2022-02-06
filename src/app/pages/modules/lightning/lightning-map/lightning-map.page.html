@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Lightning" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/lightning"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content scrollY="false">
+
+
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time == 'thirty'? 'fab-active' :''"
+        (click)="updateTimeFAB('thirty')">
+        <ion-label>30 Minutes</ion-label>
+        <ion-icon src='../../../../../assets/modules/lightning/map/30m_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time != 'thirty'? 'fab-active':''"
+        (click)="updateTimeFAB('onehr')">
+        <ion-label>1 Hour</ion-label>
+        <ion-icon src='../../../../../assets/modules/lightning/map/1hr_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+
+
+  <img src="../../../../../assets/modules/lightning/map/legend.png" class="legend" />
+
+  <ion-footer>
+
+
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col class="ion-text-center ion-padding-start ion-padding-end">
+          <ion-button expand="block" size="small" (click)="openAdv()">
+            Advisory
+          </ion-button>
+        </ion-col>
+        <ion-col class="ion-text-center ion-padding-start ion-padding-end">
+          <ion-button expand="block" size="small" (click)="refresh()">
+            Refresh
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-footer>
+
+</ion-content>

@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
     <ion-title type="small">{{"Phone Registration" | translate}}</ion-title>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" class="back-button">
       <ion-back-button defaultHref="/login"> </ion-back-button>
     </ion-buttons>
 
@@ -39,25 +39,26 @@
                 </ion-row>
                 <ion-row>
                   <ion-col>
-                    <ion-input
-                      name="phone"
-                      type="tel"
-                      placeholder="{{'Your mobile number' | translate}}"
-                      minlength="10"
-                      maxlength="10"
-                      ngModel
-                      #phoneCtrl="ngModel"
-                      required
-                    >
+                    <ion-item class="ion-no-padding ion-no-margin" lines="none">
                       <img
                         src="../../assets/login/india_ic.svg"
-                        style="margin-left: 10px"
-                      />
+                        style="margin-left: 10px" />
                       <ion-text color="primary" style="font-weight: 500">
                         &nbsp;&nbsp;+91
                       </ion-text>
                       <span class="pipe">|&nbsp;</span>
-                    </ion-input>
+                      <ion-input
+                        name="phone"
+                        type="tel"
+                        placeholder="{{'Your mobile number' | translate}}"
+                        minlength="10"
+                        maxlength="10"
+                        ngModel
+                        #phoneCtrl="ngModel"
+                        required
+                      >
+                      </ion-input
+                    ></ion-item>
                     <br />
 
                     <ion-button

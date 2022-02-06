@@ -1,3 +1,5 @@
+import { LightningAdvisoryModule } from './lightning-advisory/lightning-advisory.module';
+import { SwiperModule } from 'swiper/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -32,6 +34,8 @@ const routes: Routes = [
     IonicModule,
     TranslateModule,
     RouterModule.forChild(routes),
+    SwiperModule,
+    LightningAdvisoryModule,
   ],
   declarations: [LightningPage],
 })

@@ -22,6 +22,10 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'weather-map',
+    loadChildren: () => import('./weather-map/weather-map.module').then( m => m.WeatherMapPageModule)
+  },
 ];
 
 @NgModule({

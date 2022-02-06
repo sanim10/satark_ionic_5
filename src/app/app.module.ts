@@ -1,4 +1,3 @@
-import { HomeTabPage } from './pages/home/tab-home/home-tab.page';
 import { SwiperModule } from 'swiper/angular';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,9 +11,11 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { pageTransition } from './helper/page-transistions';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 export function setTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/language/', '.json');
 }
@@ -56,6 +57,8 @@ export function setTranslateLoader(http: HttpClient) {
     ScreenOrientation,
     Navigator,
     MobileAccessibility,
+    AndroidPermissions,
+    BackgroundGeolocation,
   ],
   bootstrap: [AppComponent],
 })

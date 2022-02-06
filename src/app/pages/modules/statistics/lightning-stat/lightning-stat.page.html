@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border ion-text-center" scrollY="false">
+  <ion-toolbar>
+    <ion-title>{{"Lightning Statistics" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        class="back-button"
+        defaultHref="statistics"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-content>
+    <ion-segment [(ngModel)]="activeTab">
+      <ion-segment-button value="map">
+        {{"Map" | translate}}
+      </ion-segment-button>
+      <ion-segment-button value="chart">
+        {{"Chart" | translate}}
+      </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="activeTab">
+      <div *ngSwitchCase="'map'" class="fade-up map">
+        <app-lightning-map
+          [totalDeathDataForMap]="totalDeathDataForMap"
+        ></app-lightning-map>
+        <ion-footer>
+          <ion-img
+            src="../../../../../assets/modules/statistics/lightning/legend.png"
+          ></ion-img>
+        </ion-footer>
+      </div>
+
+      <div *ngSwitchCase="'chart'" class="fade-up chart">
+        <ion-grid
+          class="ion-padding"
+          style="padding-bottom: 0; margin-top: 50px"
+        >
+          <ion-row>
+            <ion-col>
+              <ion-label class="headers"
+                >{{"Select location" | translate}}</ion-label
+              >
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-padding-bottom">
+            <ion-col>
+              <ion-input (click)="showLocationDialog()" disabled>
+                <span *ngIf="death_data && lang=='en'">
+                  &nbsp;&nbsp;&nbsp;{{death_data[0]?.district_name}}</span
+                >
+                <span *ngIf="death_data && lang=='od'">
+                  &nbsp;&nbsp;&nbsp;{{death_data[0]?.district_name_ory}}</span
+                >
+                <span *ngIf="!death_data" style="opacity: 0.7"
+                  >&nbsp;&nbsp;&nbsp;Select a district</span
+                >
+                <ion-icon
+                  name="caret-down-outline"
+                  style="position: absolute; right: 10px; opacity: 0.7"
+                ></ion-icon>
+              </ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label class="headers"
+                >{{"Deaths per year" | translate}}</ion-label
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <app-lightning-graph [graphData]="graphData"> </app-lightning-graph>
+      </div>
+    </div>
+  </ion-content>
+</ion-content>

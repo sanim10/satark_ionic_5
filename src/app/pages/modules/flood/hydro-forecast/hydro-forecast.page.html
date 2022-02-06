@@ -1,0 +1,83 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Hydrologicial Forecast" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="/flood"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+
+
+  <div class="map-container">
+    <div id="map" #map></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="mBasin? 'fab-active':''"
+        (click)="fabClick('mBasin')">
+        <ion-label>Mahanadi Basin </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/basin_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="mRiver? ' fab-active':''"
+        (click)="fabClick('mRiver')">
+        <ion-label>Mahanadi River </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/river_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="rBasin? 'fab-active':''"
+        (click)="fabClick('rBasin')">
+        <ion-label>Rushikulya Basin </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/basin_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="rRiver? 'fab-active':''"
+        (click)="fabClick('rRiver')">
+        <ion-label>Rushikulya River </ion-label>
+        <ion-icon src='../../../../../assets/modules/flood/river_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-footer>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
+      <ion-icon name="play"></ion-icon>
+    </ion-button>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="pause()" *ngIf="run">
+      <ion-icon name="pause"></ion-icon>
+    </ion-button>
+
+
+
+    <ion-grid #content class="ion-no-padding time-holder">
+      <ion-col *ngFor="let date of date_options;let i=index;" id="{{i}}" class="ion-no-padding ion-text-center">
+        <ion-button class="time-button" [class.focus]="scrollTo ==i" (click)="showData(i)">
+          {{date}}
+        </ion-button>
+      </ion-col>
+    </ion-grid>
+
+
+
+    <!-- <swiper class="ion-no-padding" [config]="config" (swiper)="onSwiper($event)" (slideChange)="onSlideChange()"
+      #swiper>
+      <ng-template swiperSlide>
+
+        a
+      </ng-template>
+
+      <ng-template swiperSlide>
+        b
+      </ng-template>
+    </swiper> -->
+  </ion-footer>
+</ion-content>
