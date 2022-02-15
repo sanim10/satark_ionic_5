@@ -8,6 +8,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 
+import { mapKey } from '../../../../config/key';
 import * as mapboxgl from 'mapbox-gl';
 import * as moment from 'moment';
 import { LoadingController } from '@ionic/angular';
@@ -287,11 +288,11 @@ export class WeatherMapPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           // style: {
           //   version: 8,
           //   sources: {
@@ -312,7 +313,7 @@ export class WeatherMapPage implements OnInit, AfterViewInit {
           //   ],
           // },
           style: 'mapbox://styles/mapbox/light-v10',
-          center: [84.978903, 19.468185],
+          center: [84.145805, 20.576347],
           zoom: 4.2,
         });
         this.map.on('load', () => {

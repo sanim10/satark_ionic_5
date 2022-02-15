@@ -7,6 +7,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+import { mapKey } from '../../../../config/key';
 
 @Component({
   selector: 'app-lightning-map',
@@ -47,11 +48,11 @@ export class LightningMapComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
-          container: 'map', // container id
+          container: 'map',
+          attributionControl: false, // container id
           style: 'mapbox://styles/mapbox/light-v10',
           center: [84.5121, 20.5012],
           zoom: 5.2,

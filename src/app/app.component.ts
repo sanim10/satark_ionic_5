@@ -19,6 +19,7 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
+
 import { Storage } from '@capacitor/storage';
 import { Network } from '@capacitor/network';
 import { initializeApp } from 'firebase/app';
@@ -34,6 +35,7 @@ import {
 })
 export class AppComponent implements OnInit {
   alertIsShowing = false;
+  data_content;
   lang: string;
   firebaseAuth = {
     apiKey: 'AIzaSyAz73qdaC__6oksWTMXQd9tmjpx_GpZ73w',
@@ -54,7 +56,8 @@ export class AppComponent implements OnInit {
     public translate: TranslateService,
     private lHelper: LanguageHelperService,
     private AuthService: AuthService,
-    private router: Router
+    private router: Router,
+    private alertCtrl: AlertController
   ) {
     const app = initializeApp(this.firebaseAuth);
     initializeAuth(app, {
@@ -100,6 +103,34 @@ export class AppComponent implements OnInit {
       PushNotifications.requestPermissions().then((result) => {
         if (result.receive === 'granted') {
           PushNotifications.register();
+
+          var channedID = 'satark_lightning';
+          var channedID_1 = 'satark_ocean';
+          PushNotifications.createChannel({
+            id: channedID,
+            description: 'this is satark lightning',
+            sound: 'lightning.mp3',
+            vibration: true,
+            visibility: 1,
+            // The importance property goes from 1 = Lowest, 2 = Low, 3 = Normal, 4 = High and 5 = Highest.
+            importance: 3,
+            name: channedID,
+          }).then(() => console.log('Channel created'));
+
+          PushNotifications.createChannel({
+            id: channedID_1,
+            description: 'this is satark ocean',
+            sound: 'ocean.mp3',
+            vibration: true,
+            visibility: 1,
+            // The importance property goes from 1 = Lowest, 2 = Low, 3 = Normal, 4 = High and 5 = Highest.
+            name: channedID_1,
+            importance: 3,
+          }).then(() => console.log('Channel created'));
+
+          PushNotifications.listChannels().then((channels) =>
+            console.log('List of channels', channels)
+          );
         } else {
           console.log('Permission error');
         }
@@ -116,8 +147,15 @@ export class AppComponent implements OnInit {
 
       PushNotifications.addListener(
         'pushNotificationReceived',
-        (notification: PushNotificationSchema) => {
+        async (notification: PushNotificationSchema) => {
           console.log('Push received: ' + JSON.stringify(notification));
+          this.data_content = notification.data.content;
+          let alert = this.alertCtrl.create({
+            header: notification.title,
+            message: notification.body,
+            buttons: ['OK'],
+          });
+          (await alert).present();
         }
       );
 

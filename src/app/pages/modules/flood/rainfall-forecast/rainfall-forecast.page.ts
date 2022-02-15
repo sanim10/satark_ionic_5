@@ -1,5 +1,3 @@
-import { element } from 'protractor';
-import { SwiperComponent } from 'swiper/angular';
 import {
   Component,
   OnInit,
@@ -13,6 +11,7 @@ import { ApiService } from './../../../../providers/api.service';
 import * as mapboxgl from 'mapbox-gl';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
+import { mapKey } from '../../../../config/key';
 @Component({
   selector: 'app-rainfall-forecast',
   templateUrl: './rainfall-forecast.page.html',
@@ -47,7 +46,7 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
   q95: any;
   fabState = false;
   ECMWF = false;
-  WRF = false;
+  WRF = true;
   constructor(
     private loadingCtrl: LoadingController,
     private apiService: ApiService,
@@ -77,11 +76,11 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 6,
@@ -355,6 +354,8 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
         }
       }
       this.date = this.date_options[0];
+    } else {
+      this.authService.showErrorToast('Data is not available currently!');
     }
   }
 
@@ -512,9 +513,11 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
 
   updateDatesFAB(fc) {
     if (fc == 'three') {
-      this.WRF = !this.WRF;
+      this.WRF = true;
+      this.ECMWF = false;
     } else {
-      this.ECMWF = !this.ECMWF;
+      this.ECMWF = true;
+      this.WRF = false;
     }
     this.days = fc;
     this.updateDates();

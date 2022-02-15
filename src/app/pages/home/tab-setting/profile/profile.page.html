@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title class="ion-text-center">Profile</ion-title>
+    <ion-title class="ion-text-center">{{"Profile" | translate}}</ion-title>
     <ion-buttons slot="start">
       <ion-button class="back-button" (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
@@ -12,37 +12,22 @@
 <ion-content class="ion-padding">
   <div *ngIf="user_data == null">
     <div class="skeleton-container">
-      <div
-        class="skeleton skeleton-card profile-img"
-        style="margin-top: -30px; border-radius: 100%"
-      ></div>
-      <div
-        class="skeleton skeleton-card"
-        style="height: 150px; margin-top: -20px"
-      ></div>
+      <div class="skeleton skeleton-card profile-img" style="margin-top: -30px; border-radius: 100%"></div>
+      <div class="skeleton skeleton-card" style="height: 150px; margin-top: -20px"></div>
     </div>
   </div>
   <div *ngIf="user_data">
     <div class="profile-img">
-      <img
-        *ngIf="!user_data[0].user_image"
-        src="../../../../../assets/profile/people.png"
-      />
+      <img *ngIf="!user_data[0].user_image" src="../../../../../assets/profile/people.png" />
       <img *ngIf="user_data[0].user_image" src="{{user_data[0].user_image}}" />
-      <span class="upload-img" (click)="getPhoto()"
-        ><ion-icon
-          color="light"
-          name="camera"
-          style="transform: scale(0.7)"
-        ></ion-icon
-      ></span>
+      <span class="upload-img" (click)="getPhoto()">
+        <ion-icon color="light" name="camera" style="transform: scale(0.7)"></ion-icon>
+      </span>
     </div>
 
     <ion-item>
       <ion-icon name="person"></ion-icon>
-      <ion-label class="ion-padding-start"
-        >{{user_data[0].full_name}}</ion-label
-      >
+      <ion-label class="ion-padding-start">{{user_data[0].full_name}}</ion-label>
     </ion-item>
     <ion-item>
       <ion-icon name="call"></ion-icon>
@@ -56,9 +41,7 @@
 
     <ion-item>
       <ion-icon name="navigate"></ion-icon>
-      <ion-label class="ion-padding-start"
-        >{{user_data[0].block_name}}, {{user_data[0].district_name}}</ion-label
-      >
+      <ion-label class="ion-padding-start">{{user_data[0].block_name}}, {{user_data[0].district_name}}</ion-label>
     </ion-item>
   </div>
 </ion-content>

@@ -3,6 +3,8 @@ import { AuthService } from './../../../../guard/auth.service';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import * as mapboxgl from 'mapbox-gl';
+
+import { mapKey } from '../../../../config/key';
 @Component({
   selector: 'app-flood-map',
   templateUrl: './flood-map.page.html',
@@ -44,11 +46,11 @@ export class FloodMapPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 5.5,
@@ -144,7 +146,7 @@ export class FloodMapPage implements OnInit, AfterViewInit {
           el.classList.add('marker');
 
           var s =
-            '<div style="background:#0066A6; border-radius:100%; color:white; height:30px;width:30px;display:flex;align-items:center;justify-content:center;border: 2px solid white"> <ion-icon src="../../../../../assets/modules/flood/reservoir_ic.svg" style="transform:scale(1.8)"></ion-icon></div>';
+            '<div style="background:#0066A6; border-radius:100%; color:white; height:25px;width:25px;display:flex;align-items:center;justify-content:center;border: 2px solid white"> <ion-icon src="../../../../../assets/modules/flood/reservoir_ic.svg" style="transform:scale(1.3)"></ion-icon></div>';
           el.innerHTML = s;
 
           if (this.warning_lvl[j] == null && this.danger_lvl[j] == null) {

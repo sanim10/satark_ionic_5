@@ -83,7 +83,7 @@ export class HomePage implements OnInit, AfterViewInit {
             this.user_data[0].district_name_ory;
           this.getFavLocations(this.user_id);
           this.get10DaysImdForecast(this.block_id);
-          this.getImdRainfallValueAdditionForBlock(this.block_id);
+          this.getRainfallValueAdditionForBlock(this.block_id);
         },
         (Error) => {
           console.log(Error);
@@ -95,12 +95,13 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   //get 10days IMD value addition
-  getImdRainfallValueAdditionForBlock(block: string) {
+  getRainfallValueAdditionForBlock(block: string) {
     let param = {
       block_id: block,
     };
     this.apiService
-      .get10DaysImdValueAdditionDataForWeather(param)
+      // .get10DaysImdValueAdditionDataForWeather(param)
+      .getUpdatedValueAdditionDataForWeather(param)
       .pipe(take(1))
       .subscribe(
         (data) => {

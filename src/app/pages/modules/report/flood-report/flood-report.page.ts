@@ -55,7 +55,6 @@ export class FloodReportPage implements OnInit {
       .subscribe((data) => {
         this.user_data = data['result'];
         console.log('user_data', this.user_data);
-        console.log('full name', this.user_data[0].full_name);
       });
   }
 

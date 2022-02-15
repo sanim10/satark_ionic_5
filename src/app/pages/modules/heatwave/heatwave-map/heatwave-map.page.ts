@@ -12,6 +12,7 @@ import * as mapboxgl from 'mapbox-gl';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 
+import { mapKey } from '../../../../config/key';
 @Component({
   selector: 'app-heatwave-map',
   templateUrl: './heatwave-map.page.html',
@@ -64,11 +65,11 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 5.5,
@@ -232,6 +233,14 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
   updateDates() {
     if (this.forecast_ensemble != null && this.forecast_ten != null) {
       if (this.days == 'ten') {
+        for (var k in this.forecast_ten) {
+          if (k != this.date) {
+            this.date = k;
+            console.log(this.date);
+          }
+          break;
+        }
+
         if (this.forecast_ten.length != 0) {
           this.date_options = Object.keys(this.forecast_ten);
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
@@ -245,13 +254,21 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
           this.authService.showErrorToast('Data is not available currently!');
         }
       } else if (this.days == 'ensemble') {
+        for (var k in this.forecast_ensemble) {
+          if (k != this.date) {
+            this.date = k;
+            console.log(this.date);
+          }
+          break;
+        }
+
         if (this.forecast_ensemble.length != 0) {
           this.date_options = Object.keys(this.forecast_ensemble);
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
-          this.updateMapFeature();
           this.authService.showErrorToast(
             'Loading data for next 5 days Heatwave Forecast. Please wait..'
           );
+          this.updateMapFeature();
         } else {
           this.date_options = Object.keys(this.forecast);
           console.log('error');
@@ -308,11 +325,12 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
           fcst = this.forecast_ensemble[this.date];
           let block_id: any = element;
           console.log('Town Id: ' + block_id);
-          console.log(fcst);
+          console.log(this.forecast_ensemble);
 
           if (!fcst[block_id]) {
             matchExpression.push(element, 'black');
           }
+
           let heat_fcst = fcst[block_id].heat_wave_status;
           console.log(
             'Town Id: ' + block_id + ' heatwave status: ' + heat_fcst

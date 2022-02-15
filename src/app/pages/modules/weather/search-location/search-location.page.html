@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Search Location" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="weather"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="container">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-searchbar placeholder="{{'Search Location' | translate}}" [(ngModel)]="searchTerm"
+          (ionInput)="filterItems($event)">&nbsp;&nbsp;&nbsp;
+        </ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <div *ngIf="filtereditems">
+        <ion-list style="position: absolute; z-index: 4; width: 100%">
+          <ion-item *ngFor="let item of filtereditems" name="list_data">
+            <ion-label (click)="openModal(item.id,item.block_name,block_name_ory)">
+              {{item.block_name}}
+              <span *ngIf="lang=='od'" style="
+                      font-size: 1.25rem;
+                      font-weight: bolder;
+                      color: var(--ion-color-sec);
+                    ">|</span>
+              <span *ngIf="lang=='od'" style="color: var(--ion-color-primary)">
+                {{item.block_name_ory}}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div *ngIf="filtereditems == null"></div>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

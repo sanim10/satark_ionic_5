@@ -221,8 +221,10 @@ ion-modal {
   // padding-bottom: 10px;
   text-align: center;
   .mapboxgl-popup-close-button {
-    right: 5px;
-    top: 5px;
+    right: 10px;
+    top: 10px;
+    color: var(--ion-color-sec);
+    transform: scale(1.3);
   }
 }
 

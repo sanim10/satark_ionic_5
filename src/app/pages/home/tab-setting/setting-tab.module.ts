@@ -9,6 +9,7 @@ import { IonicModule } from '@ionic/angular';
 import { SettingTabPageRoutingModule } from './setting-tab-routing.module';
 
 import { SettingTabPage } from './setting-tab.page';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { SettingTabPage } from './setting-tab.page';
     SettingTabPageRoutingModule,
     TranslateModule,
   ],
+  providers: [BackgroundGeolocation],
   declarations: [SettingTabPage, ProfilePage],
 })
 export class SettingTabPageModule {}

@@ -6,8 +6,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import * as mapboxgl from 'mapbox-gl';
 import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { mapKey } from '../../../../config/key';
 @Component({
   selector: 'app-lightning-map',
   templateUrl: './lightning-map.page.html',
@@ -69,11 +68,11 @@ export class LightningMapPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 5.5,

@@ -5,6 +5,7 @@ import * as mapboxgl from 'mapbox-gl';
 
 import { Geolocation } from '@capacitor/geolocation';
 
+import { mapKey } from '../../../../config/key';
 declare var google;
 
 @Component({
@@ -40,11 +41,11 @@ export class ReportMapComponent implements OnInit, AfterViewInit {
     //   })
     //   .then((loadingEl) => {
     //     loadingEl.present();
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+    mapboxgl.accessToken = mapKey;
 
     this.map = new mapboxgl.Map({
       container: 'map',
+      attributionControl: false,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [84.5121, 20.5012],
       zoom: 5.3,

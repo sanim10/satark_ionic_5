@@ -1,38 +1,25 @@
-<div
-  class="drawer"
-  #drawer
-  [ngClass]="drawerUp ? 'drawer-active' : 'drawer-inactive'"
->
+<div class="drawer" #drawer [ngClass]="drawerUp ? 'drawer-active' : 'drawer-inactive'">
   <div class="ion-text-center">
     <div class="drawer-handle">
       <div class="drawer-handle-icon"></div>
       <div class="drawer-handle-content">
         {{ "Today" | translate }}
-        <div
-          *ngIf="lHelper.lang == 'en'"
-          class="drawer-handle-content-location"
-        >
+        <div *ngIf="lHelper.lang == 'en'" class="drawer-handle-content-location">
           <ion-icon src="../../../../assets/home/loc.svg"></ion-icon>
           {{ current_location_block }}, {{ current_location_district }}
         </div>
-        <div
-          *ngIf="lHelper.lang == 'od'"
-          class="drawer-handle-content-location"
-        >
+        <div *ngIf="lHelper.lang == 'od'" class="drawer-handle-content-location">
           <ion-icon src="../../../../assets/home/loc.svg"></ion-icon>
           {{ current_location_block_ory }}, {{ current_location_district_ory }}
         </div>
       </div>
     </div>
 
-    <div
-      class="drawer-card weather"
-      [ngClass]="
+    <div class="drawer-card weather" [ngClass]="
         rainStatus != null
-          ? 'weather-' + rainStatus[0].rain_status_value_addition
+          ? 'weather-' + rainStatus[0].rainfall_status
           : ''
-      "
-    >
+      ">
       <div class="drawer-card-icon-bg">
         <div class="wrapper">
           <ion-img></ion-img>
@@ -79,8 +66,7 @@
             <div>
               <ion-img class="weather-icon rain"></ion-img>
               <ion-label>
-                {{ weatherForcast[0].rainfall_dynamic }} mm</ion-label
-              >
+                {{ weatherForcast[0].rainfall_dynamic }} mm</ion-label>
             </div>
           </div>
           <div class="drawer-card-content-box">
@@ -99,14 +85,11 @@
       </div>
     </div>
 
-    <div
-      class="drawer-card lightning"
-      [ngClass]="
+    <div class="drawer-card lightning" [ngClass]="
         lightningData != null
           ? 'lightning-' + lightningData.l_type?.toLowerCase()
           : ''
-      "
-    >
+      ">
       <div class="drawer-card-icon-bg">
         <div class="wrapper">
           <ion-img></ion-img>
@@ -119,20 +102,17 @@
       <div *ngIf="lightningData != null" class="drawer-card-content-bg">
         <ion-label>{{
           lightningData.l_type == null
-            ? ("No Lightning" | translate)
-            : (lightningData.l_type | translate)
-        }}</ion-label>
+          ? ("No Lightning" | translate)
+          : (lightningData.l_type | translate)
+          }}</ion-label>
       </div>
     </div>
 
-    <div
-      class="drawer-card heatwave"
-      [ngClass]="
+    <div class="drawer-card heatwave" [ngClass]="
         heatwaveData != null
           ? 'heatwave-' + getCondition(heatwaveData[0].heat_wave_status)
           : ''
-      "
-    >
+      ">
       <div class="drawer-card-icon-bg">
         <div class="wrapper">
           <ion-img></ion-img>
@@ -140,20 +120,17 @@
         </div>
       </div>
       <div *ngIf="heatwaveData == null" class="drawer-card-content-bg">
-        <ion-label
-          >--------
+        <ion-label>--------
           <span style="color: darkgrey">| </span>
           --° C
         </ion-label>
       </div>
       <div *ngIf="heatwaveData != null" class="drawer-card-content-bg">
-        <ion-label style="text-transform: capitalize"
-          >{{ getCondition(heatwaveData[0].heat_wave_status) | translate }}
+        <ion-label style="text-transform: capitalize">{{ getCondition(heatwaveData[0].heat_wave_status) | translate }}
           <span style="color: darkgrey">| </span>
           <span style="font-family: 'Alata', sans-serif">
             {{ heatwaveData[0].tx_dynamic }}
-            °C</span
-          >
+            °C</span>
         </ion-label>
       </div>
     </div>

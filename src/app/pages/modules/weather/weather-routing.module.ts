@@ -12,19 +12,32 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomePage,
-        // loadChildren: () =>
-        //   import('./home/home.module').then((m) => m.HomePageModule),
       },
       {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
       },
+      {
+        path: 'search-location',
+        loadChildren: () =>
+          import('./search-location/search-location.module').then(
+            (m) => m.SearchLocationPageModule
+          ),
+      },
     ],
   },
   {
     path: 'weather-map',
-    loadChildren: () => import('./weather-map/weather-map.module').then( m => m.WeatherMapPageModule)
+    loadChildren: () =>
+      import('./weather-map/weather-map.module').then(
+        (m) => m.WeatherMapPageModule
+      ),
+  },
+  {
+    path: 'map-view',
+    loadChildren: () =>
+      import('./map-view/map-view.module').then((m) => m.MapViewPageModule),
   },
 ];
 

@@ -28,23 +28,23 @@
 
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="wind? 'fab-active':''"
         (click)="updateFAB('wind')">
-        <ion-label>Wind Speed</ion-label>
+        <ion-label>{{"Wind Speed" | translate}}</ion-label>
         <ion-icon src='../../../../assets/modules/ocean/wind_ic.svg'></ion-icon>
       </ion-fab-button>
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="swell? 'fab-active':''"
         (click)="updateFAB('swell')">
-        <ion-label>Swell Wave Height</ion-label>
+        <ion-label>{{"Swell Wave Height"| translate}}</ion-label>
         <ion-icon src='./../../../assets/modules/ocean/swell_ic.svg'></ion-icon>
       </ion-fab-button>
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="wave? 'fab-active':''"
         (click)="updateFAB('wave')">
-        <ion-label>Significant Wave Height</ion-label>
+        <ion-label>{{"Significant Wave Height"| translate}}</ion-label>
         <ion-icon src='./../../../assets/modules/ocean/wave_ic.svg'></ion-icon>
       </ion-fab-button>
 
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="overview? 'fab-active':''"
         (click)="updateFAB('overview')">
-        <ion-label>Overview</ion-label>
+        <ion-label>{{"Overview"| translate}}</ion-label>
         <ion-icon src='./../../../assets/modules/ocean/overview_ic.svg'></ion-icon>
 
       </ion-fab-button>

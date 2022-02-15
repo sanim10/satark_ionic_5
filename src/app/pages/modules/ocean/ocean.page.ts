@@ -17,6 +17,7 @@ import {
 } from '@ionic/angular';
 import * as mapboxgl from 'mapbox-gl';
 import * as moment from 'moment';
+import { mapKey } from '../../../config/key';
 
 @Component({
   selector: 'app-ocean',
@@ -131,11 +132,11 @@ export class OceanPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 5.5,
@@ -208,10 +209,17 @@ export class OceanPage implements OnInit, AfterViewInit {
           let el = document.createElement('div');
           el.classList.add('marker');
 
+          // var s =
+          //   '<div  id="' +
+          //   this.ocean_station_data[t].id +
+          //   '"style="background:radial-gradient(circle,#0771B8 40%, #4BC7CF 100%); border-radius:100%; color:#000; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 0px solid white;"><div style="text-align:center; font-weight:400;line-height:10px;margin-top:4px;">' +
+          //   this.ocean_station_data[t].location +
+          //   '</div></div>';
+
           var s =
             '<div id="' +
             this.ocean_station_data[t].id +
-            '" style="background:radial-gradient(circle,rgba(112, 144, 247, 1) 40%, rgba(42, 84, 220, 1) 100%); border-radius:100%; color:white; height:37px;width:37px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; text-align:center;font-size:10px;">' +
+            '" style="background:radial-gradient(circle,#7ABFFF 20%, #004CBF 100%); border-radius:100%; color:#black; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; text-align:center;font-size:8px;">' +
             this.ocean_station_data[t].location +
             '</div>';
           el.innerHTML = s;

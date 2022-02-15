@@ -152,14 +152,14 @@ export class SettingTabPage implements OnInit {
           {
             name: 'checkN',
             type: 'checkbox',
-            label: 'Ligthning',
+            label: this.lHelper.lang == 'en' ? 'Lightning' : 'ବଜ୍ରପାତ',
             value: 'l',
             checked: this.customized_sound_lightning == 'on' ? true : false,
           },
           {
             name: 'checkO',
             type: 'checkbox',
-            label: 'Ocean',
+            label: this.lHelper.lang == 'en' ? 'Ocean' : 'ସମୁଦ୍ର',
             value: 'o',
             checked: this.customized_sound_ocean == 'on' ? true : false,
           },
@@ -299,7 +299,7 @@ export class SettingTabPage implements OnInit {
 
   startBackgroundGeolocation() {
     const positionOptions: PositionOptions = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       maximumAge: 60000,
       timeout: 60000,
     };

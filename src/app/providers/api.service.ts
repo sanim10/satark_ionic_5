@@ -2,7 +2,6 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Http, HttpResponse } from '@capacitor-community/http';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 @Injectable({
@@ -89,8 +88,16 @@ export class ApiService {
         param.block_id
     );
   }
+  ///getu pdated value addition data for weather forecast home page
 
-  //fetch IMD heatwave Alerts
+  getUpdatedValueAdditionDataForWeather(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_weather/updated_value_addition_data_get?id=' +
+        param.block_id
+    );
+  }
+
+  get //fetch IMD heatwave Alerts
   getImdHeatwaveAlerts() {
     return this.httpClient.get(
       'https://satark.rimes.int/api_heatwave/imd_heatwave_alerts_get'

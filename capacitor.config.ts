@@ -5,6 +5,10 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchAutoHide: false,
       splashFullScreen: false,
+      spinnerColor: '#0066a6',
+    },
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert'],
     },
   },
   appId: 'satark.app.io.ionicc',

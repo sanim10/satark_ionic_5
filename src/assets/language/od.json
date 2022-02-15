@@ -39,7 +39,7 @@
   "Close": "ବନ୍ଦକର",
   "Set location": "ସ୍ଥାନ ନିର୍ଧାରଣ କରନ୍ତୁ",
   "Location": "ସ୍ଥାନ",
-  "Please enter your message below(Optional)": "ଅଧିକ ତଥ୍ୟ ଦେବାର ଥିଲେ, ତଳେ ଲେଖନ୍ତୁ ",
+  "Please write your message below": "ଅଧିକ ତଥ୍ୟ ଦେବାର ଥିଲେ, ତଳେ ଲେଖନ୍ତୁ ",
   "forgot-password": "ପାସୱାର୍ଡ ଭୁଲି ଯାଇଛନ୍ତି କି?",
   "new-account": "إନୂଆ ଆକାଉଣ୍ଟ ",
   "Country": "ଦେଶ",
@@ -138,7 +138,7 @@
   "Feedback on Heatwave": "ଗ୍ରୀଷ୍ମ ପ୍ରବାହ ସମ୍ପର୍କୀୟ ସୂଚନା ଉପରେ ଆପଣଙ୍କ ମତାମତ ପ୍ରଦାନ କରନ୍ତୁ ।",
   "To report regarding flood, please fill out this form": "ବନ୍ୟା ସମ୍ବନ୍ଧୀୟ ସୂଚନା ପ୍ରଦାନ କରିବା ପାଇଁ  ଦିଆଯାଇଥିବା ଫର୍ମକୁ ପୂରଣ କରନ୍ତୁ ।",
   "Do you notice rise in water level?": "ନଦୀର ଜଳ ସ୍ତର ରେ ବୃଦ୍ଧି ହେଉଛି କି?",
-  "Flood extend and depth(in feet)": "ବନ୍ୟା ର ସ୍ତର (ଆନୁମାନିକ ଫୂଟ ରେ)",
+  "Flood extend and depth (In feet)": "ବନ୍ୟା ର ସ୍ତର (ଆନୁମାନିକ ଫୂଟ ରେ)",
   "Feedback on Flood": "ବନ୍ୟା ସମ୍ପର୍କିତ ଆଗୁଆ ସୂଚନା ର ମତାମତ ପ୍ରଦାନ କରନ୍ତୁ ",
   "To report regarding agriculture, please fill out this form": "ମରୁଡି ସମ୍ପର୍କୀୟ ସୂଚନା ପ୍ରଦାନ କରିବା ପାଇଁ  ଦିଆଯାଇଥିବା ଫର୍ମକୁ ପୂରଣ କରନ୍ତୁ ।",
   "Crop Name": "ଫସଲର ନାମ",
@@ -455,6 +455,10 @@
 
   "Select Reservoir": "ଜଳାଶୟ ଚୟନ କରନ୍ତୁ",
   "Reservoir Status": "ଜଳାଶୟର  ଅବସ୍ଥା",
-  "water level": "ଜଳସ୍ତର ",
-  "Reservoir": "ଜଳଭଣ୍ଡାର"
+  "Water level": "ଜଳସ୍ତର",
+  "Reservoir": "ଜଳଭଣ୍ଡାର",
+
+  "Search District": "ସନ୍ଧାନ ଜିଲ୍ଲା",
+
+  "Station": "ଷ୍ଟେସନ"
 }

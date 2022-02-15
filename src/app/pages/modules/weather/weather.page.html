@@ -3,7 +3,7 @@
     <ion-tab-bar slot="bottom" component="home">
       <ion-tab-button tab="home">
         <ion-icon name="home" src="../../../../assets/home/home_ic.svg"></ion-icon>
-        <ion-label>{{"Weather" | translate}}</ion-label>
+        <ion-label>{{"Home" | translate}}</ion-label>
       </ion-tab-button>
 
       <ion-tab-button routerLink="/edit-favorites">
@@ -11,7 +11,16 @@
         <ion-label>{{"Edit Location" | translate}}</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button (click)="routeTo()">
+      <ion-tab-button tab="search-location">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-label>{{"Search Location" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <!-- <ion-tab-button (click)="routeTo()">
+        <ion-icon name="map" src="../../assets/home/map_ic.svg"></ion-icon>
+        <ion-label>{{"Map View" | translate}}</ion-label>
+      </ion-tab-button> -->
+      <ion-tab-button routerLink="map-view">
         <ion-icon name="map" src="../../assets/home/map_ic.svg"></ion-icon>
         <ion-label>{{"Map View" | translate}}</ion-label>
       </ion-tab-button>

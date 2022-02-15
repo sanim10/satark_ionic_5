@@ -7,6 +7,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
+import { mapKey } from '../../../../config/key';
 
 @Component({
   selector: 'app-heatwave-stat-map',
@@ -27,14 +28,11 @@ export class HeatwaveMapComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit() {
     document.getElementById('map').style.opacity = '0';
     this.mapIt();
-    // setTimeout(() => this.map.resize().then().catch(), 0);
   }
 
   ngOnInit() {}
 
-  ngOnChanges() {
-    // setTimeout(() => this.updateMap(), 0);
-  }
+  ngOnChanges() {}
 
   mapIt() {
     this.loadingCtrl
@@ -46,11 +44,11 @@ export class HeatwaveMapComponent implements AfterViewInit, OnInit, OnDestroy {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 5.3,

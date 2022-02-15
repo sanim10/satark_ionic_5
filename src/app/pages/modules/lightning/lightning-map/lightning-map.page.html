@@ -23,12 +23,12 @@
 
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time == 'thirty'? 'fab-active' :''"
         (click)="updateTimeFAB('thirty')">
-        <ion-label>30 Minutes</ion-label>
+        <ion-label>{{"30 Minutes" | translate}}</ion-label>
         <ion-icon src='../../../../../assets/modules/lightning/map/30m_ic.svg'></ion-icon>
       </ion-fab-button>
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time != 'thirty'? 'fab-active':''"
         (click)="updateTimeFAB('onehr')">
-        <ion-label>1 Hour</ion-label>
+        <ion-label>{{"1 Hour" | translate}}</ion-label>
         <ion-icon src='../../../../../assets/modules/lightning/map/1hr_ic.svg'></ion-icon>
       </ion-fab-button>
 
@@ -48,12 +48,12 @@
       <ion-row class="ion-no-padding">
         <ion-col class="ion-text-center ion-padding-start ion-padding-end">
           <ion-button expand="block" size="small" (click)="openAdv()">
-            Advisory
+            {{"Advisory" | translate}}
           </ion-button>
         </ion-col>
         <ion-col class="ion-text-center ion-padding-start ion-padding-end">
           <ion-button expand="block" size="small" (click)="refresh()">
-            Refresh
+            {{ "Refresh" | translate}}
           </ion-button>
         </ion-col>
       </ion-row>

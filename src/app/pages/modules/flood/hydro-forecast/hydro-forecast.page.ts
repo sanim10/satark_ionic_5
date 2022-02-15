@@ -15,7 +15,7 @@ import * as moment from 'moment';
 
 import { SwiperOptions } from 'swiper';
 import SwiperCore, { Navigation } from 'swiper';
-
+import { mapKey } from '../../../../config/key';
 SwiperCore.use([Navigation]);
 @Component({
   selector: 'app-hydro-forecast',
@@ -173,7 +173,7 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
 
         if (this.warning_lvl[j] == null && this.danger_lvl[j] == null) {
           var s =
-            '<div style="background:#447FF7; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 5px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#447FF7; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -272,7 +272,7 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
           Math.round(this.water_lvl[j]) < Math.round(this.danger_lvl[j])
         ) {
           var s =
-            '<div style="background:#ff713d; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 5px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#ff713d; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -388,7 +388,7 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
           Math.round(this.water_lvl[j]) <= Math.round(this.warning_lvl[j])
         ) {
           var s =
-            '<div style="background:#6FDC6F; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 5px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#6FDC6F; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -503,7 +503,7 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
           Math.round(this.water_lvl[j]) >= Math.round(this.danger_lvl[j])
         ) {
           var s =
-            '<div style="background:#f54444; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 5px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#f54444; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -635,11 +635,11 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
       })
       .then((loadingEl) => {
         loadingEl.present();
-        mapboxgl.accessToken =
-          'pk.eyJ1Ijoic3VwZXJkb3plIiwiYSI6ImNreWk0bGJ5YTI4dGIycW84dDU1emw2eG8ifQ.zUCe5RZtHPSqBo6vKneGdQ';
+        mapboxgl.accessToken = mapKey;
 
         this.map = new mapboxgl.Map({
           container: 'map',
+          attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
           zoom: 6,

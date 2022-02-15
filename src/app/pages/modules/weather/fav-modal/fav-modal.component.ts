@@ -12,6 +12,7 @@ import { ApiService } from './../../../../providers/api.service';
 })
 export class FavModalComponent implements OnInit {
   @Input() weatherData: any;
+  @Input() blockId: any;
 
   loading = true;
   public user_data: any;
@@ -43,14 +44,19 @@ export class FavModalComponent implements OnInit {
 
   ngOnInit() {
     this.display();
-    console.log(this.weatherData);
-    this.forecast_data = this.weatherData.forecast;
+    // console.log(this.weatherData);
+    this.forecast_data = this.weatherData ? this.weatherData.forecast : '';
   }
 
   display() {
     this.loading = true;
-    this.getImdRainfallValueAdditionForBlock(this.weatherData.block_id);
-    this.get10DaysImdForecast(this.weatherData.block_id);
+    if (this.blockId == null) {
+      this.getImdRainfallValueAdditionForBlock(this.weatherData.block_id);
+      this.get10DaysImdForecast(this.weatherData.block_id);
+    } else {
+      this.getImdRainfallValueAdditionForBlock(this.blockId);
+      this.get10DaysImdForecast(this.blockId);
+    }
   }
 
   doRefresh(event) {
@@ -74,7 +80,8 @@ export class FavModalComponent implements OnInit {
       block_id: block,
     };
     this.apiService
-      .get10DaysImdValueAdditionDataForWeather(param)
+      // .get10DaysImdValueAdditionDataForWeather(param)
+      .getUpdatedValueAdditionDataForWeather(param)
       .pipe(take(1))
       .subscribe(
         (data) => {

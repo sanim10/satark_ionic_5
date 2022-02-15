@@ -16,6 +16,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { pageTransition } from './helper/page-transistions';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
+
 export function setTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/language/', '.json');
 }

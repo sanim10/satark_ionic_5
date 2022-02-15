@@ -175,8 +175,6 @@ export class HomeTabPage implements OnInit, OnDestroy {
   changeLang() {
     this.langHelper.changeLanguage();
     console.log(this.translateService.getDefaultLang());
-    // this.displayText = this.languageHelper.loginPageText();
-    // console.log();
   }
 
   checklogin(id: string) {
@@ -229,6 +227,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
     };
     this.apiService
       .get10DaysImdValueAdditionDataForWeather(param)
+      // .getUpdatedValueAdditionDataForWeather(param)
       .pipe(take(1))
       .subscribe(
         (data) => {
