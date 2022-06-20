@@ -1,0 +1,21 @@
+ion-tab-bar {
+  ion-tab-button {
+    padding: 0;
+    margin: 0 -10px;
+    margin-top: -10px;
+
+    ion-label {
+      margin: 0;
+      padding: 0;
+      padding-bottom: 2px;
+      line-height: 10px;
+      color: #616161;
+      white-space: pre-wrap;
+    }
+    ion-icon {
+      transform: scale(0.95);
+      padding: 0;
+      color: #616161;
+    }
+  }
+}

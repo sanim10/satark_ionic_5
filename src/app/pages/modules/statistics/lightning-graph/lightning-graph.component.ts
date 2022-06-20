@@ -22,7 +22,9 @@ export class LightningGraphComponent implements OnInit {
     this.loadGraph();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.graphData);
+  }
 
   ngOnChanges() {
     if (this.graphData != null) {
@@ -40,13 +42,15 @@ export class LightningGraphComponent implements OnInit {
     console.log(this.district);
     this.canvaElement = <HTMLCanvasElement>document.getElementById('myChart');
     this.context = this.canvaElement.getContext('2d');
+
     this.barChart = new Chart(this.context, {
       type: 'bar',
       data: {
         labels: this.graphData?.period,
         datasets: [
           {
-            label: '# of deaths',
+            label:
+              this.lHelper.lang == 'en' ? '# of deaths' : 'ମୃତ୍ୟୁ ର ସଂଖ୍ୟା',
             data: this.graphData?.deaths,
             backgroundColor: 'rgba(0, 102, 166,1)',
             borderColor: 'rgba(0, 102, 166, 1)',
@@ -86,7 +90,7 @@ export class LightningGraphComponent implements OnInit {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Deaths',
+              text: this.lHelper.lang == 'en' ? 'Deaths' : 'ମୃତ୍ୟୁ',
               padding: 10,
               color: '#0066A6',
               font: {

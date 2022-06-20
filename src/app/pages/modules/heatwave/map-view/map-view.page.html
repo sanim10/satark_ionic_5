@@ -1,0 +1,200 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title *ngIf="fab == 'ensemble'">{{"Heatwave" | translate }}</ion-title>
+    <ion-title *ngIf="fab == 'heatindex'">{{"Heat Stress" | translate }}</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="heatwave"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons>
+      <div class="entity">
+        <img src="../../../../assets/home/osdma_logo.png" />
+        <img src="../../../../assets/home/imd_logo.png" />
+      </div>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button class="info-button" (click)="openLegendInfo()">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+
+  <div class="map-container">
+    <div id="map" #map [ngClass]="district==false ? 'shorten-map' : ''"></div>
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
+  </div>
+
+  <ion-label *ngIf="dist_name !=null" class="district-name">
+    <span>{{"District" | translate}}</span> : {{dist_name.toLowerCase() | translate}}
+  </ion-label>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <ion-fab vertical="bottom" *ngIf="(district == true) || ( block_loading==false && block_forecast_data==null)">
+
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="this.fab == 'heatindex'? 'fab-active':''"
+        (click)="updateFAB('heatindex')">
+        <ion-label>{{"Heat Stress" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/heatwave/map/heatstress_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="this.fab == 'ensemble'? 'fab-active':''"
+        (click)="updateFAB('ensemble')">
+        <ion-label>{{"Heatwave" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/heatwave/map/heatwave_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-footer *ngIf="district">
+    <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
+      <ion-icon name="play"></ion-icon>
+    </ion-button>
+    <ion-button size="small" class="ion-no-padding play-button" (click)="pause()" *ngIf="run">
+      <ion-icon name="pause"></ion-icon>
+    </ion-button>
+    <ion-grid #content class="ion-no-padding time-holder">
+      <ion-col *ngFor="let date of date_options;let i=index;" id="{{i}}" class="ion-no-padding ion-text-center">
+        <ion-button class="time-button" [class.focus]="scrollTo ==i" (click)="fcDateClicked($event);scrollTo =i">
+          {{date}}
+        </ion-button>
+      </ion-col>
+    </ion-grid>
+  </ion-footer>
+
+  <div class="legend" *ngIf="lang=='en'">
+    <img *ngIf="fab == 'ensemble' && district == true"
+      src="../../../../../assets/modules/weather/map/tmax_legend.png" />
+    <img *ngIf="fab == 'heatindex' && district == true"
+    src="../../../../../assets/modules/heatwave/map/heatstress_ic_new.png" />  
+    <img *ngIf="(fab == 'heatindex' && blocks==true) "
+      src="../../../../../assets/modules/heatwave/map/heatstress_ic_new.png" />
+    <img *ngIf="(fab == 'ensemble' && blocks==true) "
+      src="../../../../../assets/modules/weather/map/tmax_legend.png" />  
+
+    <br />
+  </div>
+  <div class="legend" *ngIf="lang=='od'">
+    <img *ngIf="fab == 'ensemble' && district == true"
+      src="../../../../../assets/modules/weather/map/tmax_legend_od.png" />
+    <img *ngIf="fab == 'heatindex' && district == true"
+      src="../../../../../assets/modules/heatwave/map/heatstress_ic_new.png" />   
+    <img *ngIf="(fab == 'heatindex' && blocks==true) "
+      src="../../../../../assets/modules/weather/map/tmax_legend_od.png" />
+    <img *ngIf="(fab == 'ensemble' && blocks==true) "
+      src="../../../../../assets/modules/weather/map/tmax_legend_od.png" />    
+
+    <br />
+  </div>
+
+
+
+
+  <div class="forecast-footer"
+    [ngClass]="block_forecast_data!=null || block_loading==true ? 'forecast-footer-extend' : ''" *ngIf="blocks">
+    <div *ngIf="block_loading" style="margin: 15px;">
+      <div id="skeleton">
+        <div class="skeleton skeleton-header" style="margin: 0 auto;width: 200px;margin-bottom: 30px;margin-top: 20px;">
+        </div>
+        <div class="skeleton skeleton-header"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+    </div>
+
+    <div *ngIf="block_forecast_data==null">
+      <ion-row>
+        <ion-col>
+          <div class="card-location">
+            <ion-icon src="../../../../../assets/home/card/location.svg"></ion-icon>
+            <p>
+              {{"Select a location by clicking on the map" | translate}}
+            </p>
+          </div>
+        </ion-col>
+      </ion-row>
+
+    </div>
+    <div *ngIf="block_forecast_data != null">
+      <ion-row>
+        <ion-col>
+          <div class="card-location">
+            <ion-icon src="../../../assets/home/card/location.svg"></ion-icon>
+            <p *ngIf="lang == 'en'" style="text-transform:capitalize">
+              {{ current_location_block }},
+              {{dist_name.toLowerCase()}}
+            </p>
+            <p *ngIf="lang == 'od'" style="text-transform:capitalize">
+              {{ current_location_block_ory }},
+              {{dist_name.toLowerCase() | translate }}
+            </p>
+            <ion-icon name="close" class="close-button" (click)=" closeForecast()">
+            </ion-icon>
+
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-label class="ion-padding-start">{{
+        "Forecast for next 5 days" | translate
+        }}
+      </ion-label>
+
+      <ion-row>
+        <ion-col class="weather-forcast">
+          <ion-card>
+            <ion-grid>
+              <ion-row style="color: var(--ion-color-primary)">
+                <ion-col size="2.5" class="ion-text-center" style="padding-top: 5px; padding-left: 2px">
+                  <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/day.svg"></ion-icon>
+                </ion-col>
+                <ion-col size="2.25" class="ion-text-center">
+                  <ion-icon style="font-size: 1.3rem" src="../../../../../assets/modules/weather/t_high_b.svg">
+                  </ion-icon>
+                </ion-col>
+                <ion-col size="5" class="ion-text-center">
+                  <ion-icon style="font-size: 1.4rem" src="../../../../../assets/modules/heatwave/map/heatwave_ic.svg">
+                  </ion-icon>
+                </ion-col>
+                <ion-col size="2.25" class="ion-text-center">
+                  <ion-icon style="font-size: 1.3rem"
+                    src="../../../../../assets/modules/heatwave/map/heatstress_ic.svg">
+                  </ion-icon>
+                </ion-col>
+
+
+              </ion-row>
+
+              <ion-row *ngFor="let forecast of block_forecast_data.heatwave; let i = index"
+                class="ion-no-padding weather-forcast-details">
+                <ion-col size="2.5" style="color: #fe922d">
+                  {{convertDate(forecast.fcst_date)}}
+                </ion-col>
+                <ion-col size="2.25"> {{forecast.temp_max}}°C </ion-col>
+                <ion-col size="5"> {{getCondition(+forecast.heat_wave_status) | translate}} </ion-col>
+                <ion-col size="2.25"> {{ block_forecast_data.heatindex[i].HeatIndex }} °C</ion-col>
+
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+
+
+    </div>
+
+
+  </div>
+
+</ion-content>

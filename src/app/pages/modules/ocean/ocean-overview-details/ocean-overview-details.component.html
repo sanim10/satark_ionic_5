@@ -1,13 +1,9 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
     <ion-title>{{ "Ocean Overview" | translate }}</ion-title>
-    <!-- <ion-buttons slot="start">
-      <ion-button class="back-button" (click)="closeModal()">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons> -->
+
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/ocean" (click)="closeModal()"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="ocean" (click)="closeModal()"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -17,31 +13,28 @@
   </div>
 
 
-  <h1 style="text-align: center;">{{this.station_name}}</h1>
-  <!-- <div class="station_detail">
-    <p>{{"District" | translate}}: <span style="color: coral;"
-        *ngIf="global.language=='en'">{{this.district_name}}</span><span style="color: coral;"
-        *ngIf="global.language=='ar'">{{this.district_name_ory}}</span> {{"Block" | translate}}: <span
-        style="color: coral;" *ngIf="global.language=='en'">{{this.block_name}}</span><span style="color: coral;"
-        *ngIf="global.language=='ar'">{{this.block_name_ory}}</span></p>
-  </div> -->
+  <h1 style="text-align: center;">{{ this.station_name | translate}}</h1>
+
+
+  <div style="display: flex; justify-content: center;">
+    <ion-icon src="../../../../../../assets/home/card/location.svg" style="margin-top: 2px;"></ion-icon>
+    <ion-label *ngIf="lang == 'en'" style="margin: 6px;"> {{"District" | translate}}: <span
+        style="color:  var(--ion-color-sec) ;">{{
+        district_name
+        }}</span></ion-label>
+    <ion-label *ngIf="lang == 'od'" style="margin: 6px;"> {{"District" | translate}}: <span
+        style="color:var(--ion-color-sec);">{{
+        district_name_ory }}</span></ion-label>
+    <br />
+    <ion-label *ngIf="lang == 'en'" style="margin: 6px;"> {{"Block" | translate}}: <span
+        style="color:var(--ion-color-sec);">{{ block_name
+        }}</span></ion-label>
+    <ion-label *ngIf="lang == 'od'" style="margin: 6px;"> {{"Block" | translate}}: <span
+        style="color:var(--ion-color-sec);">{{
+        block_name_ory }}</span></ion-label>
+  </div>
+
   <ion-card class="ion-padding-top">
-
-
-    <ion-card-header class="ion-text-center">
-      <ion-icon src="../../../../../../assets/home/card/location.svg"></ion-icon>
-      <ion-label *ngIf="lang == 'en'"> {{"District" | translate}}: <span style="color:  var(--ion-color-sec) ;">{{
-          district_name
-          }}</span></ion-label>
-      <ion-label *ngIf="lang == 'od'"> {{"District" | translate}}: <span style="color:var(--ion-color-sec);">{{
-          district_name_ory }}</span></ion-label>
-      <br />
-      <ion-label *ngIf="lang == 'en'"> {{"Block" | translate}}: <span style="color:var(--ion-color-sec);">{{ block_name
-          }}</span></ion-label>
-      <ion-label *ngIf="lang == 'od'"> {{"Block" | translate}}: <span style="color:var(--ion-color-sec);">{{
-          block_name_ory }}</span></ion-label>
-    </ion-card-header>
-    <!-- <canvas id="myChart" width="500" height="400"></canvas> -->
 
     <div id="container" style="display: block; ">
     </div>

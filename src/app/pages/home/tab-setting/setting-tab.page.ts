@@ -8,6 +8,12 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageHelperService } from 'src/app/helper/language-helper/language-helper.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
+import {
+  BackgroundGeolocation,
+  BackgroundGeolocationConfig,
+  BackgroundGeolocationEvents,
+  BackgroundGeolocationResponse,
+} from '@awesome-cordova-plugins/background-geolocation/ngx';
 
 @Component({
   selector: 'app-setting-tab',
@@ -23,6 +29,7 @@ export class SettingTabPage implements OnInit {
   geo;
   public user_data: any;
   public loc_data: any;
+  loc_permission = 'off';
   public success_data: any;
   user_id: string;
   public watch: any;
@@ -39,7 +46,9 @@ export class SettingTabPage implements OnInit {
     private modalController: ModalController,
     translateService: TranslateService,
     private httpClient: HttpClient,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private translate: TranslateService,
+    private backgroundGeolocation: BackgroundGeolocation
   ) {
     this.lHelper = languageHelper;
     translateService.setDefaultLang(translateService.getBrowserLang());
@@ -51,7 +60,22 @@ export class SettingTabPage implements OnInit {
   ngOnInit() {
     this.requestPermission();
     this.checklogin(this.token);
+    // this.checkPermission();
+    localStorage.getItem('loc_per') == 'off'
+      ? (this.loc_permission = 'off')
+      : (this.loc_permission = 'on');
   }
+
+  // checkPermission() {
+  //   Geolocation.checkPermissions().then((status) => {
+  //     console.log(status);
+  //     if (status.location == 'granted' || status.coarseLocation == 'granted') {
+  //       this.loc_permission = 'on';
+  //     } else {
+  //       this.loc_permission = 'off';
+  //     }
+  //   });
+  // }
 
   requestPermission() {
     Geolocation.requestPermissions().then((permissionStatus) => {
@@ -66,7 +90,7 @@ export class SettingTabPage implements OnInit {
   selectAppLang() {
     this.alertController
       .create({
-        header: 'App Language',
+        header: this.translate.instant('App Language'),
         inputs: [
           {
             name: 'appE',
@@ -78,20 +102,20 @@ export class SettingTabPage implements OnInit {
           {
             name: 'appO',
             type: 'radio',
-            label: 'Oriya',
+            label: 'ଓଡିଆ',
             value: 'od',
             checked: this.lHelper.lang == 'od' ? true : false,
           },
         ],
         buttons: [
           {
-            text: 'Cancel',
+            text: this.lHelper.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
             handler: (data) => {
               console.log('Cancel clicked');
             },
           },
           {
-            text: 'Done',
+            text: this.lHelper.lang == 'en' ? 'Done' : 'ସମାପ୍ତ',
             handler: (data) => {
               this.languageHelper.setDisplayLanguage(data);
             },
@@ -106,7 +130,7 @@ export class SettingTabPage implements OnInit {
   selectNotificationLang() {
     this.alertController
       .create({
-        header: 'Notification Language',
+        header: this.translate.instant('Notification Language'),
         inputs: [
           {
             name: 'notiE',
@@ -118,20 +142,20 @@ export class SettingTabPage implements OnInit {
           {
             name: 'notiO',
             type: 'radio',
-            label: 'Oriya',
+            label: 'ଓଡିଆ',
             value: 'od',
             checked: this.noti_lang == 'od' ? true : false,
           },
         ],
         buttons: [
           {
-            text: 'Cancel',
+            text: this.lHelper.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
             handler: (data) => {
               console.log('Cancel clicked');
             },
           },
           {
-            text: 'Done',
+            text: this.lHelper.lang == 'en' ? 'Done' : 'ସମାପ୍ତ',
             handler: (data) => {
               console.log(data);
               this.setNotificationLanguage(data);
@@ -147,7 +171,7 @@ export class SettingTabPage implements OnInit {
   setNotification() {
     this.alertController
       .create({
-        header: 'Notification',
+        header: this.translate.instant('Custom notification sound'),
         inputs: [
           {
             name: 'checkN',
@@ -166,13 +190,13 @@ export class SettingTabPage implements OnInit {
         ],
         buttons: [
           {
-            text: 'Cancel',
+            text: this.lHelper.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
             handler: (data) => {
               console.log('Cancel clicked');
             },
           },
           {
-            text: 'Done',
+            text: this.lHelper.lang == 'en' ? 'Done' : 'ସମାପ୍ତ',
             handler: (data) => {
               switch (data.length) {
                 case 2:
@@ -267,6 +291,9 @@ export class SettingTabPage implements OnInit {
         this.loc_data = data['result'];
         if (this.success_data) {
           console.log('loca data', this.loc_data);
+          // this.loc_data.gps_tracker == 'off'
+          //   ? (this.loc_permission = 'off')
+          //   : (this.loc_permission = 'on');
         } else {
           this.loc_data = null;
           console.log('loca data', this.loc_data);
@@ -275,6 +302,55 @@ export class SettingTabPage implements OnInit {
   }
 
   ///enable or disable background tracking
+  getbackgroundGeolocation1(e) {
+    Geolocation.requestPermissions().then((permissionStatus) => {
+      if (
+        permissionStatus.location == 'denied' ||
+        permissionStatus.coarseLocation == 'denied'
+      ) {
+        this.loc_data.gps_tracker = 'off';
+      } else {
+        this.loc_data.gps_tracker = 'off';
+      }
+    });
+    // Geolocation.requestPermissions()
+    //   .then((permissionStatus) => {
+    //   console.log(permissionStatus);
+    //   if (
+    //     permissionStatus.location == 'denied' ||
+    //     permissionStatus.coarseLocation == 'denied'
+    //   ) {
+    //     this.loc_data.gps_tracker = 'off';
+    //   } else {
+    //     console.log('checked...', e.detail.checked);
+    //     var checked = e.detail.checked;
+    //     Geolocation.checkPermissions().then((status) => {
+    //       console.log(status);
+    //       if (
+    //         status.location == 'granted' ||
+    //         status.coarseLocation == 'granted'
+    //       ) {
+    //         if (checked == true) {
+    //           this.startBackgroundGeolocation();
+    //           // alert('start');
+    //         } else {
+    //           this.stopBackgroundGeolocation();
+    //           // alert('stop');
+    //         }
+    //       } else {
+    //         this.loc_data.gps_tracker = 'off';
+    //         // checked
+    //         //   ? (this.loc_data.gps_tracker = 'off')
+    //         //   : (this.loc_data.gps_tracker = 'on');
+    //       }
+    //     });
+    //   }
+    // })
+    // .catch(() => {
+    //   this.loc_data.gps_tracker = 'off';
+    // });
+  }
+
   getbackgroundGeolocation(e) {
     this.requestPermission();
     console.log('checked...', e.detail.checked);
@@ -283,46 +359,71 @@ export class SettingTabPage implements OnInit {
       console.log(status);
       if (status.location == 'granted' || status.coarseLocation == 'granted') {
         if (checked == true) {
+          this.loc_permission = 'on';
+          localStorage.setItem('loc_per', 'on');
           this.startBackgroundGeolocation();
           // alert('start');
         } else {
+          this.loc_permission = 'off';
+          localStorage.setItem('loc_per', 'off');
           this.stopBackgroundGeolocation();
           // alert('stop');
         }
       } else {
-        checked
-          ? (this.loc_data.gps_tracker = 'off')
-          : (this.loc_data.gps_tracker = 'on');
+        checked ? (this.loc_permission = 'off') : (this.loc_permission = 'on');
+        // checked
+        //   ? (this.loc_data.gps_tracker = 'off')
+        //   : (this.loc_data.gps_tracker = 'on');
       }
     });
   }
 
   startBackgroundGeolocation() {
-    const positionOptions: PositionOptions = {
-      enableHighAccuracy: true,
-      maximumAge: 60000,
-      timeout: 60000,
+    const config: BackgroundGeolocationConfig = {
+      desiredAccuracy: 10,
+      stationaryRadius: 20,
+      distanceFilter: 30,
+      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+      stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+      interval: 60000,
     };
 
-    Geolocation.watchPosition(positionOptions, (position) => {
-      console.log(position);
-      this.sendGPS(position);
-      let param = {
-        lat: position.coords.latitude,
-        long: position.coords.longitude,
-        user_id: this.user_id,
-      };
-      console.log(param);
-      this.apiService
-        .getGpsLightningData(param)
-        .pipe(take(1))
-        .subscribe((data) => {
-          console.log('get_gps_lightning_data', data);
+    this.backgroundGeolocation.configure(config).then(() => {
+      this.backgroundGeolocation
+        .on(BackgroundGeolocationEvents.location)
+        .subscribe((location: BackgroundGeolocationResponse) => {
+          // this.presentToast("Location based notification enabled");
+          console.log(location);
+          this.sendGPS(location);
+          let param = {
+            lat: location.latitude,
+            long: location.longitude,
+            user_id: this.user_id,
+          };
+          this.apiService.getGpsLightningData(param).subscribe((data) => {
+            console.log('get_gps_lightning_data', data);
+          });
         });
-    }).then((watchId) => {
-      this.geo = watchId;
     });
-    console.log(this.geo);
+    // start recording location
+    this.backgroundGeolocation.start();
+    this.authService.showErrorToast('Location based notification enabled');
+
+    //   let option = {
+    //     frequency: 3000,
+    //     enableHighAccuracy: true
+    //   };
+
+    // this.watch = this.geolocation.watchPosition(option).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+
+    // console.log(position);
+
+    //   // Run update inside of Angular's zone
+    //   this.zone.run(() => {
+    //     this.lat = position.coords.latitude;
+    //     this.lng = position.coords.longitude;
+    //   });
+    // })
   }
 
   stopBackgroundGeolocation() {
@@ -333,48 +434,65 @@ export class SettingTabPage implements OnInit {
       gps_tracker: 'off',
       extra_param: 'stopbackgroundGeolocation',
     });
-    this.httpClient
-      .post(url, params, { responseType: 'text' })
-      .pipe(take(1))
-      .subscribe(
-        (data) => {
-          console.log('post data', data);
-        },
-        (err) => {
-          console.log('ERROR!: ', err);
-          this.authService.showErrorToast('Network Error!');
-        }
-      );
-    Geolocation.clearWatch({ id: this.geo });
+    this.httpClient.post(url, params, { responseType: 'text' }).subscribe(
+      (data) => {
+        console.log('post data', data);
+      },
+      (err) => {
+        console.log('ERROR!: ', err);
+        this.authService.showErrorToast('Network Error!');
+      }
+    );
+    this.backgroundGeolocation.stop();
+    // this.watch.unsubscribe();
     this.authService.showErrorToast('Location based notification disabled');
   }
 
   sendGPS(location) {
-    let timestamp = new Date(location.timestamp);
+    if (location.speed == undefined) {
+      location.speed = 0;
+    }
+    let timestamp = new Date(location.time);
     var url = 'https://satark.rimes.int/api_user/users_ios_post';
     var params = JSON.stringify({
-      lat: location.coords.latitude,
-      lng: location.coords.longitude,
-      speed: location.speed == null ? 0 : location.speed,
+      lat: location.latitude,
+      lng: location.longitude,
+      speed: location.speed,
       timestamp: timestamp,
       user_id: this.user_id,
       deviceid: this.deviceid,
       gps_tracker: 'on',
       extra_param: 'startbackgroundGeolocation',
     });
-
-    this.httpClient
-      .post(url, params, { responseType: 'text' })
-      .pipe(take(1))
-      .subscribe(
-        (data) => {
-          console.log('post data', data);
-        },
-        (err) => {
-          console.log('ERROR!: ', err);
-          // this.presentToast('Network Error!');
-        }
-      );
+    this.httpClient.post(url, params, { responseType: 'text' }).subscribe(
+      (data) => {
+        console.log('post data', data);
+      },
+      (err) => {
+        console.log('ERROR!: ', err);
+        this.authService.showErrorToast('Network Error!');
+      }
+    );
+    // this.http
+    //   .post(
+    //     this.gps_update_link, // backend api to post
+    //     {
+    //       lat: location.latitude,
+    //       lng: location.longitude,
+    //       speed: location.speed,
+    //       timestamp: timestamp
+    //     },
+    //     {}
+    //   )
+    //   .then(data => {
+    //     console.log("POST Request is successful ", data);
+    //     this.backgroundGeolocation.finish(); // FOR IOS ONLY
+    //     // BackgroundGeolocation.endTask(taskKey);
+    //   })
+    //   .catch(error => {
+    //     this.backgroundGeolocation.finish(); // FOR IOS ONLY
+    //     console.log(error);
+    //   });
   }
 
   ///enable or disable customized alert sound

@@ -27,6 +27,8 @@ export class FavModalComponent implements OnInit {
     },
   };
   @Input() newheatwaveData: any;
+  @Input() blockId: any;
+  @Input() presented: any;
 
   loading = false;
   public imd_alert_data: any;
@@ -35,7 +37,8 @@ export class FavModalComponent implements OnInit {
   lHelper;
   heatwave = [
     {
-      condition: 'normal',
+      condition: 'No Heatwave',
+      condition_class: 'normal',
       advisory: [
         {
           headerName: 'warning',
@@ -68,7 +71,8 @@ export class FavModalComponent implements OnInit {
       ],
     },
     {
-      condition: 'heat wave',
+      condition: 'Heatwave Alert',
+      condition_class: 'heat wave',
       advisory: [
         {
           headerName: 'warning',
@@ -106,7 +110,8 @@ export class FavModalComponent implements OnInit {
     },
 
     {
-      condition: 'severe heatwave',
+      condition: 'Severe Heat Alert',
+      condition_class: 'severe heatwave',
       advisory: [
         {
           headerName: 'warning',
@@ -155,7 +160,8 @@ export class FavModalComponent implements OnInit {
       ],
     },
     {
-      condition: 'extreme heatwave',
+      condition: 'Extreme Heat Alert',
+      condition_class: 'extreme heatwave',
       advisory: [
         {
           headerName: 'warning',
@@ -211,20 +217,23 @@ export class FavModalComponent implements OnInit {
     private authService: AuthService,
     private languageHelperService: LanguageHelperService
   ) {
-    this.back();
+    // this.back();
     this.lHelper = languageHelperService;
   }
 
   ngOnInit() {
-    this.display();
     this.block_id = this.newheatwaveData;
+    this.display();
   }
 
   display() {
     this.loading = true;
-    setTimeout(() => {
-      this.getHeatwaveForEachBlock();
-    }, 50);
+
+    if (this.blockId == null) {
+      this.getHeatwaveForEachBlock(this.block_id);
+    } else {
+      this.getHeatwaveForEachBlock(this.blockId);
+    }
   }
 
   doRefresh(event) {
@@ -238,18 +247,15 @@ export class FavModalComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  back() {
-    this.platform.backButton.subscribeWithPriority(5, () => {});
-    this.modalController.dismiss();
-  }
-
   // get imd heatwave alerts for each block
-  getHeatwaveForEachBlock() {
+  getHeatwaveForEachBlock(block_id) {
     let param = {
-      id: this.block_id,
+      id: block_id,
+      block_id: block_id,
     };
     this.apiService
-      .getImdHeatwaveAlertsDissemintationForEachBlock(param)
+      .getUpdatedValueAdditionDataForWeather(param)
+      // .getImdHeatwaveAlertsDissemintationForEachBlock(param)
       .subscribe(
         (data) => {
           this.imd_alert_data = data;
@@ -257,16 +263,16 @@ export class FavModalComponent implements OnInit {
             console.log(this.imd_alert_data);
 
             switch (this.imd_alert_data[0].heat_wave_status) {
-              case 1:
+              case '1':
                 this.heatwaveData = this.heatwave[0];
                 break;
-              case 2:
+              case '2':
                 this.heatwaveData = this.heatwave[1];
                 break;
-              case 3:
+              case '3':
                 this.heatwaveData = this.heatwave[2];
                 break;
-              case 4:
+              case '4':
                 this.heatwaveData = this.heatwave[3];
                 break;
             }
@@ -342,13 +348,13 @@ export class FavModalComponent implements OnInit {
   getCondition(conditon): string {
     switch (conditon) {
       case 1:
-        return 'normal';
+        return 'No Heatwave';
 
       case 2:
-        return 'heat wave';
+        return 'Heatwave Alert';
 
       case 3:
-        return 'severe heatwave';
+        return 'Severe Heat Alert';
 
       case 4:
         return 'extreme heatwave';

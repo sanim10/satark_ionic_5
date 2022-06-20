@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { take } from 'rxjs/operators';
 import {
@@ -25,13 +26,15 @@ export class LightningReportPage implements OnInit {
   now_time: string;
   public user_data: any;
   address;
+  permission = false;
   constructor(
     private apiService: ApiService,
     private httpClient: HttpClient,
     private authService: AuthService,
     private navCtrl: NavController,
     private actionSheetCtrl: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private translate: TranslateService
   ) {
     this.lang = localStorage.getItem('language');
     this.today = moment().format('YYYY-MM-DD');
@@ -39,13 +42,25 @@ export class LightningReportPage implements OnInit {
   }
 
   ngOnInit() {
-    this.requestPermission();
+    // this.requestPermission();
     this.checklogin(localStorage.getItem('token'));
   }
 
   requestPermission() {
+    Geolocation.checkPermissions().then((status) => {
+      if (status.location == 'granted' && status.coarseLocation === 'granted')
+        this.permission = true;
+      else this.permission = false;
+    });
+
     Geolocation.requestPermissions().then((permissionStatus) => {
       console.log(permissionStatus);
+      if (
+        permissionStatus.location == 'granted' &&
+        permissionStatus.coarseLocation == 'granted'
+      )
+        this.permission = true;
+      else this.permission = false;
     });
   }
   checklogin(id: string) {
@@ -62,25 +77,27 @@ export class LightningReportPage implements OnInit {
   async getPhoto() {
     var buttons = [
       {
-        text: 'Camera',
+        text: this.lang == 'en' ? 'Camera' : 'କ୍ୟାମେରା',
         handler: () => {
           this.getCamera(1);
         },
       },
       {
-        text: 'Photos',
+        text: this.lang == 'en' ? 'Gallery' : 'ଗ୍ୟାଲେରୀ',
         handler: () => {
           this.getCamera(2);
         },
       },
       {
-        text: 'Cancel',
+        text: this.lang == 'en' ? 'CANCEL' : 'ବାତିଲ୍ କରନ୍ତୁ ',
         role: 'cancel',
         handler: () => {},
       },
     ];
 
-    (await this.actionSheetCtrl.create({ buttons: buttons })).present();
+    (
+      await this.actionSheetCtrl.create({ buttons: buttons, mode: 'ios' })
+    ).present();
   }
   getCamera = (src) => {
     Camera.checkPermissions().then((status) => {
@@ -124,17 +141,26 @@ export class LightningReportPage implements OnInit {
   };
 
   async presentMapModal() {
-    const modal = await this.modalController.create({
-      swipeToClose: true,
-      component: ReportMapComponent,
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned != null) {
-        this.address = dataReturned.data;
-        console.log(this.address);
+    Geolocation.checkPermissions().then(async (status) => {
+      console.log(status);
+      if (status.location == 'granted' || status.coarseLocation == 'granted') {
+        const modal = await this.modalController.create({
+          swipeToClose: true,
+          component: ReportMapComponent,
+        });
+        modal.onDidDismiss().then((dataReturned) => {
+          if (dataReturned != null) {
+            this.address = dataReturned.data;
+            console.log(this.address);
+          }
+        });
+        return await modal.present();
+      } else {
+        Geolocation.requestPermissions().then((permissionStatus) => {
+          console.log(permissionStatus);
+        });
       }
     });
-    return await modal.present();
   }
 
   Submit_form(loc, strike, date, time, msg) {
@@ -178,7 +204,7 @@ export class LightningReportPage implements OnInit {
         },
         (err) => {
           console.log('ERROR!: ', err);
-          if (this.lang == 'en') {
+          if (this.lang == 'od') {
             this.authService.showAlert(
               'ଦାଖଲ ବିଫଳ !',
               'ଆପଣଙ୍କର ରିପୋର୍ଟ ଦାଖଲ ହୋଇନାହିଁ | ଦୟାକରି ପରେ ଚେଷ୍ଟା କରନ୍ତୁ |',
@@ -186,7 +212,7 @@ export class LightningReportPage implements OnInit {
             );
           } else {
             this.authService.showAlert(
-              'Submission Fail!',
+              this.translate.instant('Submission Fail!'),
               'You report has not been submitted. Please try later.'
             );
           }

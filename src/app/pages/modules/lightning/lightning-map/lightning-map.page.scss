@@ -131,3 +131,28 @@ ion-fab-list {
   width: 100%;
   z-index: 4;
 }
+
+.top-legend {
+  z-index: 9;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.93);
+  padding: 0px 10px;
+  color: var(--ion-color-sec);
+  font-weight: 500;
+  text-transform: capitalize;
+  z-index: 4;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 5px 0px #00000031;
+
+  align-items: center;
+  img {
+    transform: scale(0.8);
+  }
+  span {
+    color: black;
+  }
+}

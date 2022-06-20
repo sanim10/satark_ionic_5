@@ -126,6 +126,13 @@ ion-icon {
     margin: auto;
   }
 
+  .temp-high {
+    content: url("../../../assets/home/weather/t_high.svg");
+  }
+  .temp-low {
+    content: url("../../../assets/home/weather/t_low.svg");
+  }
+
   .cloud {
     content: url("../../../assets/home/weather/clouds.svg");
   }

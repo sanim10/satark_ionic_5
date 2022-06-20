@@ -1,0 +1,47 @@
+.swiper-pagination {
+  position: relative;
+  margin: 2px auto;
+}
+
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  text-transform: capitalize;
+}
+
+ul {
+  margin-left: -10px;
+
+  li {
+    margin-bottom: 8px;
+    list-style: none;
+    font-size: 1.01rem;
+    text-transform: none;
+    color: rgb(26, 26, 26);
+  }
+}
+
+.red-bullet::before {
+  content: "✗\20";
+  color: red;
+  width: 1em;
+  margin-left: -1em;
+  font-size: 20px;
+  display: inline-block;
+}
+.green-bullet::before {
+  content: "✓\20";
+  color: green;
+  width: 1em;
+  margin-left: -1em;
+  font-size: 20px;
+  display: inline-block;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--ion-color-sec);
+}

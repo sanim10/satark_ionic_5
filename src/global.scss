@@ -68,12 +68,6 @@ ion-card {
 * {
   font-family: "Roboto";
   font-weight: 400;
-
-  // -webkit-user-select: none;
-  // -webkit-touch-callout: none;
-  // -moz-user-select: none;
-  // -ms-user-select: none;
-  // user-select: none;
 }
 ion-page {
   will-change: transform;
@@ -81,8 +75,8 @@ ion-page {
 
 ion-title {
   color: var(--ion-color-primary);
-  font-weight: 500;
-  // text-align: center;
+  font-weight: 600;
+  font-size: 17px;
 }
 
 ion-button {
@@ -91,13 +85,9 @@ ion-button {
   --background-hover: rgba(20, 20, 20, 0.096);
 }
 
-ion-title {
-  font-size: 18px;
-}
-
 ion-back-button {
   --icon-font-size: 24px;
-  // padding: 10px ;
+
   --color: var(--ion-color-primary);
 }
 
@@ -123,7 +113,7 @@ ion-modal {
     }
 
     ion-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     ion-input {
@@ -172,6 +162,7 @@ ion-modal {
   margin-bottom: 30px;
   border-radius: 10px;
 }
+
 .skeleton-card-desc {
   width: 100%;
   height: 100px;
@@ -195,6 +186,28 @@ ion-modal {
   margin: 10px 20px;
 }
 
+.refresh-button {
+  position: absolute;
+  z-index: 100;
+  float: right;
+  margin: 10px 20px;
+  margin-right: 10px;
+}
+
+.refresh-button {
+  position: absolute;
+  z-index: 100;
+  right: 0px;
+  margin: 10px 20px;
+  height: 48px;
+  width: 48px;
+  --background: none;
+  ion-icon {
+    margin-top: 2px;
+    transform: scale(1.1);
+    color: var(--ion-color-primary);
+  }
+}
 .md {
   .back-button {
     position: absolute;
@@ -212,23 +225,95 @@ ion-modal {
   }
 }
 
+.mapboxgl-popup {
+  position: absolute;
+  right: 0;
+}
 .mapboxgl-popup .mapboxgl-popup-content {
+  padding: 0;
+  padding-top: 10px;
   padding-left: 10px;
+  padding-right: 7px;
   border-radius: 15px;
   box-shadow: 0px 0px 15px 0px #00000031;
+
   z-index: 2;
-  min-width: 320px;
-  // padding-bottom: 10px;
-  text-align: center;
+  min-width: 300px;
+  font-size: 10px;
+  text-align: left;
   .mapboxgl-popup-close-button {
     right: 10px;
     top: 10px;
+    transform: scale(1.4);
     color: var(--ion-color-sec);
-    transform: scale(1.3);
   }
 }
 
 .mapboxgl-popup-tip {
   box-shadow: 0px 0px 15px 0px #00000031;
   z-index: 1;
+}
+
+.info-legend {
+  .alert-wrapper {
+    height: 300px !important;
+    width: 320px !important;
+  }
+  .alert-message {
+    padding: 10px !important;
+    text-align: left;
+
+    ion-grid {
+      ion-row {
+        .icon {
+          max-width: 50px !important;
+          color: var(--ion-color-primary);
+        }
+        ion-col {
+          display: flex;
+          align-items: center;
+          ion-icon {
+            font-size: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.entity {
+  display: flex;
+  border-top-left-radius: 5px;
+  box-shadow: none;
+  position: absolute;
+  right: 25px;
+
+  img {
+    max-height: 35px;
+    min-height: 35px;
+    border-radius: 5px;
+  }
+}
+.md {
+  .entity {
+    margin-top: -19px;
+  }
+}
+.ios {
+  .entity {
+    margin-top: 2px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .mapboxgl-popup .mapboxgl-popup-content {
+    transform: scale(0.9);
+  }
+  .mapboxgl-popup .mapboxgl-popup-tip {
+    margin-top: -13px;
+  }
+
+  .entity {
+    right: 0px;
+  }
 }

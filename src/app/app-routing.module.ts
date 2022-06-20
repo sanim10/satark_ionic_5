@@ -1,16 +1,13 @@
-import { HomeTabPage } from './pages/home/tab-home/home-tab.page';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { NgModule, Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
+    // redirectTo: 'setup-profile-phone',
     redirectTo: 'splash',
-    // redirectTo: 'weather/weather-map',
     pathMatch: 'full',
   },
   {
@@ -88,6 +85,7 @@ const routes: Routes = [
         (m) => m.HomePageModule
       ),
   },
+
   {
     path: 'lightning/lightning-map',
     loadChildren: () =>
@@ -179,6 +177,28 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/modules/ocean/ocean.module').then(
         (m) => m.OceanPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'road-accident',
+    loadChildren: () =>
+      import('./pages/modules/road-accident/road-accident.module').then(
+        (m) => m.RoadAccidentPageModule
+      ),
+  },
+  {
+    path: 'home',
+    loadChildren: () =>
+      import('./pages/modules/snake-bite/home/home.module').then(
+        (m) => m.HomePageModule
+      ),
+  },
+  {
+    path: 'snake-bite',
+    loadChildren: () =>
+      import('./pages/modules/snake-bite/snake-bite.module').then(
+        (m) => m.SnakeBitePageModule
       ),
     canActivate: [AuthGuard],
   },

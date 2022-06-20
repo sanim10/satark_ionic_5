@@ -11,12 +11,7 @@
     <ion-img src="../../../assets/login/landing_bottom_bg_.png"></ion-img>
   </div>
   <form>
-    <swiper
-      [config]="config"
-      (swiper)="onSwiper($event)"
-      (slideChange)="onSlideChange()"
-      #swiper
-    >
+    <swiper [config]="config" (swiper)="onSwiper($event)" (slideChange)="onSlideChange()" #swiper>
       <!-- Slide 1 --- get email -->
       <ng-template swiperSlide>
         <ion-grid class="container">
@@ -27,17 +22,13 @@
                   <br />
                   <ion-text class="ion-text-center">
                     <p>
-                      {{"Let's get some information from you, it wont take much
-                      time" | translate}}
+                      {{"Let's get some information from you, it wont take much time" | translate}}
                       <br />
-                      <span
-                        style="
+                      <span style="
                           color: var(--ion-color-primary);
                           margin-top: 10px;
-                        "
-                      >
-                        {{"Lets start with your email" | translate}}</span
-                      >
+                        ">
+                        {{"Let's start with your email" | translate}}</span>
                       <br />
                     </p>
                   </ion-text>
@@ -46,31 +37,16 @@
               <ion-row>
                 <ion-col>
                   <ion-item class="ion-no-padding ion-no-margin" lines="none">
-                    <img
-                      src="../../assets/login/mail_ic.svg"
-                      style="margin-left: 10px"
-                    />
+                    <img src="../../assets/login/mail_ic.svg" style="margin-left: 10px" />
                     <span class="pipe">|&nbsp;</span>
-                    <ion-input
-                      name="email"
-                      type="email"
-                      placeholder="{{'Your email id' | translate}}"
-                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                      required
-                      ngModel
-                      #emailCtrl="ngModel"
-                    >
+                    <ion-input name="email" type="email" placeholder="{{'Your Email Id' | translate}}"
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required ngModel #emailCtrl="ngModel">
                     </ion-input>
                   </ion-item>
                   <br />
 
-                  <ion-button
-                    expand="block"
-                    size="default"
-                    class="login-button"
-                    (click)="moveToPassword(emailCtrl.value)"
-                    [disabled]="!emailCtrl.valid"
-                  >
+                  <ion-button expand="block" size="default" class="login-button"
+                    (click)="moveToPassword(emailCtrl.value)" [disabled]="!emailCtrl.valid">
                     {{"Next" | translate}}
                   </ion-button>
                 </ion-col>
@@ -90,14 +66,11 @@
                   <ion-col size="12">
                     <ion-text class="ion-text-center">
                       <p>
-                        <span
-                          style="
+                        <span style="
                             color: var(--ion-color-primary);
                             font-weight: 500;
-                          "
-                          >{{"Put your password. Make it unique!" |
-                          translate}}</span
-                        >
+                          ">{{"Put your password. Make it unique!" |
+                          translate}}</span>
                         <br />{{"Make it unique!!" | translate}}
                       </p>
                     </ion-text>
@@ -106,40 +79,26 @@
                 <ion-row>
                   <ion-col>
                     <ion-item class="ion-no-padding ion-no-margin" lines="none">
-                      <img
-                        src="../../assets/login/password_ic.svg"
-                        style="margin-left: 10px"
-                      />
+                      <img src="../../assets/login/password_ic.svg" style="margin-left: 10px" />
                       <span class="pipe">|&nbsp;</span>
 
-                      <ion-input
-                        name="password"
-                        type="password"
-                        placeholder="{{'Password' | translate}}"
-                        minlength="12"
-                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>_/]).{8,}"
-                        required
-                        ngModel
-                        #passwordCtrl="ngModel"
-                      >
+                      <ion-input name="password" type="password" placeholder="{{'Password' | translate}}" minlength="6"
+                        maxlength="8"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>_/]).{6,8}"
+                        required ngModel #passwordCtrl="ngModel">
                       </ion-input>
                     </ion-item>
 
                     <ion-text class="ion-text-center">
                       <p style="margin: 10px auto; color: rgb(156, 156, 156)">
-                        {{"Passwords must be at least 12 characters, contain at
+                        {{"Passwords must be at 6-8 characters, contain at
                         least one uppercase letter, special character and at
                         least one number" | translate}}
                       </p>
                     </ion-text>
 
-                    <ion-button
-                      expand="block"
-                      size="default"
-                      class="login-button"
-                      (click)="signUp(passwordCtrl.value)"
-                      [disabled]="!passwordCtrl.valid"
-                    >
+                    <ion-button expand="block" size="default" class="login-button" (click)="signUp(passwordCtrl.value)"
+                      [disabled]="!passwordCtrl.valid">
                       {{"Done" | translate}}
                     </ion-button>
                   </ion-col>

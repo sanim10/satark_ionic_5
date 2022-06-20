@@ -47,7 +47,8 @@ export class HeatwaveGraphComponent implements OnInit, AfterViewInit {
         labels: this.graphData?.period,
         datasets: [
           {
-            label: '# of deaths',
+            label:
+              this.lHelper.lang == 'en' ? '# of deaths' : 'ମୃତ୍ୟୁ ର ସଂଖ୍ୟା',
             data: this.graphData?.deaths,
             backgroundColor: 'rgba(0, 102, 166,1)',
             borderColor: 'rgba(0, 102, 166, 1)',
@@ -87,7 +88,7 @@ export class HeatwaveGraphComponent implements OnInit, AfterViewInit {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Deaths',
+              text: this.lHelper.lang == 'en' ? 'Deaths' : 'ମୃତ୍ୟୁ',
               padding: 10,
               color: '#0066A6',
               font: {

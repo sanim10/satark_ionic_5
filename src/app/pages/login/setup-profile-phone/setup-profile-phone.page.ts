@@ -1,3 +1,4 @@
+import { LanguageHelperService } from 'src/app/helper/language-helper/language-helper.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from './../../../guard/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -33,7 +34,7 @@ export class SetupProfilePhonePage implements OnInit {
   email_id: string;
   block_id: string;
   device_id: string;
-
+  lang;
   constructor(
     private modalController: ModalController,
     private apiService: ApiService,
@@ -41,8 +42,12 @@ export class SetupProfilePhonePage implements OnInit {
     private httpClient: HttpClient,
     private navCtrl: NavController,
     private authService: AuthService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private lHelper: LanguageHelperService
   ) {
+    this.lang = lHelper.lang;
+
+    console.log('hi ', this.lang);
     this.getDistrict();
     this.Form = this.formBuilder.group({
       email: [
@@ -69,6 +74,10 @@ export class SetupProfilePhonePage implements OnInit {
 
   ngOnInit() {}
 
+  refresh() {
+    this.getDistrict();
+    this.lang = this.lHelper.lang;
+  }
   async openPrivacy() {
     const modal = this.modalController.create({
       swipeToClose: true,
@@ -83,11 +92,13 @@ export class SetupProfilePhonePage implements OnInit {
       .pipe(take(1))
       .subscribe((data) => {
         this.district_data = data;
+        console.log('disttict data..', this.district_data);
       });
   }
 
   getBlocks() {
-    var dis_name = this.district.value;
+    var tmp = this.district.value.split(' |');
+    var dis_name = tmp[0];
     var len = this.district_data.length;
     for (var i = 0; i < len; ++i) {
       if (
@@ -106,12 +117,13 @@ export class SetupProfilePhonePage implements OnInit {
       .pipe(take(1))
       .subscribe((data) => {
         this.block_data = data;
-        this.getBlocksId();
+        this.get_blocks_id();
       });
   }
 
-  getBlocksId() {
-    var block_name = this.blocks.value;
+  get_blocks_id() {
+    var tmp = this.blocks.value.split(' |');
+    var block_name = tmp[0];
     console.log('block_name', block_name);
     var len = this.block_data.length;
     for (var i = 0; i < len; ++i) {

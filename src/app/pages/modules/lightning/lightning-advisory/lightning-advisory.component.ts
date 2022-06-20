@@ -35,11 +35,11 @@ export class LightningAdvisoryComponent implements OnInit {
   advisory_img = [
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_1.svg',
-      text: 'When thunderstorm comes, go out of water',
+      text: 'When thunderstrom comes, go out of water',
     },
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_2.svg',
-      text: 'When thunder roars, go indoors',
+      text: 'When thunder roars, go indoor',
     },
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_3.svg',
@@ -47,7 +47,7 @@ export class LightningAdvisoryComponent implements OnInit {
     },
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_4.svg',
-      text: 'Perform CPR immediately on the victim of lightning',
+      text: 'Perform CPR immediately on the victim of ligntning',
     },
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_5.svg',
@@ -55,7 +55,7 @@ export class LightningAdvisoryComponent implements OnInit {
     },
     {
       img: '../../../../../assets/modules/lightning/advisory/adv_6.svg',
-      text: 'Unplug unnecesssary electrical equipments and avoid using corded telephones',
+      text: 'Unplug unnecessary electrical equipments and avoid using corded telephones',
     },
   ];
 
@@ -67,7 +67,7 @@ export class LightningAdvisoryComponent implements OnInit {
   }
 
   onSwiper(swiper) {
-    console.log(swiper);
+    // console.log(swiper);
   }
   onSlideChange() {
     this.activeSlide = this.swiper.swiperRef.activeIndex;
@@ -85,7 +85,7 @@ export class LightningAdvisoryComponent implements OnInit {
   }
 
   getAdvisoryData() {
-    this.apiService.getNowcastDataLightning().subscribe((data) => {
+    this.apiService.getNowcastDataLightning30Mins().subscribe((data) => {
       if (data['advisory'].length != 0) {
         this.advisory_data = data['advisory'];
         console.log('advisory dta', this.advisory_data);

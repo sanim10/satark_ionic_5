@@ -87,5 +87,20 @@ ion-content {
     align-items: center;
     justify-content: center;
     padding: 10px !important;
+    background-color: #e7e7e7;
+    color: #686868;
+    border-radius: 5px;
+  }
+}
+
+.resend-button {
+  position: absolute;
+  right: 20px;
+  margin-top: 20px;
+  a {
+    color: var(--ion-color-sec);
+  }
+  a:hover {
+    color: var(--ion-color-primary);
   }
 }

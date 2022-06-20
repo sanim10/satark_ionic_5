@@ -1,3 +1,4 @@
+import { Market } from '@ionic-native/market/ngx';
 import { Network } from '@capacitor/network';
 import { take } from 'rxjs/operators';
 import { ApiService } from './../../../providers/api.service';
@@ -7,7 +8,8 @@ import { LanguageHelperService } from 'src/app/helper/language-helper/language-h
 import { HomeTabService } from './home-tab.service';
 import { AlertController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+
 import * as moment from 'moment';
 import {
   ChangeDetectorRef,
@@ -16,7 +18,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-home-tab',
@@ -41,6 +42,14 @@ export class HomeTabPage implements OnInit, OnDestroy {
   imd_alert_data;
   registered_loc_data;
   date;
+  routeState;
+  flash_msg_data: any;
+  current_version_android: any = '25.0';
+  current_version_ios: any = '22.0';
+
+  current_version_from_db_android: any;
+  current_version_from_db_ios: any;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private alertController: AlertController,
@@ -49,8 +58,13 @@ export class HomeTabPage implements OnInit, OnDestroy {
     private langHelper: LanguageHelperService,
     private translateService: TranslateService,
     private authService: AuthService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private market: Market,
+    private platform: Platform,
+    private alertCtrl: AlertController,
+    private iab: InAppBrowser
   ) {
+    this.checklogin(localStorage.getItem('token'));
     this.lHelper = langHelper;
     translateService.setDefaultLang(translateService.getBrowserLang());
     var day = new Date();
@@ -67,6 +81,69 @@ export class HomeTabPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.apiService
+      .get_check_app_version()
+      .pipe(take(1))
+      .subscribe(async (data) => {
+        console.log('versions...', data);
+        if (this.platform.is('android')) {
+          this.current_version_from_db_android = data[0].current_version;
+          console.log(
+            'android version....',
+            this.current_version_from_db_android
+          );
+          if (
+            this.current_version_android < this.current_version_from_db_android
+          ) {
+            let alert = this.alertCtrl.create({
+              header: 'Update Available',
+
+              message:
+                'New version of the app is available, to make use of the latest features please update now',
+              buttons: [
+                {
+                  text: 'Update',
+                  handler: () => {
+                    console.log('update clicked');
+                    this.market.open('satark.app.io.ionic');
+                  },
+                },
+                {
+                  text: 'Cancel',
+                  handler: () => {},
+                },
+              ],
+            });
+            (await alert).present();
+          }
+        } else if (this.platform.is('ios')) {
+          this.current_version_from_db_ios = data[1].current_version;
+          console.log('ios version....', this.current_version_from_db_ios);
+          if (this.current_version_ios < this.current_version_from_db_ios) {
+            let alert = this.alertCtrl.create({
+              header: 'Update Available',
+
+              message:
+                'New version of the app is available, to make use of the latest features please update now',
+              buttons: [
+                {
+                  text: 'Update',
+                  handler: () => {
+                    console.log('update clicked');
+                    this.market.open('1470204757');
+                  },
+                },
+                {
+                  text: 'Cancel',
+                  handler: () => {},
+                },
+              ],
+            });
+            (await alert).present();
+          }
+        }
+      });
+
     Network.getStatus().then((status) => {
       status.connected ? (this.connected = true) : (this.connected = false);
     });
@@ -83,7 +160,6 @@ export class HomeTabPage implements OnInit, OnDestroy {
     this.modules = this.homeTabService.modules;
     this.modules_od = this.homeTabService.modules_od;
     // this.rain_status_value_addition = localStorage.getItem('rain_status');
-    this.checklogin(localStorage.getItem('token'));
   }
 
   popAlert() {
@@ -147,12 +223,13 @@ export class HomeTabPage implements OnInit, OnDestroy {
           url = 'ocean';
           break;
 
-        case 'ସଡକ ସୁରକ୍ଷା':
-          url = 'road';
+        // case 'ସଡକ ସୁରକ୍ଷା':
+        case 'ସଡକ ଦୁର୍ଘଟଣା':
+          url = 'road-accident';
           break;
 
         case 'ସର୍ପାଘାତ':
-          url = 'snake';
+          url = 'snake-bite';
           break;
 
         case 'ବିବରଣୀ':
@@ -161,6 +238,13 @@ export class HomeTabPage implements OnInit, OnDestroy {
 
         case 'ପରିସଂଖ୍ୟାନ':
           url = 'statistics';
+          break;
+
+        case 'road accident':
+          url = 'road-accident';
+          break;
+        case 'snakebite':
+          url = 'snake-bite';
           break;
       }
       this.router.navigateByUrl(url).catch((err) => {
@@ -195,6 +279,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
           localStorage.setItem('block_id', this.user_data[0].block_id);
           localStorage.setItem('district_id', this.user_data[0].district_id);
           localStorage.setItem('block_name', this.user_data[0].block_name);
+          localStorage.setItem('id', this.user_data[0].id);
           localStorage.setItem(
             'block_name_ory',
             this.user_data[0].block_name_ory
@@ -207,27 +292,39 @@ export class HomeTabPage implements OnInit, OnDestroy {
             'district_name_ory',
             this.user_data[0].district_name_ory
           );
+          localStorage.setItem(
+            'notification_lang',
+            this.user_data[0].notification_lng
+          );
+          this.getFlashMsg();
           this.getImdRainfallValueAdditionForBlock(this.block_id);
-          this.get10DaysImdForecast(this.block_id);
-          this.getHeatwaveForEachBlock();
+          // this.getHeatwaveForEachBlock();
           this.getLightningAdvRegisteredLocData(this.block_id);
         },
         (Error) => {
           console.log(Error);
-          // this.authService.showErrorToast(
-          //   'Network Error. Please refresh the page'
-          // );
         }
       );
   }
-  //get 10days IMD value addition
+
+  getFlashMsg() {
+    this.apiService.getFlashAlertMsg().subscribe((data) => {
+      this.flash_msg_data = data;
+      if (this.flash_msg_data.length != 0) {
+        console.log('flash msg data..', data);
+      } else {
+        this.flash_msg_data = null;
+      }
+    });
+  }
+
+  //get 5days IMD value addition
   getImdRainfallValueAdditionForBlock(block: string) {
     let param = {
       block_id: block,
     };
     this.apiService
-      .get10DaysImdValueAdditionDataForWeather(param)
-      // .getUpdatedValueAdditionDataForWeather(param)
+      .getUpdatedValueAdditionDataForWeather(param)
       .pipe(take(1))
       .subscribe(
         (data) => {
@@ -236,37 +333,16 @@ export class HomeTabPage implements OnInit, OnDestroy {
             this.value_addtion_forecast_data = null;
           } else {
           }
-          // this.loading = false;
-        },
-        (Error) => {
-          console.log(Error);
-          // this.authService.showErrorToast(
-          //   'Network Error. Please refresh the page'
-          // );
-        }
-      );
-  }
 
-  get10DaysImdForecast(block: string) {
-    let param = {
-      block_id: block,
-    };
-    this.apiService
-      .get10DaysImdDataForWeather(param)
-      .pipe(take(1))
-      .subscribe(
-        (data) => {
-          this.forecast_data = data;
-          if (this.forecast_data.length == 0) {
-            this.forecast_data = null;
+          this.imd_alert_data = data;
+          if (this.imd_alert_data.length != 0) {
+            console.log(this.imd_alert_data);
           } else {
+            this.imd_alert_data = null;
           }
         },
         (Error) => {
           console.log(Error);
-          // this.authService.showErrorToast(
-          //   'Network Error. Please refresh the page'
-          // );
         }
       );
   }
@@ -313,12 +389,34 @@ export class HomeTabPage implements OnInit, OnDestroy {
     }
   }
 
-  getHeatwaveForEachBlock() {
+  get10DaysImdForecast(block: string) {
     let param = {
-      id: this.block_id,
+      block_id: block,
     };
     this.apiService
-      .getImdHeatwaveAlertsDissemintationForEachBlock(param)
+      .get10DaysImdDataForWeather(param)
+      .pipe(take(1))
+      .subscribe(
+        (data) => {
+          this.forecast_data = data;
+          if (this.forecast_data.length == 0) {
+            this.forecast_data = null;
+          } else {
+          }
+        },
+        (Error) => {
+          console.log(Error);
+        }
+      );
+  }
+
+  getHeatwaveForEachBlock() {
+    let param = {
+      block_id: this.block_id,
+    };
+    this.apiService
+      // .getImdHeatwaveAlertsDissemintationForEachBlock(param)
+      .getUpdatedValueAdditionDataForWeather(param)
       .subscribe(
         (data) => {
           this.imd_alert_data = data;
@@ -328,11 +426,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
             this.imd_alert_data = null;
           }
         },
-        (Error) => {
-          this.authService.showErrorToast(
-            'Error while getting data. Please reload the page.'
-          );
-        }
+        (Error) => {}
       );
   }
 
@@ -352,11 +446,54 @@ export class HomeTabPage implements OnInit, OnDestroy {
           console.log('no registered_loc_data', this.registered_loc_data);
         }
       },
-      (Error) => {
-        this.authService.showErrorToast(
-          'Error while getting data. Please refresh the page.'
+      (Error) => {}
+    );
+  }
+
+  refresh() {
+    this.imd_alert_data = null;
+    this.value_addtion_forecast_data = null;
+    this.registered_loc_data.l_type = null;
+    this.flash_msg_data = null;
+    this.current_location_block = null;
+    this.current_location_block_ory = null;
+    this.current_location_district = null;
+    this.current_location_district_ory = null;
+
+    this.checklogin(localStorage.getItem('token'));
+  }
+
+  openHyperlink() {
+    if (this.platform.is('android')) {
+      if (this.lHelper.lang == 'en') {
+        const browser = this.iab.create(
+          this.flash_msg_data[0].alert_link_en,
+          '_system',
+          'location=yes,enableViewportScale=yes,hidden=no'
+        );
+      } else {
+        const browser = this.iab.create(
+          this.flash_msg_data[0].alert_link_or,
+          '_system',
+          'location=yes,enableViewportScale=yes,hidden=no'
         );
       }
-    );
+    } else if (this.platform.is('ios')) {
+      if (this.lHelper.lang == 'en') {
+        const browser = this.iab.create(
+          this.flash_msg_data[0].alert_link_en,
+          '_self',
+          'location=no'
+        );
+        browser.show();
+      } else {
+        const browser = this.iab.create(
+          this.flash_msg_data[0].alert_link_or,
+          '_self',
+          'location=no'
+        );
+        browser.show();
+      }
+    }
   }
 }

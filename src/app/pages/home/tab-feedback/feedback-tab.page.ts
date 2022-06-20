@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import { AlertController, NavController } from '@ionic/angular';
 import { ApiService } from './../../../providers/api.service';
@@ -16,7 +17,8 @@ export class FeedbackTabPage implements OnInit {
     private authService: AuthService,
     private apiService: ApiService,
     private alertCtrl: AlertController,
-    private navctrl: NavController
+    private navCtrl: NavController,
+    private translate: TranslateService
   ) {}
   token_id: string;
   user_id: string;
@@ -66,20 +68,20 @@ export class FeedbackTabPage implements OnInit {
             'Your feedback has been sucessfully submitted. Thank you.'
           );
 
-          this.navctrl.navigateBack('/home', { replaceUrl: true });
+          this.navCtrl.navigateBack('/home', { replaceUrl: true });
         } else {
           this.authService.showAlert(
             'Report Submitted',
             'Your feedback has been sucessfully submitted. Thank you.'
           );
-          this.navctrl.navigateBack('/home', { replaceUrl: true });
+          this.navCtrl.navigateBack('/home', { replaceUrl: true });
         }
       },
       async (err) => {
         console.log('ERROR!: ', err);
         if (this.lang == 'en' || this.lang == null) {
           let alert = this.alertCtrl.create({
-            header: 'Submission Fail!',
+            header: this.translate.instant('Submission Fail!'),
             message: 'Please try again',
             buttons: ['OK'],
           });

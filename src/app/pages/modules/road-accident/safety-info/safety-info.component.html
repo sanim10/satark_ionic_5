@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Safety Info" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-grid>
+
+    <div [ngStyle]="lang=='en'? {'display':'block'}:{'display':'none'}">
+      <swiper [config]="config" (slideChange)="onSlideChange()" #swiper>
+
+        <ng-template swiperSlide *ngFor="let content of safety_info_img">
+          <ion-row>
+            <ion-col class="ion-no-padding">
+
+              <ion-card [ngStyle]="content.do!=null ? {'background':'#6FDC6F'} : {'background':'#FF5C5C'} ">
+                <ion-card-content>
+
+                  <div style="height: 100px;display:flex;align-items: center; justify-content: center;">
+                    <ion-icon *ngIf="content.do!=null" name="checkmark" style="font-size: 150px;color: white;">
+                    </ion-icon>
+
+                    <ion-icon *ngIf="content.dont!=null" name="close" style="font-size: 150px;color: white;">
+                    </ion-icon>
+                  </div>
+
+
+                  <div style="height: 230px; display:flex; ">
+                    <img style="margin: 5px auto; max-height: 230px" src="{{content.img}}" alt="img" />
+                  </div>
+                  <br>
+                  <div class="swiper-pagination"></div>
+
+                  <ion-label style="font-size: 1.01rem; text-transform: none">
+                    {{content.text | translate}}
+                  </ion-label>
+                </ion-card-content>
+              </ion-card>
+
+
+            </ion-col>
+          </ion-row>
+        </ng-template>
+
+      </swiper>
+
+    </div>
+
+    <div [ngStyle]="lang=='od'? {'display':'block'}:{'display':'none'}">
+      <swiper [config]="config" (slideChange)="onSlideChange()" #swiper_od>
+
+        <ng-template swiperSlide *ngFor="let content of safety_info_img_od">
+          <ion-row>
+            <ion-col class="ion-no-padding">
+
+              <ion-card [ngStyle]="content.do!=null ? {'background':'#6FDC6F'} : {'background':'#FF5C5C'} ">
+                <ion-card-content>
+
+                  <div style="height: 100px;display:flex;align-items: center; justify-content: center;">
+                    <ion-icon *ngIf="content.do!=null" name="checkmark" style="font-size: 150px;color: white;">
+                    </ion-icon>
+
+                    <ion-icon *ngIf="content.dont!=null" name="close" style="font-size: 150px;color: white;">
+                    </ion-icon>
+                  </div>
+
+
+                  <div style="height: 230px; display:flex; ">
+                    <img style="margin: 5px auto; max-height: 230px" src="{{content.img}}" alt="img" />
+                  </div>
+                  <br>
+                  <div class="swiper-pagination"></div>
+
+                  <ion-label style="font-size: 1.01rem; text-transform: none">
+                    {{content.text | translate}}
+                  </ion-label>
+                </ion-card-content>
+              </ion-card>
+
+
+            </ion-col>
+          </ion-row>
+        </ng-template>
+      </swiper>
+
+    </div>
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <ion-button size="default" style="margin:15px" (click)="slidePrev()" *ngIf="activeSlide!=0">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button size="default" style="margin:15px" (click)="slideNext()" *ngIf="activeSlide!=slidesLength">
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-grid>
+
+
+</ion-content>

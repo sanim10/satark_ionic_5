@@ -50,7 +50,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
   heatwave = [
     {
-      condition: 'normal',
+      condition: 'No Heatwave',
+      condition_class: 'normal',
       advisory: [
         {
           headerName: 'warning',
@@ -83,7 +84,8 @@ export class HomePage implements OnInit, AfterViewInit {
       ],
     },
     {
-      condition: 'heat wave',
+      condition: 'Heatwave Alert',
+      condition_class: 'heat wave',
       advisory: [
         {
           headerName: 'warning',
@@ -121,7 +123,8 @@ export class HomePage implements OnInit, AfterViewInit {
     },
 
     {
-      condition: 'severe heatwave',
+      condition: 'Severe Heat Alert',
+      condition_class: 'severe heatwave',
       advisory: [
         {
           headerName: 'warning',
@@ -170,7 +173,8 @@ export class HomePage implements OnInit, AfterViewInit {
       ],
     },
     {
-      condition: 'extreme heatwave',
+      condition: 'Extreme Heat Alert',
+      condition_class: 'extreme heatwave',
       advisory: [
         {
           headerName: 'warning',
@@ -225,12 +229,19 @@ export class HomePage implements OnInit, AfterViewInit {
     private modalController: ModalController,
     private apiService: ApiService,
     private authService: AuthService,
-    private languageHelper: LanguageHelperService // private moment: Moment
+    languageHelper: LanguageHelperService // private moment: Moment
   ) {
     this.lHelper = languageHelper;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user_id = localStorage.getItem('id');
+    this.block_id = localStorage.getItem('block_id');
+    this.block = localStorage.getItem('block_name');
+    this.block_ory = localStorage.getItem('block_name_ory');
+    this.district = localStorage.getItem('district_name');
+    this.district_ory = localStorage.getItem('district_name_ory');
+  }
 
   ngAfterViewInit() {
     this.display();
@@ -239,6 +250,7 @@ export class HomePage implements OnInit, AfterViewInit {
   display() {
     this.loading = true;
     this.checklogin(localStorage.getItem('token'));
+    // this.checkLogin();
   }
 
   doRefresh(event) {
@@ -255,6 +267,12 @@ export class HomePage implements OnInit, AfterViewInit {
       componentProps: { newheatwaveData: heatwave },
     });
     return await modal.present();
+  }
+
+  checkLogin() {
+    this.getFavLocations(this.user_id);
+    this.getHeatwaveForEachBlock();
+    // this.getHeatwaveForFavBlock();
   }
 
   checklogin(id: string) {
@@ -276,7 +294,7 @@ export class HomePage implements OnInit, AfterViewInit {
           );
           this.getFavLocations(this.user_id);
           this.getHeatwaveForEachBlock();
-          this.getHeatwaveForFavBlock();
+          // this.getHeatwaveForFavBlock();
         },
         (Error) => {
           this.authService.showErrorToast(
@@ -287,7 +305,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   ////get fav location detail of user by userid
-  getFavLocations(usrid: string) {
+  getFavLocations1(usrid: string) {
     let param = {
       id: usrid,
     };
@@ -309,36 +327,81 @@ export class HomePage implements OnInit, AfterViewInit {
     );
   }
 
+  getFavLocations(id: string) {
+    this.apiService
+      .getFavLocations(id)
+      .pipe(take(1))
+      .subscribe(
+        (data) => {
+          this.fav_loc_data = data['result'];
+          this.success_data = data['success'];
+          if (!this.success_data) {
+            this.fav_loc_data = null;
+          } else {
+            this.fav_loc_data.forEach(async (element, index) => {
+              this.getTempMax(element.block_id)
+                .pipe(take(1))
+                .subscribe((data) => {
+                  this.fav_loc_data[index].forecast = data;
+                });
+            });
+            console.log('hello', this.fav_loc_data);
+          }
+        },
+        (Error) => {
+          console.log(Error);
+
+          this.authService.showErrorToast(
+            'Error while getting location. Please try again.'
+          );
+        }
+      );
+  }
+
+  getTempMax(block_id) {
+    let param = {
+      block_id: block_id,
+    };
+    return this.apiService.getUpdatedValueAdditionDataForWeather(param);
+  }
+
   // get imd heatwave alerts for each block
   getHeatwaveForEachBlock() {
     let param = {
-      id: this.block_id,
+      block_id: this.block_id,
+      // id: this.block_id,
     };
     this.apiService
-      .getImdHeatwaveAlertsDissemintationForEachBlock(param)
+      // .getImdHeatwaveAlertsDissemintationForEachBlock(param);
+      .getUpdatedValueAdditionDataForWeather(param)
       .subscribe(
         (data) => {
           this.imd_alert_data = data;
           if (this.imd_alert_data?.length != 0) {
-            console.log(this.imd_alert_data);
+            // console.log(this.imd_alert_data);
 
             switch (this.imd_alert_data[0].heat_wave_status) {
-              case 1:
+              // case 1:
+              case '1':
                 this.heatwaveData = this.heatwave[0];
                 break;
-              case 2:
+              // case 2:
+              case '2':
                 this.heatwaveData = this.heatwave[1];
                 break;
-              case 3:
+              // case 3:
+              case '3':
                 this.heatwaveData = this.heatwave[2];
                 break;
-              case 4:
+              // case 4:
+              case '4':
                 this.heatwaveData = this.heatwave[3];
                 break;
             }
           } else {
             this.imd_alert_data = null;
           }
+          this.loading = false;
         },
         (Error) => {
           this.authService.showErrorToast(
@@ -363,7 +426,6 @@ export class HomePage implements OnInit, AfterViewInit {
           } else {
             this.imd_alert_fav_data = null;
           }
-          this.loading = false;
         },
         (Error) => {
           this.loading = false;
@@ -430,16 +492,16 @@ export class HomePage implements OnInit, AfterViewInit {
 
   getCondition(conditon): string {
     switch (conditon) {
-      case 1:
-        return 'normal';
+      case '1':
+        return 'No Heatwave';
 
-      case 2:
-        return 'heat wave';
+      case '2':
+        return 'Heatwave Alert';
 
-      case 3:
-        return 'severe heatwave';
+      case '3':
+        return 'Severe Heat Alert';
 
-      case 4:
+      case '4':
         return 'extreme heatwave';
     }
   }

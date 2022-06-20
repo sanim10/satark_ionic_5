@@ -3,16 +3,24 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 50px;
   z-index: 1;
 }
 
 #map {
   position: fixed;
   top: 0;
-  bottom: 0;
   width: 100%;
   opacity: 0;
   z-index: 1;
-  height: 100%;
+  height: calc(100% - 30px);
+}
+
+.legend {
+  position: fixed;
+  bottom: 0px;
+  min-height: 30px;
+  max-height: 30px;
+  width: 100%;
+  z-index: 4;
 }

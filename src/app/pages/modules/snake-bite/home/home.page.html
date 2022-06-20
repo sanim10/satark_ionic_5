@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Snakebite" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end" [scrollY]="false">
+  <div class="map-container">
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0" *ngIf="mapState!=true">
+    </div>
+    <div id="map" #map></div>
+  </div>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="top" (click)="showHideBackdrop()" [ngClass]="lang =='en'? '':'od'">
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'recent-attacks'? 'fab-active' :''"
+        (click)="updateFAB('recent-attacks')">
+        <ion-label>{{"Recent Attacks" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/snake-bite/bite_flat_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == 'nearby-hospital'? 'fab-active' :''"
+        (click)="updateFAB('nearby-hospital')">
+        <ion-label>{{"Nearby Hospital" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/snake-bite/hospital_flat_ic.svg'></ion-icon>
+
+      </ion-fab-button>
+
+
+
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>

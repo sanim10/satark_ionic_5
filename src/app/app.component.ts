@@ -1,3 +1,6 @@
+import { take } from 'rxjs/operators';
+import { Market } from '@ionic-native/market/ngx';
+import { ApiService } from 'src/app/providers/api.service';
 import { Router } from '@angular/router';
 import { AuthService } from './guard/auth.service';
 import { LanguageHelperService } from 'src/app/helper/language-helper/language-helper.service';
@@ -8,11 +11,11 @@ import {
   NavController,
   Platform,
 } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { Device } from '@capacitor/Device';
+
 import {
   ActionPerformed,
   PushNotificationSchema,
@@ -28,6 +31,8 @@ import {
   indexedDBLocalPersistence,
   initializeAuth,
 } from 'firebase/auth';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -51,13 +56,14 @@ export class AppComponent implements OnInit {
     private location: Location,
     private screenOrientation: ScreenOrientation,
     private navController: NavController,
-    private alertController: AlertController,
     private modalController: ModalController,
     public translate: TranslateService,
     private lHelper: LanguageHelperService,
     private AuthService: AuthService,
     private router: Router,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private httpClient: HttpClient,
+    private apiService: ApiService
   ) {
     const app = initializeApp(this.firebaseAuth);
     initializeAuth(app, {
@@ -113,7 +119,7 @@ export class AppComponent implements OnInit {
             vibration: true,
             visibility: 1,
             // The importance property goes from 1 = Lowest, 2 = Low, 3 = Normal, 4 = High and 5 = Highest.
-            importance: 3,
+            importance: 5,
             name: channedID,
           }).then(() => console.log('Channel created'));
 
@@ -125,7 +131,7 @@ export class AppComponent implements OnInit {
             visibility: 1,
             // The importance property goes from 1 = Lowest, 2 = Low, 3 = Normal, 4 = High and 5 = Highest.
             name: channedID_1,
-            importance: 3,
+            importance: 5,
           }).then(() => console.log('Channel created'));
 
           PushNotifications.listChannels().then((channels) =>
@@ -153,7 +159,7 @@ export class AppComponent implements OnInit {
           let alert = this.alertCtrl.create({
             header: notification.title,
             message: notification.body,
-            buttons: ['OK'],
+            buttons: this.lHelper.lang == 'en' ? ['OK'] : ['ଠିକ'],
           });
           (await alert).present();
         }
@@ -161,10 +167,242 @@ export class AppComponent implements OnInit {
 
       PushNotifications.addListener(
         'pushNotificationActionPerformed',
-        (notification: ActionPerformed) => {
-          console.log('Push action performed: ' + JSON.stringify(notification));
+        async (data: any) => {
+          console.log('Push action performed: ' + JSON.stringify(data));
+          this.navController.navigateForward('/home/home-tab');
+
+          this.data_content = data.notification.data.content;
+          if (data.notification.data.content == 'Lightning') {
+            let alert1 = this.alertCtrl.create({
+              header: 'SATARK Alert Feedback',
+              message: 'Have you experienced lightning in past 30 min?',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    console.log('yes clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'yes',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+                {
+                  text: 'No',
+                  handler: () => {
+                    console.log('no clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'no',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+              ],
+            });
+            (await alert1).present();
+
+            let alert = this.alertCtrl.create({
+              header: 'SATARK Alert Feedback',
+              message: 'Did you experience lightning just now?',
+              cssClass: 'fav_loc_prompt',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    console.log('yes clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'yes',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+                {
+                  text: 'No',
+                  handler: () => {
+                    console.log('no clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'no',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+              ],
+            });
+            (await alert).present();
+          } else if (data.notification.data.content == 'Rainfall') {
+            let alert = this.alertCtrl.create({
+              header: 'SATARK Alert Feedback',
+              cssClass: 'fav_loc_prompt',
+              message: 'Did it rain yesterday?',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    console.log('yes clicked');
+                    this.yes_did_rain();
+                  },
+                },
+                {
+                  text: 'No',
+                  handler: () => {
+                    console.log('no clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'no',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+              ],
+            });
+            (await alert).present();
+          } else if (data.notification.data.content == 'Heatwave') {
+            let alert = this.alertCtrl.create({
+              header: 'SATARK Alert Feedback',
+              message: 'Did you experience heatwave?',
+              cssClass: 'fav_loc_prompt',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    console.log('yes clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'yes',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+                {
+                  text: 'No',
+                  handler: () => {
+                    console.log('no clicked');
+                    var url =
+                      'https://satark.rimes.int/api_user/users_ios_post';
+                    var params = JSON.stringify({
+                      deviceid: localStorage.getItem('deviceid'),
+                      field: data.notification.data.content,
+                      received: 'no',
+                      extra_param: 'notification_feedback',
+                    });
+                    this.httpClient
+                      .post(url, params, { responseType: 'text' })
+                      .subscribe(
+                        (data) => {
+                          console.log('post data', data);
+                        },
+                        (err) => {
+                          console.log('ERROR!: ', err);
+                        }
+                      );
+                  },
+                },
+              ],
+            });
+            (await alert).present();
+          }
+          // else if(data.content == "Ocean"){
+          //   this.nav.setRoot(OceanPage);
+          // }
+
+          // alert('background');
         }
+
+        // else {
+        //     let alert = this.alertCtrl.create({
+        //       header: data.title,
+        //       cssClass: 'fav_loc_prompt',
+        //       message: data.body,
+        //       buttons: ['OK'],
+        //     });
+        //     alert.present();
+        //   }
+        // }
       );
+
+      PushNotifications.removeAllDeliveredNotifications();
 
       Network.addListener('networkStatusChange', async (status) => {
         console.log('Network status changed', status);
@@ -180,7 +418,7 @@ export class AppComponent implements OnInit {
         }
       });
 
-      this.platform.backButton.subscribeWithPriority(10, () => {
+      this.platform.backButton.subscribeWithPriority(1, () => {
         console.log('Back press handler!');
         if (this.location.isCurrentPathEqualTo('/no-connection')) {
         } else if (this.location.isCurrentPathEqualTo('/home/home-tab')) {
@@ -208,13 +446,16 @@ export class AppComponent implements OnInit {
   showExitConfirm() {
     if (!this.alertIsShowing) {
       this.alertIsShowing = true;
-      this.alertController
+      this.alertCtrl
         .create({
-          message: 'Do you want to close the app?',
+          message:
+            this.lHelper.lang == 'en'
+              ? 'Do you want to close the app?'
+              : 'ଆପଣ ଆପ୍ ବନ୍ଦ କରିବାକୁ ଚାହୁଁଛନ୍ତି କି?',
           backdropDismiss: false,
           buttons: [
             {
-              text: 'No',
+              text: this.lHelper.lang == 'en' ? 'No' : 'ନାଁ',
               role: 'cancel',
               handler: () => {
                 this.alertIsShowing = false;
@@ -222,7 +463,7 @@ export class AppComponent implements OnInit {
               },
             },
             {
-              text: 'Exit',
+              text: this.lHelper.lang == 'en' ? 'Exit' : 'ପ୍ରସ୍ଥାନ',
               handler: () => {
                 this.alertIsShowing = false;
                 navigator['app'].exitApp();
@@ -234,5 +475,64 @@ export class AppComponent implements OnInit {
           alert.present();
         });
     }
+  }
+
+  ///generate alert if it did rain
+  private async yes_did_rain() {
+    console.log('yes it did rain');
+    let alert = this.alertCtrl.create({
+      header: 'SATARK Alert Feedback',
+      cssClass: 'fav_loc_prompt',
+      message: 'Did it rain at night or day?',
+      buttons: [
+        {
+          text: 'Day',
+          handler: () => {
+            console.log('yes clicked');
+            var url = 'https://satark.rimes.int/api_user/users_ios_post';
+            var params = JSON.stringify({
+              deviceid: localStorage.getItem('deviceid'),
+              field: 'Rainfall',
+              received: 'day',
+              extra_param: 'notification_feedback',
+            });
+            this.httpClient
+              .post(url, params, { responseType: 'text' })
+              .subscribe(
+                (data) => {
+                  console.log('post data', data);
+                },
+                (err) => {
+                  console.log('ERROR!: ', err);
+                }
+              );
+          },
+        },
+        {
+          text: 'Night',
+          handler: () => {
+            console.log('no clicked');
+            var url = 'https://satark.rimes.int/api_user/users_ios_post';
+            var params = JSON.stringify({
+              deviceid: localStorage.getItem('deviceid'),
+              field: 'Rainfall',
+              received: 'night',
+              extra_param: 'notification_feedback',
+            });
+            this.httpClient
+              .post(url, params, { responseType: 'text' })
+              .subscribe(
+                (data) => {
+                  console.log('post data', data);
+                },
+                (err) => {
+                  console.log('ERROR!: ', err);
+                }
+              );
+          },
+        },
+      ],
+    });
+    (await alert).present();
   }
 }

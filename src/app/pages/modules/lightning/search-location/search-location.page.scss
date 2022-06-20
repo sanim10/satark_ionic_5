@@ -1,0 +1,16 @@
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+ion-searchbar {
+  --background: #f3f3f3;
+  --border-radius: 5px;
+  --padding-end: 10px;
+  margin-left: -7px;
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
+  --box-shadow: none;
+}

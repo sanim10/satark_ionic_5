@@ -1,3 +1,4 @@
+import { SwiperModule } from 'swiper/angular';
 import { HeatwaveMapModule } from '../heatwave-map/heatwave-map.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -19,6 +20,7 @@ import { HeatwaveGraphModule } from '../heatwave-graph/heatwave-graph.module';
     HeatwaveStatPageRoutingModule,
     TranslateModule,
     HeatwaveGraphModule,
+    SwiperModule,
     HeatwaveMapModule,
   ],
   declarations: [HeatwaveStatPage],

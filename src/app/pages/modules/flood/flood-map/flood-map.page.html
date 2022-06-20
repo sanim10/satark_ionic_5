@@ -1,8 +1,8 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
-    <ion-title>{{"Flood" | translate}}</ion-title>
+    <ion-title>{{"Observation Stations" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/flood"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="flood"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,5 +13,8 @@
     <div id="map" #map></div>
     <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
   </div>
+
+  <img *ngIf="lang=='en'" src="../../../../../assets/modules/flood/flood_legend.png" class="legend" />
+  <img *ngIf="lang=='od'" src="../../../../../assets/modules/flood/flood_legend_od.png" class="legend" />
 
 </ion-content>

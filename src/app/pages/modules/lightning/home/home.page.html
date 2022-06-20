@@ -55,6 +55,7 @@
             <ion-card>
               <ion-card-content class="ion-no-padding">
                 <ion-grid>
+                  <!-- <ion-row class="{{this.registered_loc_data.l_type?.toLowerCase()}}"> -->
                   <ion-row class="{{this.registered_loc_data.l_type?.toLowerCase()}}">
                     <ion-col class="card-icon-bg ion-padding-top ion-padding-bottom" size="2.5">
                       <div class="wrapper">
@@ -78,13 +79,29 @@
 
                         <ion-row *ngIf="(registered_loc_data !=null)">
                           <ion-col class="ion-text-center">
-                            <ion-label *ngIf="registered_loc_data.l_type === 'High'">{{"High Lightning"| translate }}
+                            <!-- <ion-label *ngIf="registered_loc_data.l_type === 'High' && lHelper.lang ==='en'">{{registered_loc_data.l_type_adv}}
                             </ion-label>
-                            <ion-label *ngIf="registered_loc_data.l_type === 'Medium'">{{"Medium Lightning" | translate
+                            <ion-label *ngIf="registered_loc_data.l_type === 'High' && lHelper.lang ==='od'">{{registered_loc_data.l_type_adv }}
+                            </ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Medium' && lHelper.lang ==='en'">{{registered_loc_data.l_type_adv
                               }}</ion-label>
-                            <ion-label *ngIf="registered_loc_data.l_type === 'Low'">{{"Low Lightning" | translate }}
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Medium' && lHelper.lang ==='od'">{{registered_loc_data.l_type_adv
+                              }}</ion-label>  
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Low' && lHelper.lang ==='en'">{{"registered_loc_data.l_type_adv}}
                             </ion-label>
-                            <ion-label *ngIf="registered_loc_data.l_type === null">{{"No Lightning" | translate }}
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Low' && lHelper.lang ==='od'">{{"registered_loc_data.l_type_adv}}
+                            </ion-label> -->
+                            <ion-label *ngIf="registered_loc_data.l_type === 'High' && lHelper.lang ==='en'">{{registered_loc_data.l_type_adv}}
+                            </ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === 'High' && lHelper.lang ==='od'">{{registered_loc_data.l_type_adv_ory }}
+                            </ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Medium' && lHelper.lang ==='en'">{{registered_loc_data.l_type_adv}}</ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Medium' && lHelper.lang ==='od'">{{registered_loc_data.l_type_adv_ory}}</ion-label>  
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Low' && lHelper.lang ==='en'">{{"registered_loc_data.l_type_adv}}
+                            </ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === 'Low' && lHelper.lang ==='od'">{{"registered_loc_data.l_type_adv_ory}}
+                            </ion-label>
+                            <ion-label *ngIf="registered_loc_data.l_type === null">{{ "No Lightning" | translate }}
                             </ion-label>
                           </ion-col>
                         </ion-row>
@@ -105,17 +122,17 @@
           </ion-row>
 
           <div *ngIf="lHelper.lang=='en'">
-            <div *ngFor="let data of registered_loc_data.do">
-              <ol *ngIf="data != ''">
-                <li>{{data}}</li>
-              </ol>
+            <div class="green-bullet">
+              <ul *ngFor="let data of registered_loc_data.do">
+                <div *ngIf="data != ''">{{data}}</div>
+              </ul>
             </div>
           </div>
           <div *ngIf="lHelper.lang=='od'">
-            <div *ngFor="let data of registered_loc_data.do_in_oriya">
-              <ol *ngIf="data != ''">
-                <li>{{data}}</li>
-              </ol>
+            <div class="green-bullet">
+              <ul *ngFor="let data of registered_loc_data.do_in_oriya">
+                <div *ngIf="data != ''">{{data}}</div>
+              </ul>
             </div>
           </div>
         </div>
@@ -123,22 +140,22 @@
         <div *ngIf="registered_loc_data?.dont !=null">
           <ion-row class="ion-padding-start">
             <ion-col>
-              <ion-label class="headers">{{"Dont's" | translate}}</ion-label>
+              <ion-label class="headers">{{"Don'ts" | translate}}</ion-label>
             </ion-col>
           </ion-row>
 
           <div *ngIf="lHelper.lang=='en'">
-            <div *ngFor="let data of registered_loc_data.dont">
-              <ol *ngIf="data != ''">
-                <li>{{data}}</li>
-              </ol>
+            <div class="red-bullet">
+              <ul *ngFor="let data of registered_loc_data.dont">
+                <div *ngIf="data != ''">{{data}}</div>
+              </ul>
             </div>
           </div>
           <div *ngIf="lHelper.lang=='od'">
-            <div *ngFor="let data of registered_loc_data.dont_in_oriya">
-              <ol *ngIf="data != ''">
-                <li>{{data}}</li>
-              </ol>
+            <div class="red-bullet">
+              <ul *ngFor="let data of registered_loc_data.dont_in_oriya">
+                <div *ngIf="data != ''">{{data}}</div>
+              </ul>
             </div>
           </div>
         </div>
@@ -195,64 +212,72 @@
           <ion-col>
             <ion-label class="ion-padding">
               <p style="text-align: center; font-size: 1.01rem">
-                You haven’t added any favourites yet.
+                {{"No favourites added" | translate}}
               </p>
             </ion-label>
           </ion-col>
         </ion-row>
+        <div *ngIf="fav_loc_lightning_data!=null">
 
-        <ion-row class="ion-no-padding" *ngFor=" let favourite of fav_loc_lightning_data"
-          (click)="favourite?.l_type !=null ? openFavLoc(favourite):''">
-          <ion-col class="ion-no-padding favourites">
-            <ion-card class="ion-no-padding">
-              <ion-card-content class="ion-no-padding">
-                <ion-grid>
-                  <ion-row class="{{favourite.l_type?.toLowerCase()}}">
-                    <ion-col class="card-icon-bg" size="2.5">
-                      <div class="wrapper">
-                        <ion-icon></ion-icon>
-                      </div>
-                    </ion-col>
-                    <ion-col class="card-content-bg ion-no-padding" size="9.5">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col class="ion-no-padding ion-text-center">
-                            <ion-label *ngIf="lHelper.lang==='en'" class="card-content-location">
-                              &nbsp;{{favourite.block_name}}
-                            </ion-label>
-                            <ion-label *ngIf="lHelper.lang==='od'" class="card-content-location">
-                              &nbsp;{{favourite.block_name_ory}}
-                            </ion-label>
-                          </ion-col>
-                        </ion-row>
+          <ion-row class="ion-no-padding" *ngFor=" let favourite of fav_loc_lightning_data"
+            (click)="favourite?.l_type !=null ? openFavLoc(favourite):''">
+            <ion-col class="ion-no-padding favourites">
+              <ion-card class="ion-no-padding">
+                <ion-card-content class="ion-no-padding">
+                  <ion-grid>
+                    <ion-row class="{{favourite.l_type?.toLowerCase()}}">
+                      <ion-col class="card-icon-bg" size="2.5">
+                        <div class="wrapper">
+                          <ion-icon></ion-icon>
+                        </div>
+                      </ion-col>
+                      <ion-col class="card-content-bg ion-no-padding" size="9.5">
+                        <ion-grid>
+                          <ion-row>
+                            <ion-col class="ion-no-padding ion-text-center">
+                              <ion-label *ngIf="lHelper.lang==='en'" class="card-content-location">
+                                &nbsp;{{favourite.block_name}}, {{favourite.district_name}}
+                              </ion-label>
+                              <ion-label *ngIf="lHelper.lang==='od'" class="card-content-location">
+                                &nbsp;{{favourite.block_name_ory}}, {{favourite.district_name_ory}}
+                              </ion-label>
+                            </ion-col>
+                          </ion-row>
 
-                        <ion-row>
-                          <ion-col class="ion-text-center ion-no-padding">
-                            <ion-label *ngIf="favourite.l_type === 'High'">{{"High Lightning"| translate }}</ion-label>
-                            <ion-label *ngIf="favourite.l_type === 'Medium'">{{"Medium Lightning" | translate }}
-                            </ion-label>
-                            <ion-label *ngIf="favourite.l_type === 'Low'">{{"Low Lightning" | translate }}</ion-label>
-                            <ion-label *ngIf="favourite.l_type === null">{{"No Lightning" | translate }}</ion-label>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                      <div *ngIf="favourite?.l_type !=null" style="
+                          <ion-row>
+                            <ion-col class="ion-text-center ion-no-padding">
+                              <ion-label *ngIf="favourite.l_type === 'High' && lHelper.lang ==='en'" >{{favourite.l_type_adv}}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.l_type === 'Medium'  && lHelper.lang ==='en'" >{{favourite.l_type_adv}}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.l_type === 'Low'  && lHelper.lang ==='en'">{{favourite.l_type_adv}}</ion-label>
+                              <ion-label *ngIf="favourite.l_type === 'High' && lHelper.lang ==='od'" >{{favourite.l_type_adv_ory}}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.l_type === 'Medium'  && lHelper.lang ==='od'" >{{favourite.l_type_adv_ory}}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.l_type === 'Low'  && lHelper.lang ==='od'">{{favourite.l_type_adv_ory}}</ion-label>
+                              <ion-label *ngIf="favourite.l_type === null">{{"No Lightning" | translate }}</ion-label>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                        <div *ngIf="favourite?.l_type !=null" style="
                           position: absolute;
                           float: right;
                           width: 100%;
                           top: 10px;
                         ">
-                        <ion-icon src=" ../../../../../assets/modules/heatwave/more-next.svg"
-                          style="float: right; font-size: 1rem">
-                        </ion-icon>
-                      </div>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
+                          <ion-icon src=" ../../../../../assets/modules/heatwave/more-next.svg"
+                            style="float: right; font-size: 1rem">
+                          </ion-icon>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </div>
 
         <br />
       </ion-grid>
@@ -286,10 +311,10 @@
         </ion-row>
       </ion-grid>
 
-      <ion-grid *ngIf=" (!loading) && (dta_data!=null)" class="container ion-padding">
+      <ion-grid *ngIf=" (!loading) && (dta_data != null)" class="container ion-padding">
         <ion-row>
           <ion-col>
-            <ion-label class="ion-padding-start headers">{{"Potential Status" | translate}}</ion-label>
+            <ion-label class="ion-padding-start headers">{{"Potential Lightning After Few Minutes" | translate}}</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ion-padding-bottom">
@@ -297,7 +322,7 @@
             <ion-card>
               <ion-card-content class="ion-no-padding">
                 <ion-grid>
-                  <ion-row class="dta_data[0].severity?.toLowerCase()">
+                  <ion-row class="{{this.dta_data[0].severity?.toLowerCase()}}">
                     <ion-col class="card-icon-bg ion-padding-top ion-padding-bottom" size="2.5">
                       <div class="wrapper">
                         <ion-icon></ion-icon>
@@ -320,11 +345,14 @@
 
                         <ion-row *ngIf="(dta_data !=null)">
                           <ion-col class="ion-text-center">
-                            <ion-label *ngIf="dta_data[0].severity === 'High'">{{"High Lightning"| translate }}
+                            <ion-label *ngIf="dta_data[0].severity === 'High'" style="font-size: 1rem;">{{"High
+                              lightning in few minutes"| translate }}
                             </ion-label>
-                            <ion-label *ngIf="dta_data[0].severity === 'Medium'">{{"Medium Lightning" | translate }}
+                            <ion-label *ngIf="dta_data[0].severity === 'Medium'" style="font-size: 1rem;">{{"Medium
+                              lightning in few minutes" | translate }}
                             </ion-label>
-                            <ion-label *ngIf="dta_data[0].severity=== 'Low'">{{"Low Lightning" | translate }}
+                            <ion-label *ngIf="dta_data[0].severity=== 'Low'" style="font-size: 1rem;">{{"Low lightning
+                              in few minutes" | translate }}
                             </ion-label>
                             <ion-label *ngIf="dta_data[0].severity === null">{{"No Lightning" | translate }}</ion-label>
                           </ion-col>
@@ -348,55 +376,60 @@
           <ion-col>
             <ion-label class="ion-padding">
               <p style="text-align: center; font-size: 1.01rem">
-                You haven’t added any favourites yet.
+                {{"No favourites added" | translate}}
               </p>
             </ion-label>
           </ion-col>
         </ion-row>
 
-        <ion-row class="ion-no-padding" *ngFor=" let favourite of dta_fav_data">
-          <ion-col class="ion-no-padding favourites">
-            <ion-card class="ion-no-padding">
-              <ion-card-content class="ion-no-padding">
-                <ion-grid>
-                  <ion-row class="{{favourite?.severity}}">
-                    <ion-col class="card-icon-bg" size="2.5">
-                      <div class="wrapper">
-                        <ion-icon></ion-icon>
-                      </div>
-                    </ion-col>
-                    <ion-col class="card-content-bg ion-no-padding" size="9.5">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col class="ion-no-padding ion-text-center">
-                            <ion-label *ngIf="lHelper.lang==='en'" class="card-content-location">
-                              &nbsp;{{favourite.block_name}}
-                            </ion-label>
-                            <ion-label *ngIf="lHelper.lang==='od'" class="card-content-location">
-                              &nbsp;{{favourite.block_name_ory}}
-                            </ion-label>
-                          </ion-col>
-                        </ion-row>
+        <div *ngIf="dta_fav_data!=null">
+          <ion-row class="ion-no-padding" *ngFor=" let favourite of dta_fav_data">
+            <ion-col class="ion-no-padding favourites">
+              <ion-card class="ion-no-padding">
+                <ion-card-content class="ion-no-padding">
+                  <ion-grid>
+                    <ion-row class="{{favourite?.severity}}">
+                      <ion-col class="card-icon-bg" size="2.5">
+                        <div class="wrapper">
+                          <ion-icon></ion-icon>
+                        </div>
+                      </ion-col>
+                      <ion-col class="card-content-bg ion-no-padding" size="9.5">
+                        <ion-grid>
+                          <ion-row>
+                            <ion-col class="ion-no-padding ion-text-center">
+                              <ion-label *ngIf="lHelper.lang==='en'" class="card-content-location">
+                                &nbsp;{{favourite.block_name}}, {{favourite.district_name}}
+                              </ion-label>
+                              <ion-label *ngIf="lHelper.lang==='od'" class="card-content-location">
+                                &nbsp;{{favourite.block_name_ory}}, {{favourite.district_name_ory}}
+                              </ion-label>
+                            </ion-col>
+                          </ion-row>
 
-                        <ion-row>
-                          <ion-col class="ion-text-center ion-no-padding">
-                            <ion-label *ngIf="favourite.severity === 'High'">{{"High Lightning"| translate }}
-                            </ion-label>
-                            <ion-label *ngIf="favourite.severity === 'Medium'">{{"Medium Lightning" | translate }}
-                            </ion-label>
-                            <ion-label *ngIf="favourite.severity === 'Low'">{{"Low Lightning" | translate }}</ion-label>
-                            <ion-label *ngIf="favourite.severity === null">{{"No Lightning" | translate }}</ion-label>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-
+                          <ion-row>
+                            <ion-col class="ion-text-center ion-no-padding">
+                              <ion-label *ngIf="favourite.severity === 'High'" style="font-size: 1rem;">{{"High
+                                lightning in few minutes"| translate }}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.severity === 'Medium'" style="font-size: 1rem;">{{"Medium
+                                lightning in few minutes" | translate }}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.severity === 'Low'" style="font-size: 1rem;">{{"Low lightning
+                                in few minutes" | translate }}
+                              </ion-label>
+                              <ion-label *ngIf="favourite.severity === null">{{"No Lightning" | translate }}</ion-label>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </div>
         <br />
       </ion-grid>
     </div>

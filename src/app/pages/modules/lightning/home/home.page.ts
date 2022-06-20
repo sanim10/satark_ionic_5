@@ -31,113 +31,20 @@ export class HomePage implements OnInit, AfterViewInit {
   };
 
   loading = true;
-  public user_data: Array<any>;
+  public user_data: any = [];
+  public user_datum: any = [];
   block_id: string;
   user_id: string;
   today: string;
-  public fav_loc_data: any;
-  public success_data: any;
-  public registered_loc_data: any;
-  public fav_loc_lightning_data: any;
-  public dta_data: any;
-  public dta_fav_data: any;
+  public fav_loc_data: any = [];
+  public success_data: any = [];
+  public registered_loc_data: any = [];
+  public fav_loc_lightning_data: any = [];
+  public dta_data: any = [];
+  public dta_fav_data: any = [];
   dta_status_reg: string;
   dta_status_fav: string;
   lHelper;
-  favourites = [
-    {
-      location: 'angul',
-      condition: 'no lightning',
-    },
-    {
-      location: 'Dhansala',
-      condition: 'low lightning',
-      advisory: [
-        {
-          headerName: "do's",
-          content: [
-            {
-              img: '../../../../../assets/modules/lightning/dos/dos_1.jpg',
-              text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-            },
-            {
-              img: '../../../../../assets/home/buttons/heatwave_ic.svg',
-              text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-            },
-            {
-              img: '../../../../../assets/home/buttons/heatwave_ic.svg',
-              text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-            },
-          ],
-        },
-
-        {
-          headerName: "dont's",
-          content: [
-            {
-              img: '../../../../../assets/home/buttons/heatwave_ic.svg',
-              text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-            },
-            {
-              img: '../../../../../assets/home/buttons/heatwave_ic.svg',
-              text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  lightning = {
-    location: 'Dhankauda, Sambalpur',
-    condition: 'medium lightning',
-    temperature: '33',
-    advisory: [
-      {
-        headerName: "do's",
-        content: [
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_1.svg',
-            text: 'When thunderstorm comes, go out of water',
-          },
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_2.svg',
-            text: 'When thunder roars, go indoors',
-          },
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_3.svg',
-            text: 'If in an open field, crouch down and put your feet together ',
-          },
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_4.svg',
-            text: 'Perform CPR immediately on the victim of lightning',
-          },
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_5.svg',
-            text: 'Avoid taking bath during lightning storm as current can easily pass through water',
-          },
-          {
-            img: '../../../../../assets/modules/lightning/dos/dos_6.svg',
-            text: 'Unplug unnecesssary electrical equipments and avoid using corded telephones',
-          },
-        ],
-      },
-
-      {
-        headerName: "dont's",
-        content: [
-          {
-            img: '../../../../../assets/home/buttons/lightning_ic.svg',
-            text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-          },
-          {
-            img: '../../../../../assets/home/buttons/lightning_ic.svg',
-            text: 'Lorem ipsum dolor sit amet. Ex dolore facere ut perferendis dicta rem rerum voluptas. ',
-          },
-        ],
-      },
-    ],
-  };
 
   constructor(
     private modalController: ModalController,
@@ -152,11 +59,22 @@ export class HomePage implements OnInit, AfterViewInit {
     this.display();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user_id = localStorage.getItem('id');
+    this.block_id = localStorage.getItem('block_id');
+    this.user_datum.block_name = localStorage.getItem('block_name');
+    this.user_datum.block_name_ory = localStorage.getItem('block_name_ory');
+    this.user_datum.district_id = localStorage.getItem('district_id');
+    this.user_datum.district_name = localStorage.getItem('district_name');
+    this.user_datum.district_name_ory =
+      localStorage.getItem('district_name_ory');
+    this.user_data.push(this.user_datum);
+  }
 
   display() {
     this.loading = true;
-    this.checklogin(localStorage.getItem('token'));
+    // this.checklogin(localStorage.getItem('token'));
+    this.checklogin();
   }
 
   doRefresh(event) {
@@ -175,24 +93,32 @@ export class HomePage implements OnInit, AfterViewInit {
     return await modal.present();
   }
 
-  checklogin(id: string) {
-    this.apiService
-      .checklogin(id)
-      .pipe(take(1)) //call api to check token
-      .subscribe((data) => {
-        this.user_data = data['result'];
-        console.log('user_data', this.user_data);
-        this.block_id = this.user_data[0].block_id;
-        this.user_id = this.user_data[0].id;
-        console.log('block', this.user_data[0].block_id);
-        this.getFavLocations(this.user_id);
-        this.getLightningAdvRegisteredLocData(this.block_id);
-        this.getLightningAdvFavLocData(this.user_id);
-        this.getDtaRegBlocks(this.block_id);
-        this.getDtaFavBlocks(this.user_id);
-      });
-  }
+  // checklogin(id: string) {
+  //   this.apiService
+  //     .checklogin(id)
+  //     .pipe(take(1)) //call api to check token
+  //     .subscribe((data) => {
+  //       this.user_data = data['result'];
+  //       console.log('user_data', this.user_data);
+  //       this.block_id = this.user_data[0].block_id;
+  //       this.user_id = this.user_data[0].id;
+  //       console.log('block', this.user_data[0].block_id);
+  //       this.getFavLocations(this.user_id);
+  //       this.getLightningAdvRegisteredLocData(this.block_id);
+  //       this.getLightningAdvFavLocData(this.user_id);
+  //       this.getDtaRegBlocks(this.block_id);
+  //       this.getDtaFavBlocks(this.user_id);
+  //     });
+  // }
 
+  checklogin() {
+    this.getFavLocations(this.user_id);
+    this.getFavLocations(this.user_id);
+    this.getLightningAdvRegisteredLocData(this.block_id);
+    this.getLightningAdvFavLocData(this.user_id);
+    this.getDtaRegBlocks(this.block_id);
+    this.getDtaFavBlocks(this.user_id);
+  }
   ////get fav location detail of user by userid
   getFavLocations(usrid: string) {
     let param = {
@@ -279,6 +205,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.dta_data = data;
         if (this.dta_data?.length != 0) {
           console.log('dta blocks...', this.dta_data);
+          console.log("severity..",this.dta_data[0].severity);
           // for(var i = 0; i <= this.dta_data.length; ++i){
           //   if(this.block_id === this.dta_data[i].block_id){
           //     this.dta_status_reg = this.dta_data[i].severity;
@@ -288,7 +215,7 @@ export class HomePage implements OnInit, AfterViewInit {
           //   }
           // }
         } else {
-          // this.dta_data = null;
+          this.dta_data = null;
           this.dta_data[0].severity = null;
         }
         this.loading = false;

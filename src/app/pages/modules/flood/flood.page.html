@@ -1,24 +1,24 @@
 <ion-content [fullscreen]=" true" scrollY="false">
   <ion-tabs>
     <ion-tab-bar slot="bottom" component="home">
-      <ion-tab-button tab="home">
+      <ion-tab-button (click)="routeTo('home')">
         <ion-icon name="home" src="../../../../assets/home/home_ic.svg"></ion-icon>
         <ion-label>{{"Home" | translate}}</ion-label>
       </ion-tab-button>
 
       <ion-tab-button tab='reservior-status'>
         <ion-icon name="reservior-status" src="../../../../assets/modules/flood/reservoir_ic.svg"></ion-icon>
-        <ion-label>Reservoir <br>Status</ion-label>
+        <ion-label>{{"Reservoir Status" | translate}} </ion-label>
       </ion-tab-button>
 
       <ion-tab-button (click)="routeTo('hydro-forecast')">
         <ion-icon name="hydro-forecast" src="../../../../assets/modules/flood/hydro_ic.svg"></ion-icon>
-        <ion-label>Hydrological <br> Forecast</ion-label>
+        <ion-label>{{"Hydrological \n Forecast" | translate}}</ion-label>
       </ion-tab-button>
 
       <ion-tab-button (click)="routeTo('rainfall-forecast')">
         <ion-icon name="rainfall-forecast" src="../../../../assets/modules/flood/rainfall_ic.svg"></ion-icon>
-        <ion-label>Rainfall <br /> Forecast</ion-label>
+        <ion-label>{{"Rainfall\nForecast" | translate}}</ion-label>
       </ion-tab-button>
 
       <ion-tab-button (click)="routeTo('map')">

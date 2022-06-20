@@ -1,4 +1,3 @@
-import { HomePage } from './home/home.page';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -11,17 +10,24 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: HomePage,
-        // loadChildren: () =>
-        //   import('./home/home.module').then((m) => m.HomePageModule),
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomePageModule),
       },
       {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
       },
+      {
+        path: 'search-location',
+        loadChildren: () =>
+          import('./search-location/search-location.module').then(
+            (m) => m.SearchLocationPageModule
+          ),
+      },
     ],
   },
+
   {
     path: 'lightning-map',
     loadChildren: () =>
@@ -35,4 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WeatherPageRoutingModule {}
+export class LightningPageRoutingModule {}

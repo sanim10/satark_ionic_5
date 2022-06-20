@@ -6,7 +6,12 @@ import { SwiperComponent } from 'swiper/angular';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SwiperOptions } from 'swiper';
 import SwiperCore, { Navigation } from 'swiper';
-import { LoadingController, NavController } from '@ionic/angular';
+import {
+  IonBackButtonDelegate,
+  LoadingController,
+  NavController,
+  Platform,
+} from '@ionic/angular';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 
 SwiperCore.use([Navigation]);
@@ -17,15 +22,21 @@ SwiperCore.use([Navigation]);
 })
 export class EmailRegistrationPage implements OnInit {
   @ViewChild('swiper', { static: true }) swiper?: SwiperComponent;
+  @ViewChild(IonBackButtonDelegate, { static: false })
+  backButton: IonBackButtonDelegate;
+  backPriorityBtn;
+
   mail;
   password;
+  activeSlide = 0;
   constructor(
     private languageHelper: LanguageHelperService,
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
     private navCtrl: NavController,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private platform: Platform
   ) {}
 
   ngOnInit() {}
@@ -47,7 +58,7 @@ export class EmailRegistrationPage implements OnInit {
     // console.log(swiper);
   }
   onSlideChange() {
-    // console.log('slide change');
+    this.activeSlide = this.swiper.swiperRef.activeIndex;
   }
 
   moveToPassword(email) {
@@ -92,5 +103,33 @@ export class EmailRegistrationPage implements OnInit {
             this.authService.setLoginState('false');
           });
       });
+  }
+
+  ionViewDidEnter() {
+    this.setUIBackButtonAction();
+  }
+
+  setUIBackButtonAction() {
+    this.backButton.onClick = (ev) => {
+      if (this.activeSlide != 0) {
+        this.slidePrev();
+      } else {
+        this.navCtrl.navigateBack('login'), { replaceUrl: true };
+      }
+    };
+    this.backPriorityBtn = this.platform.backButton.subscribeWithPriority(
+      2,
+      () => {
+        if (this.activeSlide != 0) {
+          this.slidePrev();
+        } else {
+          this.navCtrl.navigateBack('login'), { replaceUrl: true };
+        }
+      }
+    );
+  }
+
+  ionViewWillLeave() {
+    this.backPriorityBtn.unsubscribe();
   }
 }

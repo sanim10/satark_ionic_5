@@ -48,18 +48,15 @@ export class SearchLocationPage implements OnInit {
   filterItems(ev: any) {
     this.searchTerm = ev.target.value;
     console.log('searchterm', this.searchTerm);
+
     if (this.searchTerm && this.searchTerm.trim() != '') {
       console.log(this.searchTerm);
-      this.filtereditems = this.block_data
-        .filter((item) => {
-          return (
-            item.block_name
-              .toLowerCase()
-              .indexOf(this.searchTerm.toLowerCase()) > -1
-          );
-        })
-        .sort();
-      console.log(this.filtereditems);
+      this.filtereditems = this.block_data.filter((item) => {
+        return (
+          item.block_name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+          -1
+        );
+      });
     } else {
       this.filtereditems = null;
     }

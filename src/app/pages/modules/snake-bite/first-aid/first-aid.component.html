@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"First Aid" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+
+  <ion-grid>
+
+    <div>
+      <swiper [config]="config" (slideChange)="onSlideChange()" #swiper>
+
+        <ng-template swiperSlide *ngFor="let content of first_aid_img">
+          <ion-row>
+            <ion-col class="ion-no-padding">
+
+              <ion-card>
+                <ion-card-content>
+
+                  <div style="height: 100px;display:flex;align-items: center; justify-content: center;">
+                    <ion-icon *ngIf="content.do!=null" name="checkmark" style="font-size: 150px;color:#6FDC6F;">
+                    </ion-icon>
+
+                    <ion-icon *ngIf="content.dont!=null" name="close" style="font-size: 150px;color: #FF5C5C;">
+                    </ion-icon>
+                  </div>
+
+
+                  <div style="height: 230px; display:flex; ">
+                    <img style="margin: 5px auto; max-height: 230px" src="{{content.img}}" alt="img" />
+                  </div>
+                  <br>
+                  <div class="swiper-pagination"></div>
+
+                  <ion-label style="font-size: 1.01rem; text-transform: none; color: rgb(26, 26, 26);">
+                    {{content.text | translate}}
+                  </ion-label>
+                </ion-card-content>
+              </ion-card>
+
+
+            </ion-col>
+          </ion-row>
+        </ng-template>
+
+      </swiper>
+
+    </div>
+
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <ion-button size="default" style="margin:15px" (click)="slidePrev()" *ngIf="activeSlide!=0">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button size="default" style="margin:15px" (click)="slideNext()" *ngIf="activeSlide!=first_aid_img.length-1">
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-grid>
+</ion-content>

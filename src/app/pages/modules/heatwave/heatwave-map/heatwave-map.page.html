@@ -3,7 +3,13 @@
     <ion-title *ngIf="this.days == 'ensemble'">{{"Heatwave Forecast" | translate}}</ion-title>
     <ion-title *ngIf="this.days == 'ten'">{{"Heat Stress Forecast" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/heatwave"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="heatwave"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons>
+      <div class="entity">
+        <img src="../../../../assets/home/osdma_logo.png" />
+        <img src="../../../../assets/home/imd_logo.png" />
+      </div>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

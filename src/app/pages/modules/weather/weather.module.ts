@@ -1,4 +1,3 @@
-import { MapModalModule } from './map-modal/map-modal.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { HomePage } from './../weather/home/home.page';
 import { FavModalModule } from './fav-modal/fav-modal.module';
@@ -20,7 +19,6 @@ import { WeatherPage } from './weather.page';
     WeatherPageRoutingModule,
     TranslateModule,
     FavModalModule,
-    MapModalModule,
   ],
   declarations: [WeatherPage, HomePage],
 })

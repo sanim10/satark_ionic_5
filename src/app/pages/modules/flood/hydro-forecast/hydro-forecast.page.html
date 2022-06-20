@@ -1,8 +1,8 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
-    <ion-title>{{"Hydrologicial Forecast" | translate}}</ion-title>
+    <ion-title>{{"Hydrological Forecast" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/flood"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="flood"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -47,6 +47,8 @@
 
     </ion-fab-list>
   </ion-fab>
+  <img *ngIf="lang=='en'" src="../../../../../assets/modules/flood/hydro_legend.png" class="legend" />
+  <img *ngIf="lang=='od'" src="../../../../../assets/modules/flood/hydro_legend_ory.png" class="legend" />
 
   <ion-footer>
     <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
@@ -55,6 +57,7 @@
     <ion-button size="small" class="ion-no-padding play-button" (click)="pause()" *ngIf="run">
       <ion-icon name="pause"></ion-icon>
     </ion-button>
+
 
 
 

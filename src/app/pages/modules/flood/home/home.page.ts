@@ -54,7 +54,6 @@ export class HomePage implements OnInit, AfterViewInit {
     this.loading = true;
     this.getRiverIdForDefault();
     this.checklogin(localStorage.getItem('token'));
-    this.getAllRiver();
   }
 
   checklogin(id: string) {
@@ -66,7 +65,9 @@ export class HomePage implements OnInit, AfterViewInit {
         this.block_id = this.user_data[0].block_id;
         this.user_id = this.user_data[0].id;
         console.log('block', this.user_data[0].block_id);
+        this.loading = false;
       });
+    this.getAllRiver();
   }
 
   setDefaultRivers() {
@@ -85,7 +86,6 @@ export class HomePage implements OnInit, AfterViewInit {
       (data) => {
         this.river_data = data;
         console.log('river names', this.river_data);
-        this.loading = false;
       },
       (Error) => {
         this.authService.showErrorToast(
@@ -150,7 +150,7 @@ export class HomePage implements OnInit, AfterViewInit {
   //get water level data for default station
   getWaterlvlForDefault() {
     let param = {
-      id: '80',
+      id: 80,
     };
     console.log('default param', param);
     this.apiService.getWaterlevelByStationId(param).subscribe((data) => {
@@ -189,11 +189,11 @@ export class HomePage implements OnInit, AfterViewInit {
   async showRiverSelector() {
     this.buttons = [
       {
-        text: this.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
+        text: this.lang == 'en' ? 'CANCEL' : 'ବାତିଲ କରନ୍ତୁ',
         role: 'cancel',
       },
     ];
-
+    console.log(this.river_data);
     this.river_data.forEach((element) => {
       var tmpButton = {
         text: this.lang == 'en' ? element.river_name : element.river_name_ory,
@@ -207,14 +207,17 @@ export class HomePage implements OnInit, AfterViewInit {
     });
 
     (
-      await this.actionSheetController.create({ buttons: this.buttons })
+      await this.actionSheetController.create({
+        buttons: this.buttons,
+        mode: 'ios',
+      })
     ).present();
   }
 
   showStationSelector = async () => {
     this.buttons = [
       {
-        text: this.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
+        text: this.lang == 'en' ? 'CANCEL' : 'ବାତିଲ କରନ୍ତୁ',
         role: 'cancel',
       },
     ];
@@ -235,7 +238,10 @@ export class HomePage implements OnInit, AfterViewInit {
     });
 
     (
-      await this.actionSheetController.create({ buttons: this.buttons })
+      await this.actionSheetController.create({
+        buttons: this.buttons,
+        mode: 'ios',
+      })
     ).present();
   };
 
@@ -244,7 +250,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
     if (
       this.stn_waterlvl_data[0].value != null &&
-      this.stn_waterlvl_data[0].danger_lvl != null
+      this.stn_waterlvl_data[0].danger_lvl != null &&
+      this.stn_waterlvl_data[0].warning_lvl != null
     ) {
       if (
         +this.stn_waterlvl_data[0].value >=

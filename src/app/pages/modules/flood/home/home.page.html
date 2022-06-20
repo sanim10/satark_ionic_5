@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>{{"Flood" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -20,7 +20,7 @@
     <div class="skeleton skeleton-card-desc"></div>
   </div>
 
-  <ion-grid *ngIf="user_data && !loading" class="ion-padding">
+  <ion-grid *ngIf="user_data && !loading " class="ion-padding">
     <ion-row>
       <ion-col>
         <ion-list>
@@ -64,7 +64,7 @@
       <ion-col style="padding-top: 0; padding-bottom: 0">
         <ion-input *ngIf="rivername != null" #station_name (ionChange)="getStationId()" (click)="showStationSelector()"
           interface="action-sheet" [(ngModel)]="this.stationname" readonly>
-          &nbsp;&nbsp; <ion-icon name="caret-down-outline" style="position: absolute; right: 10px; opacity: 0.4">
+          &nbsp;&nbsp; <ion-icon name=" caret-down-outline" style="position: absolute; right: 10px; opacity: 0.4">
           </ion-icon>
         </ion-input>
       </ion-col>
@@ -84,12 +84,12 @@
                   <ion-label class="water-level-header">{{"Station" | translate}} </ion-label>
                 </ion-col>
                 <ion-col size="6" class="ion-text-center">
-                  <ion-label class="water-level-header"> {{"As observerd on" | translate}} </ion-label>
+                  <ion-label class="water-level-header"> {{"As observed on" | translate}} </ion-label>
                 </ion-col>
               </ion-row>
 
               <ion-row>
-                <ion-col size="6" class="ion-text-center">
+                <ion-col size="6" class="ion-text-center ion-no-padding" style="padding-top: 5px;">
                   <ion-label *ngIf="lang=='en'" class="water-level-details">{{stn_waterlvl_data[0].location_name}}
                   </ion-label>
                   <ion-label *ngIf="lang=='od'" class="water-level-details">{{stn_waterlvl_data[0].location_name_ory}}
@@ -308,4 +308,7 @@
     </div>
 
   </ion-grid>
+  <p style="font-size: 10px; text-align: center; color: rgb(167, 167, 167)">
+    {{"Data Source: Department of Water Resources, Odisha" | translate}}
+  </p>
 </ion-content>

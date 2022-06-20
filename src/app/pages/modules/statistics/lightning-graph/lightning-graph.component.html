@@ -1,9 +1,5 @@
 <ion-content class="ion-padding-start ion-padding-end" scrollY="false">
-  <div
-    *ngIf="!graphData"
-    class="ion-padding-start ion-padding-end ion-padding-top"
-    style="height: 100vh"
-  >
+  <div *ngIf="!graphData" class="ion-padding-start ion-padding-end ion-padding-top" style="height: 100vh">
     <div class="skeleton skeleton-card"></div>
   </div>
   <ion-card>
@@ -15,7 +11,7 @@
     <canvas id="myChart" width="500" height="400"></canvas>
     <ion-card-content>
       <div></div>
-      <p>Number of Deaths</p>
+      <p>{{"Number of Deaths" | translate}}</p>
     </ion-card-content>
   </ion-card>
 </ion-content>

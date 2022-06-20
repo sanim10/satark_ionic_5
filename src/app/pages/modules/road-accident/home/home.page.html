@@ -1,0 +1,84 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Road Accident" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="map-container">
+    <!-- <div id="map" #map></div> -->
+    <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0" *ngIf="mapState!=true">
+    </div>
+
+    <div #map id="map"></div>
+
+  </div>
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <div style="width: 100%;z-index: 9;position: absolute;background-color: rgba(255, 255, 255, 0.737);">
+
+    <ion-searchbar [(ngModel)]="autocompleteorigin.input" (ionInput)="updateOriginSearchResults()"
+      placeholder="From..(Currently your location)"></ion-searchbar>
+    <ion-list [hidden]="autocompleteItemsorigin.length == 0">
+      <ion-item *ngFor="let item of autocompleteItemsorigin" tappable (click)="selectOriginSearchResult(item)">
+        {{ item.description }}
+      </ion-item>
+    </ion-list>
+
+    <!-- search bar for destination -->
+    <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Where to..."
+      style="margin-top:5px; "></ion-searchbar>
+    <ion-list [hidden]="autocompleteItems.length == 0">
+      <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+        {{ item.description }}
+      </ion-item>
+    </ion-list>
+
+    <!-- <ion-card [hidden]="this.route_distance != null"> -->
+    <ion-card [hidden]="this.route_distance == null">
+
+      <ion-card-content>
+        <ion-icon name="close" style="float:right;transform:scale(1.5)" (click)="clear()">
+        </ion-icon>
+        <h4>{{"Time" | translate}}: <span style="color:#447FF7;font-weight:bold">{{this.route_duration}}</span> <span
+            style=" padding-left:
+            15px;">{{"Distance"
+            |
+            translate}}: </span> <span style="color:#447FF7;font-weight:bold">{{this.route_distance}}</span></h4>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+
+
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="top" (click)="showHideBackdrop()" [ngClass]="lang =='en'? '':'od'">
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="accidents? 'fab-active' :''"
+        (click)="updateFAB('accidents')">
+        <ion-label>{{"Recent Accidents" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/road-accident/accident_ic.svg'></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="black_spots? 'fab-active' :''"
+        (click)="updateFAB('black-spots')">
+        <ion-label>{{"Black Spot" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/road-accident/black_spot_ic.svg'></ion-icon>
+      </ion-fab-button>
+
+
+
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+
+</ion-content>

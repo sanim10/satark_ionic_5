@@ -63,6 +63,7 @@ export class ReserviorStatusPage implements OnInit, AfterViewInit {
         // this.block_id = this.user_data[0].block_id;
         this.user_id = this.user_data[0].id;
         console.log('block', this.user_data[0].block_id);
+        this.loading = false;
       });
     this.getAllReservoirs();
   }
@@ -85,7 +86,6 @@ export class ReserviorStatusPage implements OnInit, AfterViewInit {
         console.log('resvr_data', this.resvr_data);
         // this.getResvId();
         this.getDefault(this.resvrname);
-        this.loading = false;
       },
       (Error) => {
         this.authService.showErrorToast(
@@ -171,7 +171,7 @@ export class ReserviorStatusPage implements OnInit, AfterViewInit {
   showResSelector = async () => {
     this.buttons = [
       {
-        text: this.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
+        text: this.lang == 'en' ? 'CANCEL' : 'ବାତିଲ କରନ୍ତୁ',
         role: 'cancel',
       },
     ];
@@ -192,7 +192,10 @@ export class ReserviorStatusPage implements OnInit, AfterViewInit {
     });
 
     (
-      await this.actionSheetController.create({ buttons: this.buttons })
+      await this.actionSheetController.create({
+        buttons: this.buttons,
+        mode: 'ios',
+      })
     ).present();
   };
 

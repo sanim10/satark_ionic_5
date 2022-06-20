@@ -22,7 +22,7 @@ export class FloodMapPage implements OnInit, AfterViewInit {
   warning_lvl: any = [];
   cur_lvl: any = [];
   public marker: any = [];
-
+  marker_lnglat;
   public result_data: any = [];
   constructor(
     private loadingCtrl: LoadingController,
@@ -64,7 +64,32 @@ export class FloodMapPage implements OnInit, AfterViewInit {
           setTimeout(() => this.map.resize(), 0);
           document.getElementById('map').style.opacity = '1';
           document.getElementById('skeleton').style.display = 'none';
-
+          this.map.addSource('district', {
+            type: 'geojson',
+            data: '../../../../../assets/geojson/Odisha_Dist.geojson',
+          });
+          this.map.addLayer({
+            id: 'district-layer',
+            type: 'fill',
+            source: 'district',
+            paint: {
+              'fill-color': 'white',
+              'fill-opacity': 0.5,
+            },
+          });
+          this.map.addLayer({
+            id: 'district-layer2',
+            type: 'line',
+            source: 'district',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round',
+            },
+            paint: {
+              'line-color': '#000',
+              'line-width': 1,
+            },
+          });
           loadingEl.dismiss();
 
           this.map.addLayer({
@@ -99,6 +124,14 @@ export class FloodMapPage implements OnInit, AfterViewInit {
               'line-width': 0.5,
             },
           });
+        });
+        this.map.on('click', (e) => {
+          if (this.marker_lnglat != null) {
+            console.log(this.marker_lnglat);
+            this.map.flyTo({
+              center: [this.marker_lnglat.lng, this.marker_lnglat.lat + 0.3],
+            });
+          }
         });
         this.loadData();
       });
@@ -155,16 +188,18 @@ export class FloodMapPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(
-                  `<div>
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<div>
                   <ion-grid class="ion-no-padding">
                   <ion-row id="popup-content" >
                       <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ">` +
-                    (this.lang == 'en'
-                      ? this.loc_name[j]
-                      : this.loc_name_ory[j]) +
-                    `<br/><br/></ion-label>
+                   <ion-label style="text-align:center;font-weight:600;font-size:14px ">` +
+                      (this.lang == 'en'
+                        ? this.loc_name[j]
+                        : this.loc_name_ory[j]) +
+                      `<br/><br/></ion-label>
                   </ion-col>
                   </ion-row>
                    
@@ -172,64 +207,66 @@ export class FloodMapPage implements OnInit, AfterViewInit {
                       <ion-col class="ion-no-padding">
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem">` +
-                    (this.lang == 'en'
-                      ? `Current Water Level`
-                      : `ବର୍ତମାନ ର ଜଳସ୍ତର`) +
-                    `</p>
+                                <p style="margin-top: 5px;font-size:14px">` +
+                      (this.lang == 'en'
+                        ? `Current Water Level`
+                        : `ବର୍ତମାନ ର ଜଳସ୍ତର`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    this.cur_lvl[j] +
-                    ` m</p>
+                                <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      this.cur_lvl[j] +
+                      ` m</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en'
-                      ? `Warning Level`
-                      : `ଜଳସ୍ଥର ଚେତାବନୀ ସଂକେତ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Warning Level` : `ଚେତାବନି ସଂକେତ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
+                                <p style="margin-top: 5px;font-size:14px;font-weight:500">
                                     ` +
-                    `NA` +
-                    `</p>
+                      (this.lang == 'en' ? `NA` : 'ଉପଲବ୍ଧ ନାହିଁ') +
+                      `</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en' ? `Danger Level` : `ଜଳସ୍ଥର ବିପଦ ସଂକେତ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    `NA` +
-                    `</p>
+                              <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      (this.lang == 'en' ? `NA` : 'ଉପଲବ୍ଧ ନାହିଁ') +
+                      `</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en' ? `Observed Date` : `ତଦାରଖର ଦିନ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Observed Date` : `ତଦାରଖର ଦିନ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    this.obs_date[j] +
-                    `</p></ion-col>
+                               <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      this.obs_date[j] +
+                      `</p></ion-col>
                         </ion-row>
 
                       </ion-col>
                     </ion-row>
                   </ion-grid>
                 </div>`
-                )
+                  )
               )
               .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else {
             const marker = new mapboxgl.Marker({ element: el })
@@ -237,16 +274,18 @@ export class FloodMapPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(
-                  `<div>
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<div>
                   <ion-grid class="ion-no-padding">
                   <ion-row id="popup-content" >
                       <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem;">` +
-                    (this.lang == 'en'
-                      ? this.loc_name[j]
-                      : this.loc_name_ory[j]) +
-                    `<br/><br/></ion-label>
+                   <ion-label style="text-align:center;font-weight:600;font-size:14px;">` +
+                      (this.lang == 'en'
+                        ? this.loc_name[j]
+                        : this.loc_name_ory[j]) +
+                      `<br/><br/></ion-label>
                   </ion-col>
                   </ion-row>
                    
@@ -254,70 +293,80 @@ export class FloodMapPage implements OnInit, AfterViewInit {
                       <ion-col class="ion-no-padding">
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en'
-                      ? `Current Water Level`
-                      : `ବର୍ତମାନ ର ଜଳସ୍ତର`) +
-                    `</p>
+                                <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en'
+                        ? `Current Water Level`
+                        : `ବର୍ତମାନ ର ଜଳସ୍ତର`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    this.cur_lvl[j] +
-                    ` m</p>
+                                <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      this.cur_lvl[j] +
+                      ` m</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en'
-                      ? `Warning Level`
-                      : `ଜଳସ୍ଥର ଚେତାବନୀ ସଂକେତ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Warning Level` : `ଚେତାବନି ସଂକେତ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
+                                <p style="margin-top: 5px;font-size:14px;font-weight:500">
                                     ` +
-                    (this.warning_lvl[j] != null
-                      ? this.warning_lvl[j] + ' m'
-                      : `NA`) +
-                    `</p>
+                      (this.warning_lvl[j] != null
+                        ? this.warning_lvl[j] + ' m'
+                        : this.lang == 'en'
+                        ? this.lang == 'en'
+                          ? `NA`
+                          : 'ଉପଲବ୍ଧ ନାହିଁ'
+                        : 'ଉପଲବ୍ଧ ନାହିଁ') +
+                      `</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en' ? `Danger Level` : `ଜଳସ୍ଥର ବିପଦ ସଂକେତ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    this.danger_lvl[j] +
-                    ` m</p>
+                              <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      this.danger_lvl[j] +
+                      ` m</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                    (this.lang == 'en' ? `Observed Date` : `ତଦାରଖର ଦିନ`) +
-                    `</p>
+                                 <p style="margin-top: 5px;font-size:14px;">` +
+                      (this.lang == 'en' ? `Observed Date` : `ତଦାରଖର ଦିନ`) +
+                      `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:#0066A6 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                    this.obs_date[j] +
-                    `</p></ion-col>
+                               <p style="margin-top: 5px;font-size:14px;font-weight:500">` +
+                      this.obs_date[j] +
+                      `</p></ion-col>
                         </ion-row>
 
                       </ion-col>
                     </ion-row>
                   </ion-grid>
                 </div>`
-                )
+                  )
               )
               .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           }
         }
       }, 0);
     }
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

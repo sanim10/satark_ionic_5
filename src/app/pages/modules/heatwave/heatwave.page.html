@@ -1,7 +1,7 @@
 <ion-content [fullscreen]=" true">
   <ion-tabs>
     <ion-tab-bar slot="bottom" component="heatwave/home">
-      <ion-tab-button tab="home">
+      <ion-tab-button (click)="routeToHome()">
         <ion-icon name="home" src="../../../../assets/home/home_ic.svg"></ion-icon>
         <ion-label>{{"Home" | translate}}</ion-label>
       </ion-tab-button>
@@ -9,6 +9,11 @@
       <ion-tab-button routerLink="/edit-favorites">
         <ion-icon name="favourite" src="../../assets/modules/heatwave/favourite_ic.svg"></ion-icon>
         <ion-label>{{"Edit Location" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="search-location">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-label>{{"Search Location" | translate}}</ion-label>
       </ion-tab-button>
 
       <ion-tab-button (click)="routeTo()">

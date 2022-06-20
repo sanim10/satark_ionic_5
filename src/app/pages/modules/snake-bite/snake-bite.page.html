@@ -1,0 +1,40 @@
+<ion-content [fullscreen]=" true" scrollY="false">
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" component="home">
+      <ion-tab-button (click)="routeTo('home')">
+        <ion-icon name="home" src="../../../../assets/home/home_ic.svg"></ion-icon>
+        <ion-label>{{"Home" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button (click)="routeTo('first-aid')">
+        <ion-icon src=" ../../../../assets/modules/snake-bite/first_aid_ic.svg">
+        </ion-icon>
+        <ion-label>{{"First\nAid" | translate}}</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button (click)="routeTo('report-snakebite')">
+        <ion-icon src="../../../../assets/modules/snake-bite/report_bite_ic.svg"></ion-icon>
+        <ion-label>{{"Report\nSnakebite" | translate}} </ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button (click)="routeTo('sos')">
+        <ion-icon src="../../../../assets/modules/road-accident/sos_ic.svg"></ion-icon>
+        <ion-label>{{"SOS" | translate}} </ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button (click)="routeTo('nearby-hospital')">
+        <ion-icon src="../../../../assets/modules/road-accident/hospital_ic.svg"></ion-icon>
+        <ion-label>{{"Nearby\nHospital" | translate}} </ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button (click)="routeTo('advisory')">
+        <ion-icon src="../../../../assets/modules/snake-bite/advisory_ic.svg"></ion-icon>
+        <ion-label>{{"Advisory\n" | translate}} </ion-label>
+      </ion-tab-button>
+
+
+
+    </ion-tab-bar>
+
+  </ion-tabs>
+</ion-content>

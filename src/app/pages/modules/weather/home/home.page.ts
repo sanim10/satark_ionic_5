@@ -1,11 +1,10 @@
-import { Router } from '@angular/router';
 import { LanguageHelperService } from 'src/app/helper/language-helper/language-helper.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from './../../../../guard/auth.service';
 import { ApiService } from './../../../../providers/api.service';
 import { FavModalComponent } from '../fav-modal/fav-modal.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -35,16 +34,16 @@ export class HomePage implements OnInit, AfterViewInit {
     private modalController: ModalController,
     private apiService: ApiService,
     private langHelper: LanguageHelperService,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertCtrl: AlertController
   ) {
     this.lHelper = langHelper;
+    this.display();
   }
 
   ngOnInit() {}
 
-  ngAfterViewInit() {
-    this.display();
-  }
+  ngAfterViewInit() {}
 
   display() {
     this.loading = true;
@@ -81,9 +80,10 @@ export class HomePage implements OnInit, AfterViewInit {
           this.current_location_district = this.user_data[0].district_name;
           this.current_location_district_ory =
             this.user_data[0].district_name_ory;
-          this.getFavLocations(this.user_id);
-          this.get10DaysImdForecast(this.block_id);
           this.getRainfallValueAdditionForBlock(this.block_id);
+
+          this.getFavLocations(this.user_id);
+          // this.get10DaysImdForecast(this.block_id);
         },
         (Error) => {
           console.log(Error);
@@ -106,11 +106,12 @@ export class HomePage implements OnInit, AfterViewInit {
       .subscribe(
         (data) => {
           this.value_addtion_forecast_data = data;
+          this.loading = false;
           if (this.value_addtion_forecast_data?.length == 0) {
             this.value_addtion_forecast_data = null;
           } else {
+            console.log(this.value_addtion_forecast_data);
           }
-          this.loading = false;
         },
         (Error) => {
           console.log(Error);
@@ -189,5 +190,93 @@ export class HomePage implements OnInit, AfterViewInit {
       block_id: block_id,
     };
     return this.apiService.get10DaysImdDataForWeather(param);
+  }
+
+  async openLegendInfo() {
+    let alert = this.alertCtrl.create({
+      header: this.lHelper.lang == 'en' ? `Info` : `ସୂଚନା`,
+      cssClass: 'info-legend',
+      message:
+        `
+          <ion-grid>
+            <ion-row>
+              <ion-col class="icon">
+                <ion-icon class="ion-padding-start" src="../../../../../assets/modules/weather/day.svg">
+                </ion-icon>
+              </ion-col>
+              <ion-col >
+                <ion-label> ` +
+        (this.lHelper.lang == 'en' ? `Day` : `ଦିନ`) +
+        `</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row >
+              <ion-col class="icon">
+                <ion-icon class="ion-padding-start" src="../../../../../assets/modules/weather/rain.svg">
+                </ion-icon>
+              </ion-col>
+                <ion-col >
+                <ion-label>` +
+        (this.lHelper.lang == 'en' ? `Rainfall` : `ବର୍ଷା`) +
+        `</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="icon" >
+                <ion-icon class="ion-padding-start" src="../../../../../assets/modules/weather/t_high_b.svg">
+                </ion-icon>
+              </ion-col>
+              <ion-col>
+                <ion-label > ` +
+        (this.lHelper.lang == 'en'
+          ? `Maximum Temperature`
+          : `ସର୍ବାଧିକ ତାପମାତ୍ରା`) +
+        `
+                </ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="icon">
+                <ion-icon class="ion-padding-start" src="../../../../../assets/modules/weather/t_low_b.svg">
+                </ion-icon>
+              </ion-col>
+                 <ion-col>
+                <ion-label> ` +
+        (this.lHelper.lang == 'en'
+          ? `Minimum Temperature`
+          : `ସର୍ବନିମ୍ନ ତାପମାତ୍ରା`) +
+        ` </ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="icon">
+                <ion-icon class="ion-padding-start"  src="../../../../../assets/modules/weather/humidity_b.svg">
+                </ion-icon>
+              </ion-col>
+                 <ion-col>
+                <ion-label> 
+                 ` +
+        (this.lHelper.lang == 'en' ? `Humidity` : `ଆର୍ଦ୍ରତା`) +
+        `  </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>`,
+      buttons: this.lHelper.lang == 'en' ? ['OK'] : ['ଠିକ'],
+    });
+    (await alert).present();
+
+    // this.alertCtrl.create({
+    //   header: card.title,
+    //   message: <img src="${card.imageUrl}" style = "border-radius: 2px" >,
+    //   // message: <img src="${card.imageUrl}" style="height: 10px;width: 10px">,
+    //   //message: <img src="${card.imageUrl}" alt="g-maps" style="border-radius: 2px" width="100" height="100" crop="fill">,
+    //   buttons: [’’]
+    // }).then(alertEl => {
+    //   alertEl.present();
+    //   setTimeout(() => {
+    //     alertEl.dismiss();
+    //   }, 1000)
+
+    // }
   }
 }

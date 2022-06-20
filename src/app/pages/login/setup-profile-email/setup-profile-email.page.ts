@@ -1,3 +1,4 @@
+import { LanguageHelperService } from 'src/app/helper/language-helper/language-helper.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from './../../../guard/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -33,6 +34,7 @@ export class SetupProfileEmailPage implements OnInit {
   email_id: string;
   block_id: string;
   device_id: string;
+  lang;
 
   constructor(
     private modalController: ModalController,
@@ -41,8 +43,11 @@ export class SetupProfileEmailPage implements OnInit {
     private httpClient: HttpClient,
     private navCtrl: NavController,
     private authService: AuthService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private lHelper: LanguageHelperService
   ) {
+    this.lang = lHelper.lang;
+
     this.getDistrict();
 
     this.Form = this.formBuilder.group({
@@ -61,7 +66,14 @@ export class SetupProfileEmailPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getDistrict();
+  }
+
+  refresh() {
+    this.getDistrict();
+    this.lang = this.lHelper.lang;
+  }
 
   async openPrivacy() {
     const modal = this.modalController.create({
@@ -77,11 +89,13 @@ export class SetupProfileEmailPage implements OnInit {
       .pipe(take(1))
       .subscribe((data) => {
         this.district_data = data;
+        console.log('district data..', this.district_data);
       });
   }
 
   getBlocks() {
-    var dis_name = this.district.value;
+    var tmp = this.district.value.split(' |');
+    var dis_name = tmp[0];
     var len = this.district_data.length;
     for (var i = 0; i < len; ++i) {
       if (
@@ -104,7 +118,9 @@ export class SetupProfileEmailPage implements OnInit {
   }
 
   getBlocksId() {
-    var block_name = this.blocks.value;
+    var tmp = this.blocks.value.split(' |');
+    var block_name = tmp[0];
+
     console.log('block_name', block_name);
     var len = this.block_data.length;
     for (var i = 0; i < len; ++i) {

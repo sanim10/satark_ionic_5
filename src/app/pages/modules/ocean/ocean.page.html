@@ -5,7 +5,7 @@
     <ion-title *ngIf="swell">{{"Swell Wave Height" | translate}}</ion-title>
     <ion-title *ngIf="wave">{{"Significant Wave Height" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -71,10 +71,12 @@
 
   <img src="../../../../assets/modules/ocean/wave/legend.png" class="legend" *ngIf="wave" />
   <img src="../../../../assets/modules/ocean/wind/legend.png" class="legend" *ngIf="wind" />
+  <img src="../../../../assets/modules/ocean/swell/legend.png" class="legend" *ngIf="swell" />
 
 
 
-  <ion-footer *ngIf="!overview" [ngClass]="swell? 'bottom-zero' : ''">
+  <!-- <ion-footer *ngIf="!overview" [ngClass]="swell? 'bottom-zero' : ''"> -->
+  <ion-footer *ngIf="!overview">
     <ion-button size="small" class="ion-no-padding play-button" (click)="play()">
       <ion-icon name="play"></ion-icon>
     </ion-button>

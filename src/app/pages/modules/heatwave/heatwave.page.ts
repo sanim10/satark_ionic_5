@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-heatwave',
@@ -7,11 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./heatwave.page.scss'],
 })
 export class HeatwavePage implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private navCtrl: NavController) {}
 
   ngOnInit() {}
 
   routeTo() {
-    this.router.navigateByUrl('heatwave/heatwave-map');
+    this.navCtrl.navigateForward('heatwave/map-view');
+  }
+  routeToHome() {
+    this.navCtrl.navigateBack('/home', { replaceUrl: true });
   }
 }

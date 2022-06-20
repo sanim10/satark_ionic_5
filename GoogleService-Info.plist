@@ -36,5 +36,11 @@
 	<string>1:488937344040:ios:625c262ca4742a27</string>
 	<key>DATABASE_URL</key>
 	<string>https://satark-1088e.firebaseio.com</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+  	<string>To take photo and store in the database</string>
+	<key>NSMotionUsageDescription</key>
+  	<string>To detect location and send notification</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+  	<string>To detect location and send notification</string>
 </dict>
 </plist>

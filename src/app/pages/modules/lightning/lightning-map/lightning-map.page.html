@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>{{"Lightning" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/lightning"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="lightning"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -14,19 +14,30 @@
     <div id="skeleton" class="skeleton skeleton-card" style="height: 100vh; border-radius: 0"></div>
   </div>
   <div [ngClass]="fabState? 'backdrop':''"></div>
-
+  <div class="top-legend">
+    <img src="../../../../../assets/modules/lightning/map/lightning_yellow_ic.svg" /> <span> - CG</span>
+    &nbsp;
+    &nbsp;
+    &nbsp;
+    <img src="../../../../../assets/modules/lightning/map/lightning_blue_ic.svg" /> <span> - CC</span>
+  </div>
   <ion-fab vertical="bottom">
     <ion-fab-button (click)="showHideBackdrop()">
       <ion-icon name="chevron-up-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top" (click)="showHideBackdrop()">
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time == 'five'? 'fab-active' :''"
+        (click)="updateTimeFAB('five')">
+        <ion-label>{{"5 Minutes" | translate}}</ion-label>
+        <ion-icon src='../../../../../assets/modules/lightning/map/5m_ic.svg'></ion-icon>
+      </ion-fab-button>
 
       <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time == 'thirty'? 'fab-active' :''"
         (click)="updateTimeFAB('thirty')">
         <ion-label>{{"30 Minutes" | translate}}</ion-label>
         <ion-icon src='../../../../../assets/modules/lightning/map/30m_ic.svg'></ion-icon>
       </ion-fab-button>
-      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time != 'thirty'? 'fab-active':''"
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab_time == 'onehr'? 'fab-active':''"
         (click)="updateTimeFAB('onehr')">
         <ion-label>{{"1 Hour" | translate}}</ion-label>
         <ion-icon src='../../../../../assets/modules/lightning/map/1hr_ic.svg'></ion-icon>
@@ -39,7 +50,7 @@
 
 
 
-  <img src="../../../../../assets/modules/lightning/map/legend.png" class="legend" />
+  <img src="../../../../../assets/modules/lightning/map/legend-1.png" class="legend" />
 
   <ion-footer>
 

@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from './../../../guard/auth.service';
 import { ApiService } from './../../../providers/api.service';
@@ -11,11 +12,14 @@ import { Component, OnInit } from '@angular/core';
 export class LightningPage implements OnInit {
   loading = true;
 
-  constructor(private router: Router) {}
+  constructor(private navCtrl: NavController) {}
 
   ngOnInit() {}
 
   routeTo() {
-    this.router.navigateByUrl('lightning/lightning-map');
+    this.navCtrl.navigateForward('lightning/lightning-map');
+  }
+  routeToHome() {
+    this.navCtrl.navigateBack('/home', { replaceUrl: true });
   }
 }

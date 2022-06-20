@@ -43,17 +43,22 @@
         map" | translate}}
       </ion-button>
       <br />
+      <span style="opacity: 0.5" *ngIf="permission !=true">{{"Please enable Location" | translate}} </span>
+
+      <br />
       <br />
 
       <ion-label> {{"Select Date" | translate}} </ion-label>
       <ion-datetime displayFormat="DD-MM-YYYY" pickerFormat="DD MMMM YYYY" min="2020" [max]="today"
-        [(ngModel)]="this.today" name="date" ngModel #dateCtrl="ngModel" required></ion-datetime>
+        [(ngModel)]="this.today" name="date" ngModel #dateCtrl="ngModel" mode="ios"
+        cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>></ion-datetime>
 
       <br />
 
       <ion-label> {{"Select Time" | translate}} </ion-label>
       <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="this.now_time" name="time" ngModel
-        #timeCtrl="ngModel" required></ion-datetime>
+        #timeCtrl="ngModel" mode="ios" cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>
+      </ion-datetime>
 
       <br />
 
@@ -61,7 +66,7 @@
         {{"Do you notice rise in water level?" | translate}}</ion-label>
 
       <ion-select #extendCtrl="ngModel" name="water" ngModel interface="action-sheet" mode="ios" required
-        cancelText="{{lang=='en'? 'Cancel': 'ବାତିଲ କରନ୍ତୁ'}}">
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
         <ion-select-option value="Yes">{{"Yes" | translate}}</ion-select-option>
         <ion-select-option value="No">{{"No" | translate}}</ion-select-option>
       </ion-select>
@@ -70,7 +75,7 @@
       <ion-label> {{"Flood extend and depth (In feet)" | translate}}</ion-label>
 
       <ion-select #waterCtrl="ngModel" name="water" ngModel interface="action-sheet" mode="ios" required
-        cancelText="{{lang=='en'? 'Cancel': 'ବାତିଲ କରନ୍ତୁ'}}">
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
         <ion-select-option value="0.5">{{"0.5" | translate}}</ion-select-option>
         <ion-select-option value="1">{{"1" | translate}}</ion-select-option>
         <ion-select-option value="1.5">{{"1.5" | translate}}</ion-select-option>
@@ -86,13 +91,14 @@
       <ion-button size="small" (click)="getPhoto()">
         <ion-icon name="camera" slot="start"></ion-icon>{{"Select
         Image" | translate}}
-      </ion-button>
+      </ion-button><br>
+      <span style="opacity: 0.5" *ngIf="img">{{"Image Selected" | translate}} </span>
       <br />
       <br />
 
       <ion-label>
         {{"Please write your message below" | translate}}<br />
-        <span style="opacity: 0.5">Optional </span>
+        <span style="opacity: 0.5">({{"Optional" | translate}})</span>
       </ion-label>
       <ion-textarea name="message" ngModel #msgCtrl="ngModel" type="text"></ion-textarea>
 

@@ -9,8 +9,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./report.page.scss'],
 })
 export class ReportPage implements OnInit {
-  reportItems: string[] = ['heatwave', 'lightning', 'flood', 'agriculture'];
-  reportItems_ory: string[] = ['ଗ୍ରୀଷ୍ମ ପ୍ରବାହ', 'ବଜ୍ରପାତ', 'ବନ୍ୟା', 'କୃଷି'];
+  reportItems: string[] = ['heatwave', 'lightning', 'flood'];
+  reportItems_ory: string[] = ['ଗ୍ରୀଷ୍ମ ପ୍ରବାହ', 'ବଜ୍ରପାତ', 'ବନ୍ୟା'];
   constructor(
     private authService: AuthService,
     private lHelper: LanguageHelperService,

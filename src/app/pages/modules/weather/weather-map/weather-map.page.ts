@@ -451,4 +451,8 @@ export class WeatherMapPage implements OnInit, AfterViewInit {
   showHideBackdrop() {
     this.fabState = !this.fabState;
   }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
+  }
 }

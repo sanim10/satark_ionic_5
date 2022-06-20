@@ -42,6 +42,19 @@ export class ApiService {
     );
   }
 
+  get_check_app_version() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_user/check_app_version_get'
+    );
+  }
+
+  //get flash alert message
+  getFlashAlertMsg() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_user/flash_alert_get'
+    );
+  }
+
   getDistrictById(param) {
     return this.httpClient.get(
       'https://satark.rimes.int/api_user/district_by_id_get?id=' + param.id
@@ -73,6 +86,21 @@ export class ApiService {
     );
   }
 
+  //10 day imd data on district level for weather forecast
+  get10daysImdDistrictHeatwave() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/weather_imd_dis_data_for_map_get'
+    );
+  }
+
+  //single day imd data on blocks under a district for weather forecast
+  get1daysImdBlockHeatwave(district_id) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_weather/updated_value_addition_all_block_by_district_data_get?id=' +
+        district_id
+    );
+  }
+
   ///get 10 days IMD data for weather forecast home page
   get10DaysImdDataForWeather(param) {
     return this.httpClient.get(
@@ -88,16 +116,16 @@ export class ApiService {
         param.block_id
     );
   }
-  ///getu pdated value addition data for weather forecast home page
+  ///get updated value addition data for weather forecast home page
 
   getUpdatedValueAdditionDataForWeather(param) {
     return this.httpClient.get(
-      'https://satark.rimes.int/Api_weather/updated_value_addition_data_get?id=' +
+      'https://satark.rimes.int/api_weather/updated_value_addition_data_get?id=' +
         param.block_id
     );
   }
 
-  get //fetch IMD heatwave Alerts
+  //fetch IMD heatwave Alerts
   getImdHeatwaveAlerts() {
     return this.httpClient.get(
       'https://satark.rimes.int/api_heatwave/imd_heatwave_alerts_get'
@@ -115,6 +143,29 @@ export class ApiService {
     return this.httpClient.get(
       'https://satark.rimes.int/api_heatwave/heatwave_alerts_dissemintation_fav_block_get?id=' +
         param.id
+    );
+  }
+
+  //get heatindex data of blocks under a district
+  getImdHeatIndexForBlocksInDistrict(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/heat_index_ensemble_all_block_by_district_data_get?id=' +
+        param
+    );
+  }
+
+  //get heatwave data of blocks under a district
+  getImdHeatwaveForBlocksInDistrict(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/heat_fcst_alerts_dissemintation_5days_imd_data_for_all_block_by_district_map_get?id=' +
+        param
+    );
+  }
+
+  //10 day imd data on district level for weather forecast
+  get10daysImdDistrictHeatwaveHeatIndex() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/heat_index_imd_district_data_for_map_get'
     );
   }
 
@@ -381,6 +432,26 @@ export class ApiService {
     );
   }
 
+   //get nowcast data 5mins
+   getNowcastDataLightning5Mins() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_lightning/total_record_for_5_min_block'
+    );
+  }
+  //get nowcast data 30 mins
+  getNowcastDataLightning30Mins() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_lightning/total_record_for_30_min_block'
+    );
+  }
+
+  //get nowcast data 1hr
+  getNowcastDataLightning1Hour() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_lightning/total_record_for_1_hr_block'
+    );
+  }
+
   //get recent_event data
   getRecentEventLightning() {
     return this.httpClient.get(
@@ -418,4 +489,94 @@ export class ApiService {
       'https://satark.rimes.int/api_drought/next_10days_date_get'
     );
   }
+
+  getlightningstats() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_lightning/total_death_data_for_map_by_year_get?year=2011-2012'
+    );
+  }
+  getheatwavestats() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/total_death_data_for_map_by_year_get?year=2012'
+    );
+  }
+
+  getlightningstatsByYear(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_lightning/total_death_data_for_map_by_year_get?year=' +
+        param.year
+    );
+  }
+  getheatwavestatsByYear(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_heatwave/total_death_data_for_map_by_year_get?year=' +
+        param.year
+    );
+  }
+
+  //get sos events snakebite
+  getSosEventsSnakebite() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_snakebite/sos_events_get'
+    );
+  }
+
+  //get snakebite events
+  getEventsSnakebite() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/Api_snakebite/snakebite_report_get'
+    );
+  }
+
+  //get nearest phc
+  getNearestPhc(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/nearest_phc_get?lat=' +
+        param.lat +
+        '&&long=' +
+        param.long
+    );
+  }
+
+  //get nearest sc
+  getNearestSc(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/nearest_sc_get?lat=' +
+        param.lat +
+        '&&long=' +
+        param.long
+    );
+  }
+
+  //get all sos events
+  getSosEventsAll() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/sos_events_get'
+    );
+  }
+
+  //get all accident reports
+  getAccidentReportAll() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/accident_report_get'
+    );
+  }
+
+  //get black spots
+  getBlackSpots() {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/black_spot_get'
+    );
+  }
+
+  //get nearest ambulance
+  getNearestAmbulance(param) {
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_road_accident/nearest_ambulance_get?lat=' +
+        param.lat +
+        '&&long=' +
+        param.long
+    );
+  }
+
 }

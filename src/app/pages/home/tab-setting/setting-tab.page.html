@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>{{"Settings" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -11,42 +11,42 @@
   <ion-item detail (click)="presentProfileModal()">{{"Profile" | translate}}</ion-item>
 
   <ion-label>
-    <p class="option-header">{{"User preferences" | translate}}</p>
+    <p class="option-header">{{"User Preferences" | translate}}</p>
   </ion-label>
 
   <ion-item lines="none" (click)="selectAppLang()" detail>
-    <ion-grid class="ion-no-padding ion-padding-top">
+    <ion-grid class="ion-no-padding" style="padding-top: 5px;">
       <ion-row>
-        <ion-col size="12">{{"App language"| translate}}</ion-col>
+        <ion-col size="12">{{"App Language"| translate}}</ion-col>
       </ion-row>
       <ion-row>
         <ion-col *ngIf="lHelper.lang=='en'" size="12" class="option-detail">English</ion-col>
-        <ion-col *ngIf="lHelper.lang=='od'" size="12" class="option-detail">Oriya</ion-col>
+        <ion-col *ngIf="lHelper.lang=='od'" size="12" class="option-detail">ଓଡିଆ</ion-col>
       </ion-row>
     </ion-grid>
   </ion-item>
   <ion-item lines="none" (click)="selectNotificationLang()" detail>
-    <ion-grid class="ion-no-padding ion-padding-top">
+    <ion-grid class="ion-no-padding" style="padding-top: 5px;">
       <ion-row>
-        <ion-col size="12">{{"Notification language" | translate}}</ion-col>
+        <ion-col size="12">{{"Notification Language" | translate}}</ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="12" class="option-detail">{{ (noti_lang==null||noti_lang=='en' )? 'English' :'Oriya'}}</ion-col>
+        <ion-col size="12" class="option-detail">{{ (noti_lang==null||noti_lang=='en' )? 'English' :'ଓଡିଆ'}}</ion-col>
       </ion-row>
     </ion-grid>
   </ion-item>
-  <ion-item [routerLink]="['/edit-favorites']" detail>{{"Manage locations" | translate}}
+  <ion-item [routerLink]="['/edit-favorites']" detail> {{"Manage Locations" | translate}}
   </ion-item>
   <ion-label>
-    <p class="option-header">{{"Notifications" | translate}}</p>
+    <p class="option-header">{{"Custom Notification" | translate}}</p>
   </ion-label>
 
   <div *ngIf="success_data == true">
     <div *ngFor="let loc_data of loc_data">
       <ion-item lines="none">
         <ion-label>{{"Location-based notification" | translate }}</ion-label>
-        <ion-toggle (ionChange)="getbackgroundGeolocation($event)" *ngIf="loc_data.gps_tracker == 'off'"></ion-toggle>
-        <ion-toggle (ionChange)="getbackgroundGeolocation($event)" *ngIf="loc_data.gps_tracker == 'on'" checked>
+        <ion-toggle (ionChange)="getbackgroundGeolocation($event)" *ngIf="loc_permission == 'off'"></ion-toggle>
+        <ion-toggle (ionChange)="getbackgroundGeolocation($event)" *ngIf="loc_permission == 'on'" checked>
         </ion-toggle>
       </ion-item>
     </div>
@@ -58,7 +58,7 @@
     </ion-item>
   </div>
 
-  <ion-item (click)="setNotification()" detail>{{"Custom notification" | translate}}
+  <ion-item (click)="setNotification()" detail>{{"Custom notification sound" | translate}}
   </ion-item>
 
   <!-- </div> -->

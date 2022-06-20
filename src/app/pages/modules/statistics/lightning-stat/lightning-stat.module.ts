@@ -1,3 +1,4 @@
+import { SwiperModule } from 'swiper/angular';
 import { LightningGraphModule } from './../lightning-graph/lightning-graph.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -20,6 +21,7 @@ import { LightningMapModule } from '../lightning-map/lightning-map.module';
     TranslateModule,
     LightningGraphModule,
     LightningMapModule,
+    SwiperModule,
   ],
   declarations: [LightningStatPage],
 })

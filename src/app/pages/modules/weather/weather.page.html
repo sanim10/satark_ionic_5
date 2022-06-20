@@ -1,7 +1,7 @@
 <ion-content [fullscreen]=" true" scrollY="false">
   <ion-tabs>
     <ion-tab-bar slot="bottom" component="home">
-      <ion-tab-button tab="home">
+      <ion-tab-button (click)="routeToHome()">
         <ion-icon name="home" src="../../../../assets/home/home_ic.svg"></ion-icon>
         <ion-label>{{"Home" | translate}}</ion-label>
       </ion-tab-button>
@@ -20,7 +20,7 @@
         <ion-icon name="map" src="../../assets/home/map_ic.svg"></ion-icon>
         <ion-label>{{"Map View" | translate}}</ion-label>
       </ion-tab-button> -->
-      <ion-tab-button routerLink="map-view">
+      <ion-tab-button (click)="routeTo()">
         <ion-icon name="map" src="../../assets/home/map_ic.svg"></ion-icon>
         <ion-label>{{"Map View" | translate}}</ion-label>
       </ion-tab-button>

@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { element } from 'protractor';
 import { OceanOverviewDetailsComponent } from './ocean-overview-details/ocean-overview-details.component';
 import { take } from 'rxjs/operators';
@@ -64,12 +65,15 @@ export class OceanPage implements OnInit, AfterViewInit {
     '23:30',
   ];
   scrollTo = 0;
+
+  marker_lnglat;
   constructor(
     private loadingCtrl: LoadingController,
     private apiService: ApiService,
     private authService: AuthService,
     private modalController: ModalController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private translate: TranslateService
   ) {
     this.lang = localStorage.getItem('language');
     let today = moment().format('YYYY-MM-DD');
@@ -91,7 +95,7 @@ export class OceanPage implements OnInit, AfterViewInit {
   showDateSelector = async () => {
     this.buttons = [
       {
-        text: this.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
+        text: this.lang == 'en' ? 'CANCEL' : 'ବାତିଲ କରନ୍ତୁ',
         role: 'cancel',
       },
     ];
@@ -118,7 +122,10 @@ export class OceanPage implements OnInit, AfterViewInit {
     });
 
     (
-      await this.actionSheetController.create({ buttons: this.buttons })
+      await this.actionSheetController.create({
+        buttons: this.buttons,
+        mode: 'ios',
+      })
     ).present();
   };
 
@@ -189,6 +196,14 @@ export class OceanPage implements OnInit, AfterViewInit {
               'line-width': 1,
             },
           });
+          this.map.on('click', (e) => {
+            if (this.marker_lnglat != null) {
+              console.log(this.marker_lnglat);
+              this.map.flyTo({
+                center: [this.marker_lnglat.lng, this.marker_lnglat.lat + 0.3],
+              });
+            }
+          });
           this.getOverviewData();
         });
       });
@@ -209,22 +224,17 @@ export class OceanPage implements OnInit, AfterViewInit {
           let el = document.createElement('div');
           el.classList.add('marker');
 
-          // var s =
-          //   '<div  id="' +
-          //   this.ocean_station_data[t].id +
-          //   '"style="background:radial-gradient(circle,#0771B8 40%, #4BC7CF 100%); border-radius:100%; color:#000; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 0px solid white;"><div style="text-align:center; font-weight:400;line-height:10px;margin-top:4px;">' +
-          //   this.ocean_station_data[t].location +
-          //   '</div></div>';
-
           var s =
             '<div id="' +
             this.ocean_station_data[t].id +
             '" style="background:radial-gradient(circle,#7ABFFF 20%, #004CBF 100%); border-radius:100%; color:#black; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; text-align:center;font-size:8px;">' +
-            this.ocean_station_data[t].location +
-            '</div>';
+            this.translate.instant(this.ocean_station_data[t].location);
+          +'</div>';
           el.innerHTML = s;
 
-          const marker = new mapboxgl.Marker({ element: el })
+          const marker = new mapboxgl.Marker({
+            element: el,
+          })
             .setLngLat([
               this.ocean_station_data[t].long,
               this.ocean_station_data[t].lat,
@@ -306,24 +316,24 @@ export class OceanPage implements OnInit, AfterViewInit {
                       <ion-col class="ion-no-padding">
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
+                                <p style="margin-top: 0px;font-size:1.01rem;">` +
           (this.lang == 'en' ? `Point` : ``) +
           `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:var(--ion-color-primary) !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
+                                <p style="margin-top: 0px;font-size:1.01rem;font-weight:500">` +
           this.ocean_station_data[t].location +
           `</p>
                               </ion-col>
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
+                                 <p style="margin-top: 0px;font-size:1.01rem;">` +
           (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
           `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:var(--ion-color-primary) !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
+                                <p style="margin-top: 0px;font-size:1.01rem;font-weight:500">
                                     ` +
           this.ocean_station_data[t].district_name +
           `m<sup>3</sup>/s
@@ -332,12 +342,12 @@ export class OceanPage implements OnInit, AfterViewInit {
                         </ion-row>
                         <ion-row  class="ion-no-padding">
                               <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
+                                 <p style="margin-top: 0px;font-size:1.01rem;">` +
           (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
           `</p>
                               </ion-col>
                               <ion-col  class="ion-no-padding"  style="color:var(--ion-color-primary) !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
+                              <p style="margin-top: 0px;font-size:1.01rem;font-weight:500">` +
           this.ocean_station_data[t].block_name +
           `</p>
                               </ion-col>
@@ -356,10 +366,15 @@ export class OceanPage implements OnInit, AfterViewInit {
           .setPopup(
             new mapboxgl.Popup({
               closeOnClick: true,
-            }).setHTML(contentString)
+            })
+              .setHTML(contentString)
+              .setLngLat(this.map.getCenter())
           )
           .addTo(this.map);
-
+        let dis = this;
+        marker.getElement().addEventListener('click', function (e) {
+          dis.marker_lnglat = marker.getLngLat();
+        });
         this.marker.push(marker);
       }
     });
@@ -479,74 +494,17 @@ export class OceanPage implements OnInit, AfterViewInit {
             this.wind_data[i].value >= 0.0 &&
             this.wind_data[i].value < 19.8
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].location
-                : this.wind_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#32CD33 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].district_name
-                : this.wind_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#32CD33 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].block_name
-                : this.wind_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+            var contentString = this.getWindContent(
+              this.wind_data[i].location,
+              this.wind_data[i].district_name,
+              this.wind_data[i].district_name_ory,
+              this.wind_data[i].block_name,
+              this.wind_data[i].block_name_ory,
+              parseFloat(this.wind_data[i].value).toFixed(2),
+              'Calm-Gentle Breeze',
+              '#32CD33'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Wind Speed(Km/hr)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wind_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#32CD33">Calm-Gentle Breeze</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
             var s =
               '<div style="background:radial-gradient(circle,#32CD33 40%, rgba(17, 166, 17, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wind_data[i].value).toFixed(2) +
@@ -558,83 +516,31 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (
             this.wind_data[i].value >= 19.8 &&
             this.wind_data[i].value < 50.0
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].location
-                : this.wind_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#E5C100 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].district_name
-                : this.wind_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#E5C100 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].block_name
-                : this.wind_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+            var contentString = this.getWindContent(
+              this.wind_data[i].location,
+              this.wind_data[i].district_name,
+              this.wind_data[i].district_name_ory,
+              this.wind_data[i].block_name,
+              this.wind_data[i].block_name_ory,
+              parseFloat(this.wind_data[i].value).toFixed(2),
+              'Moderate Breeze - Strong Breeze',
+              '#E5C100'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Wind Speed(Km/hr)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wind_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#E5C100">Moderate Breeze - Strong Breeze</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
             var s =
               '<div style="background:radial-gradient(circle,rgb(255 223 0) 40%, rgba(163, 145, 19, 1) 100%);  border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wind_data[i].value).toFixed(2) +
@@ -646,83 +552,31 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (
             this.wind_data[i].value >= 50.0 &&
             this.wind_data[i].value < 74.5
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].location
-                : this.wind_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#DA2A2A !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].district_name
-                : this.wind_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#DA2A2A !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].block_name
-                : this.wind_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+            var contentString = this.getWindContent(
+              this.wind_data[i].location,
+              this.wind_data[i].district_name,
+              this.wind_data[i].district_name_ory,
+              this.wind_data[i].block_name,
+              this.wind_data[i].block_name_ory,
+              parseFloat(this.wind_data[i].value).toFixed(2),
+              'Strong Gale - Hurricane Force',
+              '#DA2A2A'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Wind Speed(Km/hr)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wind_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#DA2A2A">Strong Gale - Hurricane Force</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
             var s =
               '<div style="background:radial-gradient(circle,rgba(248, 104, 104, 1) 40%, rgba(218, 42, 42, 1); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wind_data[i].value).toFixed(2) +
@@ -734,80 +588,28 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (this.wind_data[i].value >= 74.5) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].location
-                : this.wind_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#FAAB70 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].district_name
-                : this.wind_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#FAAB70 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wind_data[i].block_name
-                : this.wind_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+            var contentString = this.getWindContent(
+              this.wind_data[i].location,
+              this.wind_data[i].district_name,
+              this.wind_data[i].district_name_ory,
+              this.wind_data[i].block_name,
+              this.wind_data[i].block_name_ory,
+              parseFloat(this.wind_data[i].value).toFixed(2),
+              'High Wind, Moderate Gale - Gale, Fresh Gale',
+              '#FAAB70'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Wind Speed(Km/hr)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wind_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#FAAB70">High Wind, Moderate Gale - Gale, Fresh Gale</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
             var s =
               '<div style="background:radial-gradient(circle,rgba(250, 171, 112, 1) 40%, rgba(212, 114, 39, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wind_data[i].value).toFixed(2) +
@@ -819,10 +621,15 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           }
         }
@@ -847,83 +654,146 @@ export class OceanPage implements OnInit, AfterViewInit {
         let el = document.createElement('div');
         el.classList.add('marker');
         if (selected_date_time == this.swell_data[i].forecast_time) {
-          var contentString =
-            ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-            (this.lang == 'en'
-              ? this.swell_data[i].location
-              : this.swell_data[i].location) +
-            `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-            (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-            `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding" >
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-            (this.lang == 'en'
-              ? this.swell_data[i].district_name
-              : this.swell_data[i].district_name_ory) +
-            `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-            (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-            `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#32CD33 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-            (this.lang == 'en'
-              ? this.swell_data[i].block_name
-              : this.swell_data[i].block_name_ory) +
-            `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+          if (
+            parseFloat(this.swell_data[i].value) >= 0.0 &&
+            parseFloat(this.swell_data[i].value) < 0.5
+          ) {
+            var contentString = this.getswellContent(
+              this.swell_data[i].location,
+              this.swell_data[i].district_name,
+              this.swell_data[i].district_name_ory,
+              this.swell_data[i].block_name,
+              this.swell_data[i].block_name_ory,
+              parseFloat(this.swell_data[i].value).toFixed(2),
+              '#32CD33'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;">Swell Wave Height(m)</p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#32CD33">` +
-            parseFloat(this.swell_data[i].value).toFixed(2) +
-            `</p></ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
+            var s =
+              '<div style="background:radial-gradient(circle,#32CD33 40%, rgba(17, 166, 17, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+              parseFloat(this.swell_data[i].value).toFixed(2) +
+              '</div></div>';
+            el.innerHTML = s;
 
-          var s =
-            '<div style="background:radial-gradient(circle,#32CD33 40%, rgba(17, 166, 17, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
-            parseFloat(this.swell_data[i].value).toFixed(2) +
-            '</div></div>';
-          el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([this.swell_data[i].long, this.swell_data[i].lat])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
+              )
+              .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
+            this.marker.push(marker);
+          } else if (
+            parseFloat(this.swell_data[i].value) >= 0.5 &&
+            parseFloat(this.swell_data[i].value) <= 1.25
+          ) {
+            var contentString = this.getswellContent(
+              this.swell_data[i].location,
+              this.swell_data[i].district_name,
+              this.swell_data[i].district_name_ory,
+              this.swell_data[i].block_name,
+              this.swell_data[i].block_name_ory,
+              parseFloat(this.swell_data[i].value).toFixed(2),
+              '#E5C100'
+            );
 
-          const marker = new mapboxgl.Marker({ element: el })
-            .setLngLat([this.swell_data[i].long, this.swell_data[i].lat])
-            .setPopup(
-              new mapboxgl.Popup({
-                closeOnClick: true,
-              }).setHTML(contentString)
-            )
-            .addTo(this.map);
+            var s =
+              '<div style="background:radial-gradient(circle,rgb(255 223 0) 40%, rgba(163, 145, 19, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+              parseFloat(this.swell_data[i].value).toFixed(2) +
+              '</div></div>';
+            el.innerHTML = s;
 
-          this.marker.push(marker);
+            const marker = new mapboxgl.Marker({
+              element: el,
+            })
+              .setLngLat([this.swell_data[i].long, this.swell_data[i].lat])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
+              )
+              .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
+            this.marker.push(marker);
+          } else if (
+            parseFloat(this.swell_data[i].value) >= 1.26 &&
+            parseFloat(this.swell_data[i].value) < 2.5
+          ) {
+            var contentString = this.getswellContent(
+              this.swell_data[i].location,
+              this.swell_data[i].district_name,
+              this.swell_data[i].district_name_ory,
+              this.swell_data[i].block_name,
+              this.swell_data[i].block_name_ory,
+              parseFloat(this.swell_data[i].value).toFixed(2),
+              '#FAAB70'
+            );
+
+            var s =
+              '<div style="background:radial-gradient(circle,rgba(250, 171, 112, 1) 40%, rgba(212, 114, 39, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+              parseFloat(this.swell_data[i].value).toFixed(2) +
+              '</div></div>';
+            el.innerHTML = s;
+
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([this.swell_data[i].long, this.swell_data[i].lat])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
+              )
+              .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
+            this.marker.push(marker);
+          } else if (parseFloat(this.swell_data[i].value) >= 2.5) {
+            var contentString = this.getswellContent(
+              this.swell_data[i].location,
+              this.swell_data[i].district_name,
+              this.swell_data[i].district_name_ory,
+              this.swell_data[i].block_name,
+              this.swell_data[i].block_name_ory,
+              parseFloat(this.swell_data[i].value).toFixed(2),
+              '#EC3737'
+            );
+
+            var s =
+              '<div style="background:radial-gradient(circle,rgba(248, 104, 104, 1) 40%, rgba(218, 42, 42, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+              parseFloat(this.swell_data[i].value).toFixed(2) +
+              '</div></div>';
+            el.innerHTML = s;
+
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([this.swell_data[i].long, this.swell_data[i].lat])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
+              )
+              .addTo(this.map);
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
+            this.marker.push(marker);
+          }
         }
       }
     } else {
@@ -954,74 +824,17 @@ export class OceanPage implements OnInit, AfterViewInit {
             parseFloat(this.wave_data[i].value) >= 0.0 &&
             parseFloat(this.wave_data[i].value) < 0.5
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].location
-                : this.wave_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#32CD33 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].district_name
-                : this.wave_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#32CD33 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].block_name
-                : this.wave_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
+            var contentString = this.getWaveContent(
+              this.wave_data[i].location,
+              this.wave_data[i].district_name,
+              this.wave_data[i].district_name_ory,
+              this.wave_data[i].block_name,
+              this.wave_data[i].block_name_ory,
+              parseFloat(this.wave_data[i].value).toFixed(2),
+              'Calm - Smooth',
+              '#32CD33'
+            );
 
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Significant Wave height(m)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wave_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#32CD33">Calm - Smooth</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
             var s =
               '<div style="background:radial-gradient(circle,#32CD33 40%, rgba(17, 166, 17, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wave_data[i].value).toFixed(2) +
@@ -1033,83 +846,30 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (
             parseFloat(this.wave_data[i].value) >= 0.5 &&
             parseFloat(this.wave_data[i].value) < 1.5
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].location
-                : this.wave_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#E5C100 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].district_name
-                : this.wave_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#E5C100 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].block_name
-                : this.wave_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
-
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Significant Wave height(m)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wave_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#E5C100">Slight</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
+            var contentString = this.getWaveContent(
+              this.wave_data[i].location,
+              this.wave_data[i].district_name,
+              this.wave_data[i].district_name_ory,
+              this.wave_data[i].block_name,
+              this.wave_data[i].block_name_ory,
+              parseFloat(this.wave_data[i].value).toFixed(2),
+              'Slight',
+              '#E5C100'
+            );
 
             var s =
               '<div style="background:radial-gradient(circle,rgb(255 223 0) 40%, rgba(163, 145, 19, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
@@ -1122,83 +882,30 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (
             parseFloat(this.wave_data[i].value) >= 1.5 &&
             parseFloat(this.wave_data[i].value) < 2.5
           ) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].location
-                : this.wave_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#FAAB70 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].district_name
-                : this.wave_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#FAAB70 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].block_name
-                : this.wave_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
-
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Significant Wave height(m)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wave_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#FAAB70">Moderate</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
+            var contentString = this.getWaveContent(
+              this.wave_data[i].location,
+              this.wave_data[i].district_name,
+              this.wave_data[i].district_name_ory,
+              this.wave_data[i].block_name,
+              this.wave_data[i].block_name_ory,
+              parseFloat(this.wave_data[i].value).toFixed(2),
+              'Moderate',
+              '#FAAB70'
+            );
 
             var s =
               '<div style="background:radial-gradient(circle,rgba(250, 171, 112, 1) 40%, rgba(212, 114, 39, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
@@ -1211,96 +918,48 @@ export class OceanPage implements OnInit, AfterViewInit {
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           } else if (parseFloat(this.wave_data[i].value) >= 2.5) {
-            var contentString =
-              ` <div>
-                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].location
-                : this.wave_data[i].location) +
-              `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem; text-align:center">` +
-              (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#EC3737 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].district_name
-                : this.wave_data[i].district_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                   <ion-row  class="ion-no-padding">
-                              <ion-col class="ion-no-padding">
-                                 <p style="margin-top: 5px;font-size:1.01rem;text-align:center">` +
-              (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
-              `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#EC3737 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;text-align:center">` +
-              (this.lang == 'en'
-                ? this.wave_data[i].block_name
-                : this.wave_data[i].block_name_ory) +
-              `</p></ion-col>
-                        </ion-row>
-                       
-                  <ion-row  class="ion-no-padding">
-                  <ion-col class="ion-text-center">
-                  <ion-card>
-
-                  <ion-grid>
-                  <ion-row>
-                  <ion-col>
-                 <p style="margin-top: 5px;font-size:1.01rem;"> Significant Wave height(m)</p>
-                  </ion-col>
-                   <ion-col>
-                  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
-              (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
-              ` </p>
-                  </ion-col>
-                  </ion-row>
-                     <ion-row>
-                  <ion-col>  <p style="margin-top: 5px;font-size:1.01rem;font-weight:500;color:#000">` +
-              parseFloat(this.wave_data[i].value).toFixed(2) +
-              `</p></ion-col>
-                   <ion-col>
-                     <p style="margin-top: 5px;font-size:1.01rem;color:#EC3737">Rough - Phenomenal</p>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                  </ion-card>
-                  </ion-col>
-                  </ion-row>
-                  </ion-grid>
-                </div>`;
+            var contentString = this.getWaveContent(
+              this.wave_data[i].location,
+              this.wave_data[i].district_name,
+              this.wave_data[i].district_name_ory,
+              this.wave_data[i].block_name,
+              this.wave_data[i].block_name_ory,
+              parseFloat(this.wave_data[i].value).toFixed(2),
+              'Rough - Phenomenal',
+              '#EC3737'
+            );
 
             var s =
-              '<div style="background:radial-gradient(circle,rgba(248, 104, 104, 1) 40%, rgba(218, 42, 42, 1); border-radius:100%; color:white; height:37px;width:37px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;border: 3px solid white"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+              '<div style="background:radial-gradient(circle,rgba(248, 104, 104, 1) 40%, rgba(218, 42, 42, 1) 100%); border-radius:100%; color:white; height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
               parseFloat(this.wave_data[i].value).toFixed(2) +
               '</div></div>';
-            el.innerHTML = s;
 
+            el.innerHTML = s;
             const marker = new mapboxgl.Marker({ element: el })
               .setLngLat([this.wave_data[i].long, this.wave_data[i].lat])
               .setPopup(
                 new mapboxgl.Popup({
                   closeOnClick: true,
-                }).setHTML(contentString)
+                })
+                  .setHTML(contentString)
+                  .setLngLat(this.map.getCenter())
               )
               .addTo(this.map);
-
+            let dis = this;
+            marker.getElement().addEventListener('click', function (e) {
+              dis.marker_lnglat = marker.getLngLat();
+            });
             this.marker.push(marker);
           }
         }
@@ -1366,5 +1025,252 @@ export class OceanPage implements OnInit, AfterViewInit {
       clearInterval(this.timeout);
       return;
     }
+  }
+
+  getswellContent(
+    location,
+    district_name,
+    district_name_ory,
+    block_name,
+    block_name_ory,
+    value,
+    color
+  ) {
+    var contentString =
+      ` <div>
+                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
+                  <ion-row id="popup-content" >
+                      <ion-col class="ion-no-padding ion-text-center">
+                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
+      this.translate.instant(location) +
+      `<br/><br/></ion-label>
+                  </ion-col>
+                  </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:1.01rem; text-align:center">` +
+      (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding" >
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? district_name : district_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding">
+                                 <p style="margin-top: 0px;font-size:1.01rem;text-align:center">` +
+      (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? block_name : block_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                       
+                  <ion-row  class="ion-no-padding">
+                  <ion-col class="ion-text-center">
+                  <ion-card>
+
+                  <ion-grid>
+                  <ion-row>
+                  <ion-col>
+                 <p style="margin-top: 0px;font-size:1.01rem;">` +
+      this.translate.instant('Swell Wave Height (M)') +
+      `</p>
+                  </ion-col>
+                  </ion-row>
+                     <ion-row>
+                  <ion-col>  <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;color:` +
+      color +
+      `">` +
+      parseFloat(value).toFixed(2) +
+      `</p></ion-col>
+                  </ion-row>
+                  </ion-grid>
+                  </ion-card>
+                  </ion-col>
+                  </ion-row>
+                  </ion-grid>
+                </div>`;
+
+    return contentString;
+  }
+
+  getWindContent(
+    location,
+    district_name,
+    district_name_ory,
+    block_name,
+    block_name_ory,
+    value,
+    condition,
+    color
+  ) {
+    var contentString =
+      ` <div>
+                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
+                  <ion-row id="popup-content" >
+                      <ion-col class="ion-no-padding ion-text-center">
+                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
+      this.translate.instant(location) +
+      `<br/><br/></ion-label>
+                  </ion-col>
+                  </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:1.01rem; text-align:center">` +
+      (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? district_name : district_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding">
+                                 <p style="margin-top: 0px;font-size:1.01rem;text-align:center">` +
+      (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? block_name : block_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                       
+                  <ion-row  class="ion-no-padding">
+                  <ion-col class="ion-text-center">
+                  <ion-card>
+
+                  <ion-grid>
+                  <ion-row>
+                  <ion-col>
+                 <p style="margin-top: 0px;font-size:1.01rem;"> ` +
+      this.translate.instant('Wind Speed (Km/hr)') +
+      `</p>
+                  </ion-col>
+                   <ion-col>
+                  <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
+      (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
+      ` </p>
+                  </ion-col>
+                  </ion-row>
+                     <ion-row>
+                  <ion-col>  <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;color:#000">` +
+      parseFloat(value).toFixed(2) +
+      `</p></ion-col>
+                   <ion-col>
+                     <p style="margin-top: 0px;font-size:1.01rem;color:` +
+      color +
+      `">` +
+      condition +
+      `</p>
+                  </ion-col>
+                  </ion-row>
+                  </ion-grid>
+                  </ion-card>
+                  </ion-col>
+                  </ion-row>
+                  </ion-grid>
+                </div>`;
+    return contentString;
+  }
+
+  getWaveContent(
+    location,
+    district_name,
+    district_name_ory,
+    block_name,
+    block_name_ory,
+    value,
+    condition,
+    color
+  ) {
+    var contentString =
+      ` <div>
+                  <ion-grid class="ion-no-padding" style="padding-left:-18px !important">
+                  <ion-row id="popup-content" >
+                      <ion-col class="ion-no-padding ion-text-center">
+                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
+      this.translate.instant(location) +
+      `<br/><br/></ion-label>
+                  </ion-col>
+                  </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:1.01rem; text-align:center">` +
+      (this.lang == 'en' ? `District` : `ଜିଲ୍ଲା`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? district_name : district_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                   <ion-row  class="ion-no-padding">
+                              <ion-col class="ion-no-padding">
+                                 <p style="margin-top: 0px;font-size:1.01rem;text-align:center">` +
+      (this.lang == 'en' ? `Block` : `ବ୍ଲକ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                               <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;text-align:center">` +
+      (this.lang == 'en' ? block_name : block_name_ory) +
+      `</p></ion-col>
+                        </ion-row>
+                       
+                  <ion-row  class="ion-no-padding">
+                  <ion-col class="ion-text-center">
+                  <ion-card>
+
+                  <ion-grid>
+                  <ion-row>
+                  <ion-col>
+                 <p style="margin-top: 0px;font-size:1.01rem;">` +
+      this.translate.instant('Significant Wave Height (M)') +
+      `</p>
+                  </ion-col>
+                   <ion-col>
+                  <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;color:#7E7E7E">` +
+      (this.lang == 'en' ? `Status` : `ଅବସ୍ଥା`) +
+      ` </p>
+                  </ion-col>
+                  </ion-row>
+                     <ion-row>
+                  <ion-col>  <p style="margin-top: 0px;font-size:1.01rem;font-weight:500;color:#000">` +
+      parseFloat(value).toFixed(2) +
+      `</p></ion-col>
+                   <ion-col>
+                     <p style="margin-top: 0px;font-size:1.01rem;color:` +
+      color +
+      `">` +
+      condition +
+      `</p>
+                  </ion-col>
+                  </ion-row>
+                  </ion-grid>
+                  </ion-card>
+                  </ion-col>
+                  </ion-row>
+                  </ion-grid>
+                </div>`;
+    return contentString;
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

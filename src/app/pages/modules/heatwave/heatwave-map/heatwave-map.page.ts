@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { ApiService } from './../../../../providers/api.service';
 import { AuthService } from './../../../../guard/auth.service';
 import {
@@ -13,6 +14,7 @@ import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 
 import { mapKey } from '../../../../config/key';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-heatwave-map',
   templateUrl: './heatwave-map.page.html',
@@ -41,7 +43,8 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
   constructor(
     private loadingCtrl: LoadingController,
     private authService: AuthService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private translate: TranslateService
   ) {
     this.lang = localStorage.getItem('language');
     let today = moment().format('YYYY-MM-DD');
@@ -70,7 +73,7 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
         this.map = new mapboxgl.Map({
           container: 'map',
           attributionControl: false,
-          style: 'mapbox://styles/mapbox/streets-v11',
+          style: 'mapbox://styles/rimes/cl0menxra00c415qloucxsvtj',
           center: [84.5121, 20.5012],
           zoom: 5.5,
         });
@@ -83,8 +86,12 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
           setTimeout(() => this.map.resize(), 0);
           document.getElementById('map').style.opacity = '1';
           document.getElementById('skeleton').style.display = 'none';
+          const bounds = [
+            [79.39243244478365, 12.15088515068841], // [west, south]
+            [89.33612155521956, 28.622447876268296], // [east, north]
+          ];
+          this.map.setMaxBounds(bounds);
 
-          loadingEl.dismiss();
           this.map.addLayer({
             id: 'block-layer',
             type: 'fill',
@@ -94,41 +101,16 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
               'fill-opacity': 0.5,
             },
           });
-          // this.map.addLayer({
-          //   id: 'block-outline',
-          //   type: 'line',
-          //   source: 'block',
-          //   paint: {
-          //     'line-color': 'black',
-          //     'line-width': 1,
-          //   },
-          // });
 
-          this.map.addSource('india', {
-            type: 'geojson',
-            data: '../../../../../assets/geojson/India_Map.geojson',
-          });
-
-          this.map.addLayer({
-            id: 'india-layer',
-            type: 'line',
-            source: 'india',
-            layout: {
-              'line-cap': 'round',
-              'line-join': 'round',
-            },
-            paint: {
-              'line-color': '#3589ff',
-              'line-width': 0.5,
-            },
+          this.map.once('idle', () => {
+            this.loadForecast();
+            loadingEl.dismiss();
           });
 
           this.map.on('click', 'block-layer', (e) => {
             console.log(e.features[0].properties);
             this.onClick(e.features[0].properties.SlNo);
           });
-
-          this.loadForecast();
         });
       });
   }
@@ -186,12 +168,12 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
               );
             } else {
               this.authService.showAlert(
-                `ବ୍ଲକ: ` + blk_name,
+                `ବ୍ଲକ: ` + blk_name_ory,
                 `ସର୍ବାଧିକ ତାପମାତ୍ରା: <span style="font-weight:500;color:var(--ion-color-primary)!important">` +
                   temp +
                   `</span><br>
                 ଅବସ୍ଥା: <span style="font-weight:500;color:var(--ion-color-primary) !important">` +
-                  status +
+                  status_or +
                   `</span>`,
                 'ବନ୍ଦକର'
               );
@@ -201,33 +183,38 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
     }
   }
   loadForecast() {
-    // this.loadingCtrl.create().then((loadingEl) => {
-    // loadingEl.present();
     let ten_days_ensemble_index =
       this.apiService.getHeatIndexEnsembleDataAllBlock();
     let ten_days_ensemble = this.apiService.getEnsembleData();
 
-    forkJoin([ten_days_ensemble_index, ten_days_ensemble]).subscribe(
-      (results) => {
+    forkJoin([ten_days_ensemble_index, ten_days_ensemble])
+      .pipe(take(1))
+      .subscribe((results) => {
         (this.forecast_ten = results[0]),
           (this.forecast_ensemble = results[1]),
           console.log('TenDaysForecast', this.forecast_ten);
         console.log('TenDaysForecastEnsemble', this.forecast_ensemble);
-        // loadingEl.dismiss();
+
         if (this.forecast_ten != null || this.forecast_ensemble != null) {
           this.updateDates();
         } else {
           console.log('error');
           this.authService.showErrorToast('Data is not available currently!');
         }
-      }
-    );
-    // });
+      });
   }
 
   updateDatesFAB(fc) {
+    this.map.easeTo({
+      center: [84.5121, 20.5012],
+      zoom: 5.5,
+      duration: 0,
+    });
     this.days = fc;
-    this.updateDates();
+
+    this.map.once('idle', () => {
+      this.updateDates();
+    });
   }
 
   updateDates() {
@@ -244,9 +231,13 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
         if (this.forecast_ten.length != 0) {
           this.date_options = Object.keys(this.forecast_ten);
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
+
           this.updateMapFeature();
+
           this.authService.showErrorToast(
-            'Loading data for next 10 days HeatIndex Forecast. Please wait..'
+            this.translate.instant(
+              'Loading data for next 10 days Heat Stress Forecast. Please wait..'
+            )
           );
         } else {
           this.date_options = Object.keys(this.forecast);
@@ -266,8 +257,11 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
           this.date_options = Object.keys(this.forecast_ensemble);
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
           this.authService.showErrorToast(
-            'Loading data for next 5 days Heatwave Forecast. Please wait..'
+            this.translate.instant(
+              'Loading data for next 5 days Heatwave Forecast. Please wait..'
+            )
           );
+
           this.updateMapFeature();
         } else {
           this.date_options = Object.keys(this.forecast);
@@ -311,35 +305,45 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
           if (!fcst[block_id]) {
             console.log('not there');
             matchExpression.push(element, 'black');
+          } else {
+            let heat_index = fcst[block_id].HeatIndex;
+            console.log('Town Id: ' + block_id + ' heatindex::::: ' + heat_index);
+            // if (heat_index <= 90) {
+            //   matchExpression.push(element, 'green');
+            // } else if (heat_index > 90 && heat_index <= 103)
+            //   matchExpression.push(element, 'yellow');
+            // else if (heat_index > 103 && heat_index <= 125)
+            //   matchExpression.push(element, 'orange');
+            // else if (heat_index > 125) matchExpression.push(element, 'red');
+            if (heat_index <= 27) {
+              matchExpression.push(element, '#BAF1FF');
+            } else if (heat_index > 27 && heat_index <= 32)
+              matchExpression.push(element, '#BFF781');
+            else if (heat_index > 32 && heat_index <= 41)
+              matchExpression.push(element, '#FFDE02');
+            else if (heat_index > 41 && heat_index <= 54)
+              matchExpression.push(element, '#FE9A2E');  
+            else if (heat_index > 54) matchExpression.push(element, '#FF0000');
           }
-          let heat_index = fcst[block_id].HeatIndex;
-          console.log('Town Id: ' + block_id + ' Rainfall: ' + heat_index);
-          if (heat_index <= 90) {
-            matchExpression.push(element, 'green');
-          } else if (heat_index > 90 && heat_index <= 103)
-            matchExpression.push(element, 'yellow');
-          else if (heat_index > 103 && heat_index <= 125)
-            matchExpression.push(element, 'orange');
-          else if (heat_index > 125) matchExpression.push(element, 'red');
         } else if (this.days == 'ensemble') {
           fcst = this.forecast_ensemble[this.date];
           let block_id: any = element;
           console.log('Town Id: ' + block_id);
-          console.log(this.forecast_ensemble);
+          // console.log(this.forecast_ensemble);
 
           if (!fcst[block_id]) {
             matchExpression.push(element, 'black');
+          } else {
+            let heat_fcst = fcst[block_id].heat_wave_status;
+            console.log(
+              'Town Id: ' + block_id + ' heatwave status: ' + heat_fcst
+            );
+            if (heat_fcst == 1) {
+              matchExpression.push(element, 'green');
+            } else if (heat_fcst == 2) matchExpression.push(element, '#ffda05');
+            else if (heat_fcst == 3) matchExpression.push(element, '#e48400');
+            else if (heat_fcst == 4) matchExpression.push(element, '#red');
           }
-
-          let heat_fcst = fcst[block_id].heat_wave_status;
-          console.log(
-            'Town Id: ' + block_id + ' heatwave status: ' + heat_fcst
-          );
-          if (heat_fcst == 1) {
-            matchExpression.push(element, 'green');
-          } else if (heat_fcst == 2) matchExpression.push(element, '#ffda05');
-          else if (heat_fcst == 3) matchExpression.push(element, '#e48400');
-          else if (heat_fcst == 4) matchExpression.push(element, '#red');
         }
       });
       matchExpression.push('black');
@@ -347,13 +351,14 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
         if (this.map.getLayer('block-layer2') != null) {
           this.map.removeLayer('block-layer2');
         }
+
         this.map.addLayer({
           id: 'block-layer2',
           type: 'fill',
           source: 'block',
           paint: {
             'fill-color': matchExpression,
-            'fill-opacity': 0.7,
+            'fill-opacity': 0.6,
           },
         });
       }
@@ -415,5 +420,9 @@ export class HeatwaveMapPage implements OnInit, AfterViewInit {
 
   showHideBackdrop() {
     this.fabState = !this.fabState;
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

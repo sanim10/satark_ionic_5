@@ -1,3 +1,4 @@
+import { map, take } from 'rxjs/operators';
 import { LightningAdvisoryComponent } from './../lightning-advisory/lightning-advisory.component';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from './../../../../providers/api.service';
@@ -7,6 +8,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import * as mapboxgl from 'mapbox-gl';
 import { forkJoin } from 'rxjs';
 import { mapKey } from '../../../../config/key';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-lightning-map',
   templateUrl: './lightning-map.page.html',
@@ -30,11 +32,22 @@ export class LightningMapPage implements OnInit, AfterViewInit {
   severity: any = [];
   cg_time: any = [];
   cg_latitude: any = [];
-  public nowcast_data: any;
-  public cg_data: any;
   cg_longitude: any = [];
+  cc_time: any = [];
+  cc_latitude: any = [];
+  cc_longitude: any = [];
+
+  public nowcast_data: any;
+  public five_mins_data: any;
+  public thirty_mins_data: any;
+  public one_hour_data: any;
+  public cg_data: any;
+  public cc_data: any;
   timeframe: any = [];
-  fab_time = 'thirty';
+  timeframe2: any = [];
+  fab_time = 'five';
+  markers_cg = [];
+  markers_cc = [];
   markers = [];
   public recent_event_data: any;
   recent_time: any = [];
@@ -46,7 +59,8 @@ export class LightningMapPage implements OnInit, AfterViewInit {
     private authService: AuthService,
     private apiService: ApiService,
     private httpClient: HttpClient,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private translate: TranslateService
   ) {
     this.lang = localStorage.getItem('language');
   }
@@ -73,7 +87,7 @@ export class LightningMapPage implements OnInit, AfterViewInit {
         this.map = new mapboxgl.Map({
           container: 'map',
           attributionControl: false,
-          style: 'mapbox://styles/mapbox/streets-v11',
+          style: 'mapbox://styles/rimes/cl0menxra00c415qloucxsvtj',
           center: [84.5121, 20.5012],
           zoom: 5.5,
         });
@@ -87,25 +101,37 @@ export class LightningMapPage implements OnInit, AfterViewInit {
           document.getElementById('map').style.opacity = '1';
           document.getElementById('skeleton').style.display = 'none';
 
-          loadingEl.dismiss();
+          const bounds = [
+            [79.39243244478365, 12.15088515068841], // [west, south]
+            [89.33612155521956, 28.622447876268296], // [east, north]
+          ];
+          this.map.setMaxBounds(bounds);
+
           this.map.addLayer({
             id: 'block-layer',
             type: 'fill',
             source: 'block',
             paint: {
               'fill-color': 'white',
-              'fill-opacity': 0.5,
+              'fill-opacity': 0.9,
+              'fill-outline-color': '#5A5A5A',
             },
           });
-          // this.map.addLayer({
-          //   id: 'block-outline',
-          //   type: 'line',
-          //   source: 'block',
-          //   paint: {
-          //     'line-color': 'black',
-          //     'line-width': 1,
-          //   },
-          // });
+
+          this.map.addLayer({
+            id: 'block-layer-names',
+            type: 'symbol',
+            source: 'block',
+            layout: {
+              'text-field': ['get', 'Block'],
+              'text-offset': [0, 1.25],
+              'text-anchor': 'top',
+              'text-size': 12,
+            },
+            paint: {
+              'text-color': '#383838',
+            },
+          });
 
           this.map.addSource('india', {
             type: 'geojson',
@@ -128,58 +154,20 @@ export class LightningMapPage implements OnInit, AfterViewInit {
 
           this.map.on('click', 'block-layer', (e) => {
             console.log(e.features[0].properties);
-            // this.onClick(e.features[0].properties.SlNo);
           });
-          this.loadDta();
-          this.loadPolygon();
-          this.loadData();
+
+          this.map.once('idle', () => {
+            this.loadDta();
+            this.loadPolygon();
+            this.updateMap5Mins();
+            loadingEl.dismiss();
+          });
         });
       });
   }
 
-  loadRecentEvents() {
-    this.removeMarkers();
-    this.apiService.getRecentEventLightning().subscribe((data) => {
-      this.recent_event_data = data;
-      console.log('recent event data', this.recent_event_data);
-      var length = this.recent_event_data.length;
-      if (length != 0) {
-        for (var i = 0; i < length; i++) {
-          let el = document.createElement('div');
-          el.classList.add('marker');
-          var lati = this.recent_event_data[i].latitude;
-          var longi = this.recent_event_data[i].longitude;
-          var lightning_ti = this.recent_event_data[i].lightning_time;
-          var tframe = this.recent_event_data[i].time_frame;
-          this.recent_timeframe.push(tframe);
-          this.recent_latitude.push(lati);
-          this.recent_longitude.push(longi);
-          this.recent_time.push(lightning_ti);
-          ////show marker based on time frame
-          if (this.recent_timeframe[i] > 1800) {
-            var s =
-              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_blue_ic.svg"</ion-img></div>';
-            el.innerHTML = s;
-            const marker = new mapboxgl.Marker({ element: el })
-              .setLngLat([this.recent_longitude[i], this.recent_latitude[i]])
-              .setPopup(
-                new mapboxgl.Popup({
-                  closeOnClick: true,
-                }).setHTML(this.recent_time[i])
-              )
-              .addTo(this.map);
-
-            this.markers.push(marker);
-          }
-        }
-      } else {
-        this.authService.showErrorToastTop('No Recent Lightning Activity..');
-      }
-    });
-  }
-
   loadDta() {
-    let flash_type = this.apiService.getNowcastDataLightning();
+    let flash_type = this.apiService.getNowcastDataLightning30Mins();
     forkJoin([flash_type]).subscribe((results) => {
       this.result_data = results[0];
       this.flash_data = this.result_data['flash'];
@@ -230,21 +218,26 @@ export class LightningMapPage implements OnInit, AfterViewInit {
               var long = this.m_points_data[i].y;
               this.latitude.push(lat);
               this.longitude.push(long);
-              console.log('mlats', this.latitude); //push lat and long to array
-              console.log('mlongs', this.longitude);
+              // console.log('mlats', this.latitude); //push lat and long to array
+              // console.log('mlongs', this.longitude);
               if (this.latitude.length == 5) {
                 var triangleCoords = [];
                 for (var j = 0; j < this.latitude.length; j++) {
-                  triangleCoords.push([this.latitude[j], this.longitude[j]]); //push 5 lat and 5 long to make polygon
-                  console.log('coordsssssssssssss', triangleCoords);
+                  triangleCoords.push([this.longitude[j], this.latitude[j]]); //push 5 lat and 5 long to make polygon
+                  // console.log('coordsssssssssssss', triangleCoords);
                 }
-                console.log(triangleCoords);
+                // console.log(triangleCoords);
 
-                if (this.map.getLayer('medium-layer') != null) {
-                  this.map.removeLayer('medium-layer');
+                if (this.map.getLayer('medium-layer' + q + j) != null) {
+                  this.map.removeLayer('medium-layer' + q + j);
                 }
-
-                this.map.addSource('medium', {
+                if (this.map.getLayer('medium-layer-outline' + q + j) != null) {
+                  this.map.removeLayer('medium-layer-outline' + q + j);
+                }
+                if (this.map.getSource('medium' + q + j) != null) {
+                  this.map.removeSource('medium' + q + j);
+                }
+                this.map.addSource('medium' + q + j, {
                   type: 'geojson',
                   data: {
                     type: 'Feature',
@@ -255,13 +248,26 @@ export class LightningMapPage implements OnInit, AfterViewInit {
                   },
                 });
                 this.map.addLayer({
-                  id: 'medium-layer',
+                  id: 'medium-layer' + q + j,
                   type: 'fill',
-                  source: 'medium',
+                  source: 'medium' + q + j,
                   layout: {},
                   paint: {
                     'fill-color': 'blue',
                     'fill-opacity': 0.4,
+                  },
+                });
+                this.map.addLayer({
+                  id: 'medium-layer-outline' + q + j,
+                  type: 'line',
+                  source: 'medium' + q + j,
+                  layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round',
+                  },
+                  paint: {
+                    'line-color': 'blue',
+                    'line-width': 1,
                   },
                 });
                 this.latitude = [];
@@ -284,15 +290,21 @@ export class LightningMapPage implements OnInit, AfterViewInit {
                 var triangleCoords = [];
 
                 for (var j = 0; j < this.latitude.length; j++) {
-                  triangleCoords.push([this.latitude[j], this.longitude[j]]); //push 5 lat and 5 long to make polygon
-                  console.log('coordsssssssssssss', triangleCoords);
+                  triangleCoords.push([this.longitude[j], this.latitude[j]]); //push 5 lat and 5 long to make polygon
+                  // console.log('coordsssssssssssss', triangleCoords);
                 }
-                console.log(triangleCoords);
+                // console.log(triangleCoords);
 
-                if (this.map.getLayer('high-layer') != null) {
-                  this.map.removeLayer('high-layer');
+                if (this.map.getLayer('high-layer' + q + j) != null) {
+                  this.map.removeLayer('high-layer' + q + j);
                 }
-                this.map.addSource('high', {
+                if (this.map.getLayer('high-layer-outline' + q + j) != null) {
+                  this.map.removeLayer('high-layer-outline' + q + j);
+                }
+                if (this.map.getSource('high' + q + j) != null) {
+                  this.map.removeSource('high' + q + j);
+                }
+                this.map.addSource('high' + q + j, {
                   type: 'geojson',
                   data: {
                     type: 'Feature',
@@ -303,13 +315,26 @@ export class LightningMapPage implements OnInit, AfterViewInit {
                   },
                 });
                 this.map.addLayer({
-                  id: 'high-layer',
+                  id: 'high-layer' + q + j,
                   type: 'fill',
-                  source: 'high',
+                  source: 'high' + q + j,
                   layout: {},
                   paint: {
                     'fill-color': '#FF0000',
-                    'fill-opacity': 1,
+                    'fill-opacity': 0.5,
+                  },
+                });
+                this.map.addLayer({
+                  id: 'high-layer-outline' + q + j,
+                  type: 'line',
+                  source: 'high' + q + j,
+                  layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round',
+                  },
+                  paint: {
+                    'line-color': '#FF0000',
+                    'line-width': 1,
                   },
                 });
 
@@ -328,81 +353,329 @@ export class LightningMapPage implements OnInit, AfterViewInit {
     });
   }
 
-  loadData() {
-    //get data from api and send to map
-    this.apiService.getNowcastDataLightning().subscribe(
-      (data) => {
-        console.log('now data', data);
-        this.nowcast_data = data;
-        this.cg_data = data['CG'];
-        this.updateMap();
-      },
-      (Error) => {
-        this.authService.showErrorToastTop('Network Error.Please try later!');
-      }
-    );
-  }
+  updateMap5Mins() {
+    this.apiService
+      .getNowcastDataLightning5Mins()
+      .pipe(take(1))
+      .subscribe((data) => {
+        this.five_mins_data = data;
+        if (this.five_mins_data.length != 0) {
+          console.log('now data 5mins', data);
+          this.cg_data = data['CG'];
+          this.cc_data = data['CC'];
 
-  updateMap() {
-    if (this.nowcast_data != null) {
-      if (this.cg_data.length != 0) {
-        for (var j = 0; j < this.cg_data.length; j++) {
-          var cg_lati = this.cg_data[j].latitude;
-          var cg_long = this.cg_data[j].longitude;
-          var cg_lightning_time = this.cg_data[j].lightning_time;
-          var tframe = this.cg_data[j].time_frame;
-          this.cg_latitude.push(cg_lati);
-          this.cg_longitude.push(cg_long);
-          this.cg_time.push(cg_lightning_time);
-          this.timeframe.push(tframe);
-        }
-        if (this.fab_time == 'thirty') {
-          this.removeMarkers();
+          this.cg_data.forEach((cg) => {
+            var cg_lati = cg.latitude;
+            var cg_long = cg.longitude;
+            var cg_lightning_time = cg.lightning_time;
+            var tframe = cg.time_frame;
+            this.cg_latitude.push(cg_lati);
+            this.cg_longitude.push(cg_long);
+            this.cg_time.push(cg_lightning_time);
+            this.timeframe.push(tframe);
 
-          console.log('timessss', this.fab_time);
-          for (var t = 0; t < this.timeframe.length; t++) {
             let el = document.createElement('div');
             el.classList.add('marker');
-            if (this.timeframe[t] >= 1201 && this.timeframe[t] <= 1800) {
-              var s =
-                '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_yellow_ic.svg"</ion-img></div>';
-              el.innerHTML = s;
-              const marker = new mapboxgl.Marker({ element: el })
-                .setLngLat([this.cg_longitude[t], this.cg_latitude[t]])
-                .setPopup(
-                  new mapboxgl.Popup({
-                    closeOnClick: true,
-                  }).setHTML(this.cg_time[t])
-                )
-                .addTo(this.map);
 
-              this.markers.push(marker);
-            }
+            var s =
+              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_yellow_ic.svg" style="transform:scale(1.2)"></ion-img></div>';
+            el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([cg.longitude, cg.latitude])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CG : </span>` +
+                      cg.lightning_time +
+                      `</P>`
+                  )
+              )
+              .addTo(this.map);
+
+            this.markers_cg.push(marker);
+          });
+
+          this.cc_data.forEach((cc) => {
+            var cc_lati = cc.latitude;
+            var cc_long = cc.longitude;
+            var cc_lightning_time = cc.lightning_time;
+            var tframe = cc.time_frame;
+            this.cc_latitude.push(cc_lati);
+            this.cc_longitude.push(cc_long);
+            this.cc_time.push(cc_lightning_time);
+            this.timeframe.push(tframe);
+
+            let el = document.createElement('div');
+            el.classList.add('marker');
+
+            var s =
+              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_blue_ic.svg"></ion-img></div>';
+            el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([cc.longitude, cc.latitude])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CC : </span>` +
+                      cc.lightning_time +
+                      `</P>`
+                  )
+              )
+              .addTo(this.map);
+
+            this.markers_cc.push(marker);
+          });
+
+          if (this.cc_data.length == 0 && this.cg_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CC & CG)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CC & CG)'
+                );
+          } else if (this.cc_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CC)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+                );
+          } else if (this.cg_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CG)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+                );
           }
         }
-        ///////////////////////////////////////////////////
-      } else {
-        if (this.lang == 'en') {
-          this.authService.showErrorToastTop(
-            'No significant lightning or thunderstorm activity.'
-          );
-        } else {
-          this.authService.showErrorToastTop(
-            'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ '
-          );
+      });
+  }
+
+  updateMap30Mins() {
+    this.apiService
+      .getNowcastDataLightning30Mins()
+      .pipe(take(1))
+      .subscribe((data) => {
+        this.thirty_mins_data = data;
+        if (this.thirty_mins_data.length != 0) {
+          console.log('now data 30mins', data);
+          this.cg_data = data['CG'];
+          this.cc_data = data['CC'];
+
+          this.cg_data.forEach((cg) => {
+            var cg_lati = cg.latitude;
+            var cg_long = cg.longitude;
+            var cg_lightning_time = cg.lightning_time;
+            var tframe = cg.time_frame;
+            this.cg_latitude.push(cg_lati);
+            this.cg_longitude.push(cg_long);
+            this.cg_time.push(cg_lightning_time);
+            this.timeframe.push(tframe);
+
+            let el = document.createElement('div');
+            el.classList.add('marker');
+
+            var s =
+              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_yellow_ic.svg" style="transform:scale(1.2)"></ion-img></div>';
+            el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([cg.longitude, cg.latitude])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CG : </span>` +
+                      cg.lightning_time +
+                      `</P>`
+                  )
+              )
+              .addTo(this.map);
+
+            this.markers_cg.push(marker);
+          });
+
+          this.cc_data.forEach((cc) => {
+            var cc_lati = cc.latitude;
+            var cc_long = cc.longitude;
+            var cc_lightning_time = cc.lightning_time;
+            var tframe = cc.time_frame;
+            this.cc_latitude.push(cc_lati);
+            this.cc_longitude.push(cc_long);
+            this.cc_time.push(cc_lightning_time);
+            this.timeframe.push(tframe);
+
+            let el = document.createElement('div');
+            el.classList.add('marker');
+
+            var s =
+              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_blue_ic.svg"></ion-img></div>';
+            el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([cc.longitude, cc.latitude])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CC : </span>` +
+                      cc.lightning_time +
+                      `</P>`
+                  )
+              )
+              .addTo(this.map);
+
+            this.markers_cc.push(marker);
+          });
+
+          if (this.cc_data.length == 0 && this.cg_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CC & CG)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CC & CG)'
+                );
+          } else if (this.cc_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CC)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+                );
+          } else if (this.cg_data.length == 0) {
+            this.lang == 'en'
+              ? this.authService.showErrorToastTop(
+                  'No significant lightning or thunderstorm activity (CG)'
+                )
+              : this.authService.showErrorToastTop(
+                  'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+                );
+          }
         }
-      }
-    } else {
-      if (this.lang == 'en') {
-        this.authService.showErrorToastTop(
-          'No significant lightning or thunderstorm activity.'
-        );
-      } else {
-        this.authService.showErrorToastTop(
-          'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ '
-        );
-      }
-    }
+      });
+  }
+
+  updateMap1Hour() {
+    this.apiService
+      .getNowcastDataLightning1Hour()
+      .pipe(take(1))
+      .subscribe((data) => {
+        this.one_hour_data = data;
+        console.log('now data 1hour', data);
+        if (this.one_hour_data.length != 0) {
+          console.log('now data 1hour', data);
+          this.cg_data = data['CG'];
+          this.cc_data = data['CC'];
+
+          this.cg_data.forEach((cg) => {
+            var cg_lati = cg.latitude;
+            var cg_long = cg.longitude;
+            var cg_lightning_time = cg.lightning_time;
+            var tframe = cg.time_frame;
+            this.cg_latitude.push(cg_lati);
+            this.cg_longitude.push(cg_long);
+            this.cg_time.push(cg_lightning_time);
+            this.timeframe.push(tframe);
+
+            let el = document.createElement('div');
+            el.classList.add('marker');
+
+            var s =
+              '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_yellow_ic.svg" style="transform:scale(1.2)"></ion-img></div>';
+            el.innerHTML = s;
+            const marker = new mapboxgl.Marker({ element: el })
+              .setLngLat([cg.longitude, cg.latitude])
+              .setPopup(
+                new mapboxgl.Popup({
+                  closeOnClick: true,
+                })
+                  .setLngLat(this.map.getCenter())
+                  .setHTML(
+                    `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CG : </span>` +
+                      cg.lightning_time +
+                      `</P>`
+                  )
+              )
+              .addTo(this.map);
+
+            this.markers_cg.push(marker);
+          });
+        }
+
+        this.cc_data.forEach((cc) => {
+          var cc_lati = cc.latitude;
+          var cc_long = cc.longitude;
+          var cc_lightning_time = cc.lightning_time;
+          var tframe = cc.time_frame;
+          this.cc_latitude.push(cc_lati);
+          this.cc_longitude.push(cc_long);
+          this.cc_time.push(cc_lightning_time);
+          this.timeframe.push(tframe);
+
+          let el = document.createElement('div');
+          el.classList.add('marker');
+
+          var s =
+            '<div style="height:40px;width:40px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center;"><ion-img src="../../../../../assets/modules/lightning/map/lightning_blue_ic.svg"></ion-img></div>';
+          el.innerHTML = s;
+          const marker = new mapboxgl.Marker({ element: el })
+            .setLngLat([cc.longitude, cc.latitude])
+            .setPopup(
+              new mapboxgl.Popup({
+                closeOnClick: true,
+              })
+                .setLngLat(this.map.getCenter())
+                .setHTML(
+                  `<P style="font-size:13px;text-align:center;width:100%"><span style="font-weight:bold">CC : </span>` +
+                    cc.lightning_time +
+                    `</P>`
+                )
+            )
+            .addTo(this.map);
+
+          this.markers_cc.push(marker);
+        });
+
+        if (this.cc_data.length == 0 && this.cg_data.length == 0) {
+          this.lang == 'en'
+            ? this.authService.showErrorToastTop(
+                'No significant lightning or thunderstorm activity (CC & CG)'
+              )
+            : this.authService.showErrorToastTop(
+                'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CC & CG)'
+              );
+        } else if (this.cc_data.length == 0) {
+          this.lang == 'en'
+            ? this.authService.showErrorToastTop(
+                'No significant lightning or thunderstorm activity (CC)'
+              )
+            : this.authService.showErrorToastTop(
+                'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+              );
+        } else if (this.cg_data.length == 0) {
+          this.lang == 'en'
+            ? this.authService.showErrorToastTop(
+                'No significant lightning or thunderstorm activity (CG)'
+              )
+            : this.authService.showErrorToastTop(
+                'କୌଣସି ଉଲ୍ଲେଖନିୟ ବଜ୍ରପାତର କାର୍ଯ୍ୟକଳାପ ନାହିଁ  (CG)'
+              );
+        }
+      });
   }
 
   removeMarkers() {
@@ -412,6 +685,20 @@ export class LightningMapPage implements OnInit, AfterViewInit {
       });
       this.markers = null;
       this.markers = [];
+    }
+    if (this.markers_cc.length != 0) {
+      this.markers_cc.forEach((element) => {
+        element.remove();
+      });
+      this.markers_cc = null;
+      this.markers_cc = [];
+    }
+    if (this.markers_cg.length != 0) {
+      this.markers_cg.forEach((element) => {
+        element.remove();
+      });
+      this.markers_cg = null;
+      this.markers_cg = [];
     }
   }
 
@@ -424,63 +711,106 @@ export class LightningMapPage implements OnInit, AfterViewInit {
     block = this.flash_data;
     low = this.low_value;
     high = this.high_value;
+
     moderate = this.moderate_value;
     console.log('map block', block);
     var matchExpression = null;
-    matchExpression = ['match', ['get', 'SlNo']];
+    matchExpression = ['match', ['get', 'Id']];
 
     const features = this.map.queryRenderedFeatures({
       layers: ['block-layer'],
     });
 
-    const unique = [...new Set(features.map((item) => item.properties.SlNo))];
-    var f1: any = [];
+    const unique = [...new Set(features.map((item) => item.properties.Id))];
+    var f1;
     f1 = unique;
+
     if (f1.length != 0 && block.length != 0) {
       f1.forEach((element) => {
         let blk_id = element;
-
-        if (!block[blk_id]) {
-          matchExpression.push(element, 'white');
+        if (block[blk_id] == null) {
+          return;
         }
         let ground_value = block[blk_id].ground;
-
+        let cloud_value = block[blk_id].cloud;
         console.log(
-          'block id' + block[blk_id].block_id + 'ground' + ground_value
+          'block id' +
+            block[blk_id].block_id +
+            'ground' +
+            ground_value +
+            'cloud' +
+            cloud_value
         );
-        if (ground_value >= low && ground_value <= moderate) {
-          matchExpression.push(element, 'blue');
-        } else if (ground_value >= high) matchExpression.push(element, 'red');
-        else matchExpression.push(element, 'white');
+        if (cloud_value == 1 && ground_value == 0) {
+          // fillColor= '#D2B48C';
+          matchExpression.push(element, '#D2B48C');
+        } else if ((cloud_value > 1 && cloud_value <= 5) || ground_value == 1) {
+          // fillColor = '#CD853F';
+          matchExpression.push(element, '#CD853F');
+        } else if ((cloud_value > 5 && cloud_value <= 5) || ground_value >= 2) {
+          // fillColor = '#A0522D';
+          matchExpression.push(element, '#A0522D');
+        } else {
+          //fillColor = 'rgba(255, 255, 255, 0.2)';
+          matchExpression.push(element, 'rgba(255, 255, 255, 0.2)');
+        }
       });
       matchExpression.push('white');
-      if (this.map.getSource('block') != null && matchExpression) {
-        this.map.addLayer({
-          id: 'block-layer2',
-          type: 'fill',
-          source: 'block',
-          paint: {
-            'fill-color': matchExpression,
-            'fill-opacity': 0.7,
-          },
-        });
-      }
+      console.log(matchExpression);
+
+      this.map.setPaintProperty('block-layer', 'fill-color', matchExpression);
+
+      // if (this.map.getLayer('block-layer-two') != null) {
+      //   this.map.removeLayer('block-layer-two');
+      // }
+      // if (this.map.getSource('block') != null && matchExpression) {
+      //   this.map.addLayer({
+      //     id: 'block-layer-two',
+      //     type: 'fill',
+      //     source: 'block',
+      //     paint: {
+      //       'fill-color': matchExpression,
+      //       'fill-opacity': 0.5,
+      //     },
+      //   });
+      // }
     }
   }
 
   updateTimeFAB(fc) {
     this.fab_time = fc;
-    if (this.fab_time == 'thirty') {
-      this.updateMap();
+    if (this.fab_time == 'five') {
+      this.removeMarkers();
+      this.updateMap5Mins();
+    } else if (this.fab_time == 'thirty') {
+      this.removeMarkers();
+      // this.updateMap();
+      this.updateMap30Mins();
     } else {
-      this.loadRecentEvents();
+      // this.loadRecentEvents();
+
+      this.removeMarkers();
+      this.updateMap1Hour();
     }
   }
 
   refresh() {
-    this.loadDta();
-    this.loadPolygon();
-    this.loadData();
+    this.loadingCtrl
+      .create({
+        spinner: 'bubbles',
+        mode: 'ios',
+        duration: 10000,
+      })
+      .then((loadingEl) => {
+        loadingEl.present();
+        this.map.setPaintProperty('block-layer', 'fill-color', 'white');
+        this.removeMarkers();
+        this.loadDta();
+        this.loadPolygon();
+        this.updateMap5Mins();
+        this.fab_time = 'five';
+        loadingEl.dismiss();
+      });
   }
 
   async openAdv(l) {
@@ -489,5 +819,9 @@ export class LightningMapPage implements OnInit, AfterViewInit {
       component: LightningAdvisoryComponent,
     });
     return await modal.present();
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

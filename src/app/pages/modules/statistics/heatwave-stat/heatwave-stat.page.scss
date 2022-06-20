@@ -45,6 +45,14 @@ ion-footer {
   background-color: var(--ion-color-primary);
   // padding-top: 32px;
   bottom: 0;
+  ion-label {
+    position: absolute;
+    color: #fff;
+    margin-top: 5px;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+  }
   ion-img {
     height: 64px;
     width: 100%;
@@ -77,4 +85,18 @@ ion-input {
   ion-content {
     overflow-y: scroll;
   }
+}
+
+swiper {
+  height: 100%;
+}
+
+.popup-selector {
+  margin-top: 60px;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
 }

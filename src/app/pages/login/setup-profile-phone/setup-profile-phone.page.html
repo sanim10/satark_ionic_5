@@ -1,7 +1,15 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
     <ion-title type="small">{{"register-title" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" class="refresh-button">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
+
+
 </ion-header>
 <ion-content>
   <ion-grid class="container">
@@ -12,11 +20,8 @@
             <ion-col size="12">
               <br />
               <ion-text>
-                <p
-                  style="color: var(--ion-color-primary)"
-                  class="ion-text-center"
-                >
-                  Please provide more information to proceed
+                <p style="color: var(--ion-color-primary)" class="ion-text-center">
+                  {{"Please provide more information to proceed" | translate}}
                   <br />
                 </p>
               </ion-text>
@@ -24,55 +29,34 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <h2>Name <span class="required">*</span></h2>
-              <ion-input
-                formControlName="name"
-                type="text"
-                placeholder="Your name"
-                minLength="3"
-                maxLength="20"
-                #name
-              >
+              <h2>{{"Name" | translate}} <span class="required">*</span></h2>
+              <ion-input formControlName="name" type="text" placeholder="{{'Your Name' | translate}}" minLength="3"
+                maxLength="20" #name>
               </ion-input>
               <br />
 
-              <h2>District <span class="required">*</span></h2>
-              <ion-select
-                formControlName="district"
-                (ionChange)="getBlocks()"
-                interface="action-sheet"
-                mode="ios"
-                placeholder="Select district"
-                #district
-              >
-                <ion-select-option *ngFor=" let data of district_data"
-                  >{{data.district_name}}</ion-select-option
-                >
+              <h2>{{ "District" | translate}} <span class="required">*</span></h2>
+              <ion-select formControlName="district" (ionChange)="getBlocks()" interface="action-sheet" mode="ios"
+                placeholder="{{'Select District' | translate}}" #district>
+                <ion-select-option *ngFor=" let data of district_data">
+                  <div *ngIf="lang=='en'">{{data.district_name}}</div>
+                  <div *ngIf="lang=='od'">{{data.district_name}} | {{data.district_name_ory}}</div>
+                </ion-select-option>
               </ion-select>
               <br />
-              <h2>Block <span class="required">*</span></h2>
-              <ion-select
-                formControlName="block"
-                (ionChange)="get_blocks_id()"
-                interface="action-sheet"
-                mode="ios"
-                placeholder="Select block"
-                #block
-              >
-                <ion-select-option *ngFor="let data of block_data"
-                  >{{data.block_name}}</ion-select-option
-                >
+              <h2>{{"Block" | translate}} <span class="required">*</span></h2>
+              <ion-select formControlName="block" (ionChange)="get_blocks_id()" interface="action-sheet" mode="ios"
+                placeholder="{{'Select Block' | translate}}" #block>
+                <ion-select-option *ngFor="let data of block_data">
+                  <div *ngIf="lang=='en'">{{data.block_name}}</div>
+                  <div *ngIf="lang=='od'">{{data.block_name}} | {{data.block_name_ory}}</div>
+                </ion-select-option>
               </ion-select>
               <br />
 
-              <h2>Email (Optional)</h2>
-              <ion-input
-                formControlName="email"
-                type="email"
-                placeholder="Your Email"
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                #email
-              >
+              <h2>{{"Email" | translate}} ({{"Optional" | translate }})</h2>
+              <ion-input formControlName="email" type="email" placeholder="{{'Your E-mail' | translate}}"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email>
               </ion-input>
               <br />
 
@@ -80,20 +64,15 @@
                 <ion-checkbox slot="start" formControlName="agree" #agree>
                 </ion-checkbox>
                 <ion-label style="margin-left: 7px">
-                  <p>I agree to terms and conditions.</p>
+                  <p>{{"I agree to the terms and conditions" | translate}}</p>
                 </ion-label>
               </div>
               <h2 class="ion-text-center">
                 <a (click)="openPrivacy()">View privacy policy</a>
               </h2>
               <br />
-              <ion-button
-                expand="block"
-                size="default"
-                class="login-button"
-                (click)="signUp()"
-              >
-                Done
+              <ion-button expand="block" size="default" class="login-button" (click)="signUp()">
+                {{"Done" | translate}}
               </ion-button>
 
               <br />

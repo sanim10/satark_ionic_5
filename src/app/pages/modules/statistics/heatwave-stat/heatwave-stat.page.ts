@@ -1,12 +1,12 @@
 import { AlertController } from '@ionic/angular';
 import { ApiService } from './../../../../providers/api.service';
 import { AuthService } from './../../../../guard/auth.service';
-import SwiperCore, { Navigation, SwiperOptions } from 'swiper';
+import SwiperCore, { EffectFade, Navigation, SwiperOptions } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
 
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
-SwiperCore.use([Navigation]);
+SwiperCore.use([Navigation, EffectFade]);
 
 @Component({
   selector: 'app-heatwave-stat',
@@ -32,46 +32,24 @@ export class HeatwaveStatPage implements OnInit, AfterViewInit {
   public district_data: any;
   public district_data_by_id: any;
   lang;
-
-  activeSlide = 0;
+  currentSlide = 'map';
+  selectedYear = '2011';
   config: SwiperOptions = {
     slidesPerView: 1,
-    spaceBetween: 50,
     allowTouchMove: false,
+    fadeEffect: {
+      crossFade: true,
+    },
+    effect: 'fade',
   };
 
   slideNext() {
-    this.swiper.swiperRef.slideNext();
+    this.swiper.swiperRef.slideNext(300);
+    this.currentSlide = 'chart';
   }
   slidePrev() {
-    this.swiper.swiperRef.slidePrev();
-  }
-
-  updateMap() {
-    var fcst: any;
-    fcst = this.totalDeathDataForMap;
-    this.map.data.setStyle(function (feature) {
-      let district_id = feature.getProperty('id');
-      if (!fcst[district_id]) {
-        console.log('not there');
-        return { fillColor: 'white', fillOpacity: 0.6, strokeWeight: 0.0 };
-      }
-      let total_deaths = fcst[district_id].total_deaths;
-      console.log(
-        'district_id: ' + district_id + ' total_deaths: ' + total_deaths
-      );
-      if (total_deaths >= 1 && total_deaths <= 5)
-        return { fillColor: 'gold', fillOpacity: 0.8, strokeWeight: 0.0 };
-      else if (total_deaths > 5.1 && total_deaths <= 10.0)
-        return { fillColor: 'yellow', fillOpacity: 0.5, strokeWeight: 0.0 };
-      else if (total_deaths > 10.1 && total_deaths <= 15.0)
-        return { fillColor: 'orange', fillOpacity: 0.6, strokeWeight: 0.0 };
-      else if (total_deaths > 15.1 && total_deaths <= 20.0)
-        return { fillColor: 'darkorange', fillOpacity: 0.6, strokeWeight: 0.0 };
-      else if (total_deaths > 20.1 && total_deaths <= 25.0)
-        return { fillColor: 'coral', fillOpacity: 0.6, strokeWeight: 0.0 };
-      else return { fillColor: 'red', fillOpacity: 0.6, strokeWeight: 0.0 };
-    });
+    this.swiper.swiperRef.slidePrev(300);
+    this.currentSlide = 'map';
   }
 
   constructor(
@@ -104,7 +82,7 @@ export class HeatwaveStatPage implements OnInit, AfterViewInit {
         console.log('user_district_id', this.district_id);
         this.getDeathData(this.district_id);
         // this.getTotalDeathData(); //not used
-        this.getTotalDeathDataForMap();
+        // this.getTotalDeathDataForMap();
       });
   }
 
@@ -181,13 +159,6 @@ export class HeatwaveStatPage implements OnInit, AfterViewInit {
     });
   }
 
-  getTotalDeathDataForMap() {
-    this.apiService.getTotalDeathByHeatwaveForMap().subscribe((data) => {
-      this.totalDeathDataForMap = data;
-      console.log('total death data for map', this.totalDeathDataForMap);
-    });
-  }
-
   async showLocationDialog() {
     let locInputs = [];
     for (var loc of this.district_data) {
@@ -215,7 +186,7 @@ export class HeatwaveStatPage implements OnInit, AfterViewInit {
             };
             console.log('params..', param),
               this.apiService.getDeathByHeatwave(param).subscribe((data) => {
-                this.authService.showErrorToast('Fetching new location data');
+                this.authService.showErrorToast('Fetching new data');
 
                 this.death_data = data;
                 console.log('death data', this.death_data);
@@ -248,5 +219,48 @@ export class HeatwaveStatPage implements OnInit, AfterViewInit {
       ],
     });
     (await locationDialog).present();
+  }
+
+  async showYearDialog() {
+    console.log('hey');
+    let locInputs = [];
+
+    var years = [
+      '2011',
+      '2012',
+      '2013',
+      '2014',
+      '2015',
+      '2016',
+      '2017',
+      '2018',
+    ];
+    for (var year of years) {
+      locInputs.push({
+        type: 'radio',
+        label: year,
+        value: year,
+      });
+    }
+
+    let yearDialog = this.alertCtrl.create({
+      inputs: locInputs,
+      buttons: [
+        {
+          text: this.lang == 'en' ? 'Cancel' : 'ବାତିଲ କରନ୍ତୁ',
+          handler: (data) => {
+            console.log('cancel clicked');
+          },
+        },
+        {
+          text: this.lang == 'en' ? 'Ok' : 'ଠିକ',
+          handler: (data) => {
+            this.selectedYear = data;
+            console.log('year...', data);
+          },
+        },
+      ],
+    });
+    (await yearDialog).present();
   }
 }

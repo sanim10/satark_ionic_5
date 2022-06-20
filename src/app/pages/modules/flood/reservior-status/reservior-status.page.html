@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>{{"Reservoir Status" | translate}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button class="back-button" defaultHref="/home"></ion-back-button>
+      <ion-back-button class="back-button" defaultHref="flood"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -127,25 +127,27 @@
                   <ion-label class="water-level-header"> {{"Water level" | translate}} </ion-label>
                 </ion-col>
                 <ion-col size="4" class="ion-text-center">
-                  <ion-label class="water-level-header"> {{"As observerd on" | translate}} </ion-label>
+                  <ion-label class="water-level-header"> {{"As observed on" | translate}} </ion-label>
                 </ion-col>
               </ion-row>
 
-              <ion-row>
+              <ion-row *ngFor="let rsvr_storage_data  of rsvr_storage_data;let i=index;">
                 <ion-col size="4" class="ion-text-center">
-                  <ion-label class="water-level-details">{{rsvr_storage_data[0].location_name}}
+                  <ion-label *ngIf="lang=='en'" class="water-level-details">{{resvr_detail_data[i].location_name}}
+                  </ion-label>
+                  <ion-label *ngIf="lang=='od'" class="water-level-details">{{resvr_detail_data[i].location_name_ory}}
                   </ion-label>
                 </ion-col>
 
                 <ion-col size="4" class="ion-text-center">
                   <ion-label class="water-level-details">
-                    {{resvr_detail_data[0]?.value}}m
+                    {{resvr_detail_data[i].value}}m
                   </ion-label>
                 </ion-col>
 
                 <ion-col size="4" class="ion-text-center">
                   <ion-label class="water-level-details">
-                    {{rsvr_storage_data[0].observed_date}}
+                    {{rsvr_storage_data.observed_date}}
                   </ion-label>
                 </ion-col>
               </ion-row>
@@ -172,5 +174,7 @@
 
 
   </ion-grid>
-
+  <p style="font-size: 10px; text-align: center; color: rgb(167, 167, 167)" class="ion-margin">
+    {{"Data Source: Department of Water Resources, Odisha" | translate}}
+  </p>
 </ion-content>

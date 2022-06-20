@@ -1,5 +1,6 @@
 ion-segment {
-  --background: #efefef;
+  // --background: #efefef;
+  background-color: var(--ion-color-primary);
   width: 90%;
   margin: auto;
   margin-top: 10px;
@@ -10,7 +11,8 @@ ion-segment {
 ion-segment-button {
   text-transform: capitalize;
   font-size: 1.0001rem;
-  --color: #b8b8b8;
+  // --color: #b8b8b8;
+  --color: white;
   font-weight: 500;
   --indicator-height: 0px;
   --background-checked: #fefefe;
@@ -147,6 +149,21 @@ swiper {
   }
 }
 
+.no_lightning {
+  .card-icon-bg {
+    background-color: #6cd06c;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_no_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #6fdc6f;
+    color: #ffffff;
+  }
+}
+
 .favourites {
   ion-card {
     margin-top: 10px;
@@ -157,4 +174,76 @@ swiper {
 .swiper-pagination {
   position: relative;
   margin: 5px auto;
+}
+
+.red-bullet {
+  ul div::before {
+    content: "\2022";
+    transform: scale(1.8);
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}
+.green-bullet {
+  ul div::before {
+    content: "\2022";
+    transform: scale(1.8);
+    color: green;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}
+
+.Low {
+  .card-content-location::before {
+    content: url("../../../../../assets/modules/lightning/loc_dark.svg");
+  }
+
+  .card-icon-bg {
+    background-color: #fcb809;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_low_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #ffd15c;
+    color: #5a5a5a;
+  }
+}
+
+.Medium {
+  .card-icon-bg {
+    background-color: #ff713d;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_medium_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #ff7f50;
+    color: #fbfbfb;
+  }
+}
+
+.High {
+  .card-icon-bg {
+    background-color: #f54444;
+    .wrapper {
+      ion-icon {
+        content: url("../../../../../assets/modules/lightning/lightning_heavy_icon.svg");
+      }
+    }
+  }
+  .card-content-bg {
+    background-color: #fa665a;
+    color: #fbfbfb;
+  }
 }

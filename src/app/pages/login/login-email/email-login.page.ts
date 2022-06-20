@@ -40,7 +40,7 @@ export class EmailLoginPage implements OnInit {
     if (this.lang === 'en' || this.lang === null) {
       this.alertCtrl
         .create({
-          header: 'Forgot password',
+          header: 'Forgot Password',
           message:
             "Enter your email address and we'll help you reset your password",
           backdropDismiss: false,

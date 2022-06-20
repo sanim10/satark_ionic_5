@@ -43,22 +43,29 @@
         map" | translate}}
       </ion-button>
       <br />
+      <span style="opacity: 0.5" *ngIf="!permission">{{"Please enable Location" | translate}} </span>
+
+      <br />
       <br />
 
       <ion-label> {{"Select Date" | translate}} </ion-label>
       <ion-datetime displayFormat="DD-MM-YYYY" pickerFormat="DD MMMM YYYY" min="2020" [max]="today"
-        [(ngModel)]="this.today" name="date" ngModel #dateCtrl="ngModel" required></ion-datetime>
+        [(ngModel)]="this.today" name="date" ngModel #dateCtrl="ngModel" mode="ios"
+        cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>
+      </ion-datetime>
 
       <br />
 
       <ion-label> {{"Select Time" | translate}} </ion-label>
       <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="this.now_time" name="time" ngModel
-        #timeCtrl="ngModel" required></ion-datetime>
+        #timeCtrl="ngModel" mode="ios" cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>
+      </ion-datetime>
 
       <br />
 
-      <ion-label> {{"Feels like (In degrees)" | translate}} </ion-label>
-      <ion-select name="feel" #feelCtrl="ngModel" ngModel interface="action-sheet" mode="ios" required>
+      <ion-label> {{"Feels like (In °C)" | translate}} </ion-label>
+      <ion-select name="feel" #feelCtrl="ngModel" ngModel interface="action-sheet" mode="ios" required
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
         <ion-select-option value="30">30</ion-select-option>
         <ion-select-option value="31">31</ion-select-option>
         <ion-select-option value="32">32</ion-select-option>
@@ -85,7 +92,7 @@
       <ion-label> {{"Heat Stress Level" | translate}}</ion-label>
 
       <ion-select #heatCtrl="ngModel" name="heat" ngModel interface="action-sheet" mode="ios" required
-        cancelText="{{lang=='en'? 'Cancel': 'ବାତିଲ କରନ୍ତୁ'}}">
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
         <ion-select-option value="Feels like normal">{{"Feels like normal" | translate}}</ion-select-option>
         <ion-select-option value="Comfortable">{{"It's comfortable" | translate}}</ion-select-option>
         <ion-select-option value="Unbearable">{{"It's unbearable" | translate}}</ion-select-option>
@@ -93,21 +100,25 @@
       <br />
 
       <ion-label> {{"Issue" | translate}}</ion-label>
-      <ion-select interface="action-sheet" mode="ios" name="issue" ngModel #issueCtrl="ngModel" required>
+      <ion-select interface="action-sheet" mode="ios" name="issue" ngModel #issueCtrl="ngModel" required
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
         <ion-select-option value="No water">{{"No water" | translate}}</ion-select-option>
         <ion-select-option value="No shades">{{"No shades" | translate}}</ion-select-option>
+        <ion-select-option value="Others">{{"Others" | translate}}</ion-select-option>
       </ion-select>
 
       <ion-button size="small" (click)="getPhoto()">
         <ion-icon name="camera" slot="start"></ion-icon>{{"Select
         Image" | translate}}
-      </ion-button>
+      </ion-button><br>
+      <span style="opacity: 0.5" *ngIf="img">{{"Image Selected" | translate}} </span>
+
       <br />
       <br />
 
       <ion-label>
         {{"Please write your message below" | translate}}<br />
-        <span style="opacity: 0.5">{{"Optional" | translate}} </span>
+        <span style="opacity: 0.5">({{"Optional" | translate}})</span>
       </ion-label>
       <ion-textarea name="message" ngModel #msgCtrl="ngModel" type="text"></ion-textarea>
 

@@ -3,6 +3,7 @@ import { ApiService } from './../providers/api.service';
 import {
   AlertController,
   LoadingController,
+  NavController,
   ToastController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -39,7 +40,8 @@ export class AuthService {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private api: ApiService
+    private api: ApiService,
+    private navController: NavController
   ) {
     this.loadAuth();
     this.device_id = localStorage.getItem('deviceid');
@@ -65,87 +67,95 @@ export class AuthService {
         loadingEl.present();
 
         let new_mobile_number = '91' + phone + '@rimes.int';
+        console.log('1');
 
         const auth = getAuth();
+        console.log('2');
 
         signInWithEmailAndPassword(auth, new_mobile_number, 'rimes@123')
           .then((data) => {
             localStorage.setItem('token', data.user.uid);
             console.log(data);
 
-            this.api.checklogin(data.user.uid).subscribe((response) => {
-              this.success = response['success'];
-              console.log('success', this.success);
+            this.api
+              .checklogin(data.user.uid)
+              .pipe(take(1))
+              .subscribe((response) => {
+                this.success = response['success'];
+                console.log('success', this.success);
 
-              if (this.success) {
-                this.router.navigateByUrl('/home', { replaceUrl: true });
-                this.isAuthenticated.next(true);
-                this.setLoginState('true');
-                this.user_token = localStorage.getItem('token');
-                var usr_data = response.result[0];
-                console.log('success', usr_data);
+                if (this.success) {
+                  this.router.navigateByUrl('/home', { replaceUrl: true });
+                  this.isAuthenticated.next(true);
+                  this.setLoginState('true');
+                  this.user_token = localStorage.getItem('token');
+                  var usr_data = response.result[0];
+                  console.log('success', usr_data);
 
-                localStorage.setItem('block_id', usr_data.block_id);
-                localStorage.setItem('district_id', usr_data.district_id);
-                localStorage.setItem('block_name', usr_data.block_name);
-                localStorage.setItem('block_name_ory', usr_data.block_name_ory);
-                localStorage.setItem('district_name', usr_data.district_name);
-                localStorage.setItem(
-                  'notification_lang',
-                  usr_data.notification_lng
-                );
-                localStorage.setItem(
-                  'district_name_ory',
-                  usr_data.district_name_ory
-                );
-                if (this.lang == 'en' || this.lang === null) {
-                  this.showAlert(
-                    'Login Success!',
-                    'You have successfully logged in'
+                  localStorage.setItem('block_id', usr_data.block_id);
+                  localStorage.setItem('district_id', usr_data.district_id);
+                  localStorage.setItem('block_name', usr_data.block_name);
+                  localStorage.setItem(
+                    'block_name_ory',
+                    usr_data.block_name_ory
                   );
-                } else {
-                  this.showAlert(
-                    'ଲଗ ଇନ କୃତକାର୍ଯ୍ୟ ହେଲା!',
-                    'ଆପଣଙ୍କ ଲଗ ଇନ ସଫଳ ହେଲା',
-                    'ଠିକ'
+                  localStorage.setItem('district_name', usr_data.district_name);
+                  localStorage.setItem(
+                    'notification_lang',
+                    usr_data.notification_lng
                   );
-                }
-
-                var url = 'https://satark.rimes.int/api_user/users_post';
-                var params = JSON.stringify({
-                  token_id: this.user_token,
-                  device: this.device_id,
-                  extra_param: 'update_device_id',
-                });
-
-                this.httpClinet.post(url, params).subscribe(
-                  (data) => {
-                    // console.log(data);
-                    // alert(data);
-                  },
-                  (err) => {
-                    console.log('ERROR!: ', err);
+                  localStorage.setItem(
+                    'district_name_ory',
+                    usr_data.district_name_ory
+                  );
+                  if (this.lang == 'en' || this.lang === null) {
+                    this.showAlert(
+                      'Login Success!',
+                      'You have successfully logged in'
+                    );
+                  } else {
+                    this.showAlert(
+                      'ଲଗ ଇନ କୃତକାର୍ଯ୍ୟ ହେଲା!',
+                      'ଆପଣଙ୍କ ଲଗ ଇନ ସଫଳ ହେଲା',
+                      'ଠିକ'
+                    );
                   }
-                );
-              } else {
-                // this.router.navigateByUrl('login/registration');
-                this.isAuthenticated.next(false);
-                this.setLoginState('false');
-                if (this.lang === 'en' || this.lang === null) {
-                  this.showAlert(
-                    'Login Fail!',
-                    'You have not registered yet. Please register to log in.'
+
+                  var url = 'https://satark.rimes.int/api_user/users_post';
+                  var params = JSON.stringify({
+                    token_id: this.user_token,
+                    device: this.device_id,
+                    extra_param: 'update_device_id',
+                  });
+
+                  this.httpClinet.post(url, params).subscribe(
+                    (data) => {
+                      // console.log(data);
+                      // alert(data);
+                    },
+                    (err) => {
+                      console.log('ERROR!: ', err);
+                    }
                   );
                 } else {
-                  this.showAlert(
-                    'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
-                    'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
-                    'ଠିକ'
-                  );
+                  // this.router.navigateByUrl('login/registration');
+                  this.isAuthenticated.next(false);
+                  this.setLoginState('false');
+                  if (this.lang === 'en' || this.lang === null) {
+                    this.showAlert(
+                      'Login Fail!',
+                      'You have not registered yet. Please register to log in.'
+                    );
+                  } else {
+                    this.showAlert(
+                      'ଲଗ ଇନ ଅକୃତକାର୍ଯ୍ୟ ହେଲା!',
+                      'ପଞ୍ଜୀକୃତ ହେଇନାହାନ୍ତି, ଦୟାକରିପଞ୍ଜିକରଣକରନ୍ତୁ|',
+                      'ଠିକ'
+                    );
+                  }
                 }
-              }
-              loadingEl.dismiss();
-            });
+                loadingEl.dismiss();
+              });
           })
           .catch((err) => {
             console.log(err);
@@ -388,5 +398,9 @@ export class AuthService {
     var PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
     if (password.length > 12 && PASSWORD_REGEXP.test(password)) return true;
     else false;
+  }
+
+  routeToHome() {
+    this.navController.navigateBack('/home/home-tab');
   }
 }

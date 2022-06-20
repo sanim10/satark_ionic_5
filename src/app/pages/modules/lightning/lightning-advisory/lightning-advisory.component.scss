@@ -14,3 +14,26 @@
   position: relative;
   margin: 5px auto;
 }
+
+.red-bullet {
+  ul div::before {
+    content: "\2022";
+    transform: scale(1.8);
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}
+.green-bullet {
+  ul div::before {
+    content: "\2022";
+    transform: scale(1.8);
+    color: green;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}

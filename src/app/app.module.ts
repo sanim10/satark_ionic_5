@@ -12,10 +12,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Market } from '@ionic-native/market/ngx';
+
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { pageTransition } from './helper/page-transistions';
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 export function setTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/language/', '.json');
@@ -59,7 +61,9 @@ export function setTranslateLoader(http: HttpClient) {
     Navigator,
     MobileAccessibility,
     AndroidPermissions,
-    BackgroundGeolocation,
+    Market,
+    InAppBrowser,
+    // BackgroundGeolocation,
   ],
   bootstrap: [AppComponent],
 })

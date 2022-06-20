@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,19 +8,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./flood.page.scss'],
 })
 export class FloodPage implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private navCtrl: NavController) {}
 
   ngOnInit() {}
   routeTo(route) {
     switch (route) {
       case 'hydro-forecast':
-        this.router.navigateByUrl('/flood/hydro-forecast');
+        this.navCtrl.navigateForward('/flood/hydro-forecast');
         break;
       case 'rainfall-forecast':
-        this.router.navigateByUrl('/flood/rainfall-forecast');
+        this.navCtrl.navigateForward('/flood/rainfall-forecast');
         break;
       case 'map':
-        this.router.navigateByUrl('/flood/map');
+        this.navCtrl.navigateForward('/flood/map');
+        break;
+      case 'home':
+        this.navCtrl.navigateBack('/home', { replaceUrl: true });
         break;
     }
   }

@@ -28,16 +28,16 @@ export class DrawerComponent implements OnInit, AfterViewInit {
   @Input() heatwaveData: any;
   @Input() lightningData: any;
   @Input() rainStatus: any;
+  @Input() current_location_block: any;
+  @Input() current_location_block_ory: any;
+  @Input() current_location_district: any;
+  @Input() current_location_district_ory: any;
   drawerUp = false;
 
   public value_addtion_forecast_data: any;
   public user_data: any;
   block_id;
   user_id;
-  current_location_block;
-  current_location_block_ory;
-  current_location_district;
-  current_location_district_ory;
   forecast_data;
 
   lHelper;
@@ -71,14 +71,23 @@ export class DrawerComponent implements OnInit, AfterViewInit {
     });
     gesture.enable(true);
   }
+
+  openCloseDrawer() {
+    const drawer = this.drawer.nativeElement;
+    this.openState.emit(!this.drawerUp);
+
+    if (!this.drawerUp) {
+      this.drawerUp = true;
+      this.openState.emit(true);
+    } else if (this.drawerUp) {
+      this.drawerUp = false;
+      drawer.style.transition = '.4s ease-out';
+      drawer.style.transform = ``;
+      this.openState.emit(false);
+    }
+  }
   ngOnInit() {
-    // this.checklogin(localStorage.getItem('token'));
     this.block_id = localStorage.getItem('block_id');
-    this.current_location_block = localStorage.getItem('block_name');
-    this.current_location_block_ory = localStorage.getItem('block_name_ory');
-    this.current_location_district = localStorage.getItem('district_name');
-    this.current_location_district_ory =
-      localStorage.getItem('district_name_ory');
   }
 
   toggleBackdrop(isVisible) {
@@ -86,18 +95,34 @@ export class DrawerComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  getCondition(conditon): string {
+  getCondition(conditon): any {
     switch (conditon) {
-      case 1:
+      case '1':
+        return 'No Heatwave';
+
+      case '2':
+        return 'Heatwave Alert';
+
+      case '3':
+        return 'Severe Heat Alert';
+
+      case '4':
+        return 'Extreme Heat Alert';
+    }
+  }
+
+  getConditionClass(conditon): any {
+    switch (conditon) {
+      case '1':
         return 'normal';
 
-      case 2:
+      case '2':
         return 'heat wave';
 
-      case 3:
+      case '3':
         return 'severe heatwave';
 
-      case 4:
+      case '4':
         return 'extreme heatwave';
     }
   }

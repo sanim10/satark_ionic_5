@@ -1,0 +1,112 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Report Road Condition" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-button" defaultHref="road-accident"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-label class="header">
+    {{"To report about any obstacle on the road or its condition, please fill out this form" | translate}}
+  </ion-label>
+
+
+  <br />
+  <br />
+  <form>
+    <ion-list>
+      <ion-label> {{"District" | translate}} </ion-label>
+      <ion-input disabled>
+        <ion-icon name="lock-closed"></ion-icon>
+        <span *ngIf="user_data" style="margin-left: 10px">
+          {{ lang =='en'? user_data[0]?.district_name:
+          user_data[0]?.district_name_ory}}
+        </span>
+      </ion-input>
+
+      <br />
+
+      <ion-label> {{"Block" | translate}} </ion-label>
+      <ion-input disabled>
+        <ion-icon name="lock-closed"> </ion-icon>
+        <span *ngIf="user_data" style="margin-left: 10px">
+          {{ lang =='en'? user_data[0]?.block_name:
+          user_data[0]?.block_name_ory}}
+        </span>
+      </ion-input>
+      <br />
+
+      <ion-label> {{"Location" | translate}} </ion-label>
+      <ion-input name="location" ngModel #locationCtrl="ngModel" [(ngModel)]="this.address" type="text" required style="
+        pointer-events: none; ">
+      </ion-input>
+      <ion-button size="small" (click)="presentMapModal()">
+        <ion-icon name="location" slot="start" required></ion-icon>{{"Select from
+        map" | translate}}
+      </ion-button>
+      <br />
+      <span style="opacity: 0.5" *ngIf="!permission">{{"Please enable Location" | translate}}
+        <br /> </span>
+
+
+      <br />
+
+      <ion-label> {{"Select Date of Event" | translate}} </ion-label>
+      <ion-datetime displayFormat="DD-MM-YYYY" pickerFormat="DD MMMM YYYY" min="2020" [max]="today"
+        [(ngModel)]="this.today" name="date" ngModel #dateCtrl="ngModel" mode="ios"
+        cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>
+      </ion-datetime>
+
+
+
+      <br />
+
+      <ion-label> {{"Select Time of Event" | translate}} </ion-label>
+      <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="this.now_time" name="time" ngModel
+        #timeCtrl="ngModel" mode="ios" cancelText="{{'CANCEL' | translate}}" doneText="{{'Done' | translate}}" required>
+      </ion-datetime>
+
+      <br />
+
+
+      <ion-label> {{"Issue" | translate}} </ion-label>
+      <ion-select name="issue" #issueCtrl="ngModel" ngModel interface="action-sheet" mode="ios" required
+        cancelText="{{lang=='en'? 'CANCEL': 'ବାତିଲ କରନ୍ତୁ'}}">
+        <ion-select-option value="Manhole">{{"Manhole" | translate}}</ion-select-option>
+        <ion-select-option value="Animals/cows">{{"Animals/cows" | translate}}</ion-select-option>
+        <ion-select-option value="Street dogs">{{"Street dogs" | translate}}</ion-select-option>
+        <ion-select-option value="Obstruction due to tree">{{"Obstruction due to tree" | translate}}</ion-select-option>
+        <ion-select-option value="Electric pole/cable">{{"Electric pole/cable" | translate}}</ion-select-option>
+        <ion-select-option value="Drain water flooding on road">{{"Drain water flooding on road" | translate}}
+        </ion-select-option>
+        <ion-select-option value="Under construction road">{{"Under construction road" | translate}}</ion-select-option>
+      </ion-select>
+      <br />
+
+      <ion-label>
+        {{"Please write your message below" | translate}}<br />
+        <span style="opacity: 0.5">({{"Optional" | translate}})</span>
+      </ion-label>
+      <ion-textarea name="message" ngModel #msgCtrl="ngModel" type="text"></ion-textarea>
+
+
+      <ion-button size="small" (click)="getPhoto()">
+        <ion-icon name="camera" slot="start"></ion-icon>{{"Select
+        Image" | translate}}
+      </ion-button><br>
+      <span style="opacity: 0.5" *ngIf="img">{{"Image Selected" | translate}}
+        <br /></span>
+      <br />
+
+      <ion-button expand="block"
+        [disabled]="!locationCtrl.valid || !dateCtrl.valid || !timeCtrl.valid || !issueCtrl.valid"
+        (click)="Submit_form(locationCtrl.value,dateCtrl.value,timeCtrl.value,issueCtrl.value,msgCtrl.value)">
+        {{"Submit" | translate}}</ion-button>
+
+      <br />
+
+
+    </ion-list>
+  </form>
+</ion-content>

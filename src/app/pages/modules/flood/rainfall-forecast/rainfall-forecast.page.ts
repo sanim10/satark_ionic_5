@@ -12,6 +12,7 @@ import * as mapboxgl from 'mapbox-gl';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { mapKey } from '../../../../config/key';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-rainfall-forecast',
   templateUrl: './rainfall-forecast.page.html',
@@ -50,7 +51,8 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
   constructor(
     private loadingCtrl: LoadingController,
     private apiService: ApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {
     this.lang = localStorage.getItem('language');
     let today = moment().format('YYYY-MM-DD');
@@ -83,7 +85,7 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
           attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
-          zoom: 6,
+          zoom: 5,
         });
 
         this.map.on('load', () => {
@@ -120,24 +122,24 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
             },
           });
 
-          this.map.addLayer({
-            id: 'Mahanadi_basin-layer2',
-            type: 'fill',
-            source: 'Mahanadi_basin',
-            paint: {
-              'fill-color': [
-                'match',
-                ['get', 'Name'], // get the property
-                'W2150',
-                'black',
-                'white',
-              ],
-              'fill-opacity': 0.5,
-            },
-          });
+          // this.map.addLayer({
+          //   id: 'Mahanadi_basin-layer2',
+          //   type: 'fill',
+          //   source: 'Mahanadi_basin',
+          //   paint: {
+          //     'fill-color': [
+          //       'match',
+          //       ['get', 'Name'], // get the property
+          //       'W2150',
+          //       'black',
+          //       'white',
+          //     ],
+          //     'fill-opacity': 0.5,
+          //   },
+          // });
 
           // this.scrollTo = 0;
-          this.map.on('click', 'Mahanadi_basin-layer2', (e) => {
+          this.map.on('click', 'Mahanadi_basin-layer', (e) => {
             let name = e.features[0].properties.Name;
             console.log('basin name', name);
             let param = {
@@ -299,8 +301,9 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
                 );
             }
           });
-          this.loadForecast();
-          // this.updateMapFeature();
+          this.map.once('idle', () => {
+            this.loadForecast();
+          });
         });
       });
   }
@@ -311,13 +314,17 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
     forkJoin([wrf_rainfall, ecmwf_rainfall]).subscribe((results) => {
       (this.forecast_wrf = results[0]),
         (this.forecast_ecmwf = results[1]),
-        // console.log('DailyForecast', this.forecast);
         console.log('WRF Forecast', this.forecast_wrf);
       console.log('ECMWF Forecast', this.forecast_ecmwf);
       if (this.forecast_wrf.length != 0 || this.forecast_ecmwf.length != 0) {
         this.updateDates();
-        this.updateMapFeature();
       } else {
+        this.map.setPaintProperty('Mahanadi_basin-layer', 'fill-opacity', 0.6);
+        this.map.setPaintProperty(
+          'Mahanadi_basin-layer',
+          'fill-color',
+          'black'
+        );
         console.log('error');
         this.authService.showErrorToast('Data is not available currently!');
       }
@@ -331,8 +338,11 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
           this.date_options = Object.keys(this.forecast_ecmwf);
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
           this.updateMapFeature();
+
           this.authService.showErrorToast(
-            'Loading data for next 10 days Rainfall Forecast. Please wait..'
+            this.translate.instant(
+              'Loading data for next 10 days Rainfall Forecast. Please wait..'
+            )
           );
         } else {
           this.date_options = Object.keys(this.forecast_ecmwf);
@@ -345,7 +355,9 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
           console.log('UpdateDates', 'Set 10 dates: ' + this.date_options);
           this.updateMapFeature();
           this.authService.showErrorToast(
-            'Loading data for next 3 days Rainfall Forecast. Please wait..'
+            this.translate.instant(
+              'Loading data for next 3 days Rainfall Forecast. Please wait..'
+            )
           );
         } else {
           this.date_options = Object.keys(this.forecast_wrf);
@@ -363,9 +375,8 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
     var fcst: any;
 
     const matchExpression = ['match', ['get', 'Name']];
-    // this.map.once('idle', () => {
     const features = this.map.queryRenderedFeatures({
-      layers: ['Mahanadi_basin-layer2'],
+      layers: ['Mahanadi_basin-layer'],
     });
     console.log(features);
 
@@ -375,11 +386,11 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
         if (this.days == 'ten') {
           fcst = this.forecast_ecmwf[this.date];
           let basin_name = element.properties.Name;
-          // if (!fcst[basin_name]) {
-          //   console.log('not there');
-          //   matchExpression.push(element.properties.Name, 'black');
-          //   return;
-          // }
+          if (!fcst[basin_name]) {
+            console.log('not there');
+            matchExpression.push(element.properties.Name, 'black');
+            return;
+          }
           let rainfall = fcst[basin_name].q50;
           console.log('Basin name' + basin_name + ' Rainfall: ' + rainfall);
           if (rainfall >= 0.0 && rainfall <= 1.0)
@@ -402,11 +413,11 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
           console.log(this.forecast_wrf[this.date]);
           fcst = this.forecast_wrf[this.date];
           let basin_name = element.properties.Name;
-          // if (!fcst[basin_name]) {
-          //   console.log('not there');
-          //   matchExpression.push(element.properties.Name, 'black');
-          //   return;
-          // }
+          if (!fcst[basin_name]) {
+            console.log('not there');
+            matchExpression.push(element.properties.Name, 'black');
+            return;
+          }
           let rainfall = fcst[basin_name].bias_corrected_forecast;
           console.log('Basin name' + basin_name + ' Rainfall: ' + rainfall);
           if (rainfall >= 0.0 && rainfall <= 1.0)
@@ -426,8 +437,7 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
           else if (rainfall > 100)
             matchExpression.push(element.properties.Name, '#CCD1D1');
         }
-
-        // matchExpression.push(element.properties.Name, 'black');
+        matchExpression.push(element.properties.Name, 'black');
       });
       if (this.map.getSource('Mahanadi_basin') != null && matchExpression) {
         this.map.addLayer({
@@ -441,7 +451,6 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
         });
       }
     }
-    // });
   }
 
   play() {
@@ -521,5 +530,9 @@ export class RainfallForecastPage implements OnInit, AfterViewInit {
     }
     this.days = fc;
     this.updateDates();
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

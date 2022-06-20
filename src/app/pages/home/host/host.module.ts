@@ -1,4 +1,3 @@
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +16,5 @@ import { HomePageRoutingModule } from './host-routing.module';
     TranslateModule,
   ],
   declarations: [HostPage],
-  providers: [BackgroundGeolocation],
 })
 export class HostPageModule {}

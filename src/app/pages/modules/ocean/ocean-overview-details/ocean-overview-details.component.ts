@@ -4,6 +4,8 @@ import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import * as HighCharts from 'highcharts';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-ocean-overview-details',
   templateUrl: './ocean-overview-details.component.html',
@@ -39,7 +41,6 @@ export class OceanOverviewDetailsComponent implements OnInit, AfterViewInit {
     let today = moment().format('YYYY-MM-DD');
     this.date = today;
     this.default_date = moment(this.date).format('YYYYMMDD');
-    this.back();
   }
 
   ngOnInit() {
@@ -55,9 +56,6 @@ export class OceanOverviewDetailsComponent implements OnInit, AfterViewInit {
       id: station,
       date: newdate,
     };
-    // let swell = this.api.get_swell_data_by_stations(param);
-    // let wave = this.api.get_wave_data_by_stations(param);
-    // let wind =  this.api.get_wind_data_by_stations(param);
     let swell = this.apiService.getSwellDataOverview(param);
     let wave = this.apiService.getWaveDataOverview(param);
     let wind = this.apiService.getWindDataOverview(param);
@@ -119,337 +117,158 @@ export class OceanOverviewDetailsComponent implements OnInit, AfterViewInit {
       } else {
         this.wind_data = null;
       }
-      // this.load_liner_graph();
       this.loadLinearHighchart();
       this.loading = false;
     });
   }
   loadLinearHighchart() {
-    if (this.lang == 'en') {
-      var myChart = HighCharts.chart({
-        //   this.chartOptions);
-        // this.chartOptions =  HighCharts.setOptions({
-        chart: {
-          renderTo: 'container',
+    HighCharts.chart({
+      chart: {
+        renderTo: 'container',
+      },
+      title: {
+        text: this.lang == 'en' ? 'Overview' : 'ସାଧାରଣ ବର୍ଣ୍ଣନା',
+      },
+      credits: {
+        enabled: false,
+      },
+      legend: {
+        enabled: true,
+      },
+      plotOptions: {
+        area: {
+          showInLegend: true,
         },
+      },
+      xAxis: {
+        type: 'datetime',
+        categories: this.f_date_time.map((x) => {
+          return moment(x);
+        }),
+        offset: 0,
+        labels: {
+          step: 3,
+          rotation: -90,
+          formatter: (value) => {
+            let dateStr = moment(value.value).format('DD MMM - HH:mm');
+            return dateStr;
+          },
+
+          style: {
+            color: '#5368f5',
+          },
+        },
+
         title: {
-          text: 'Overview',
-        },
-        credits: {
-          enabled: false,
-        },
-        legend: {
-          enabled: true,
-        },
-        plotOptions: {
-          area: {
-            showInLegend: true,
+          text: 'Date/Time',
+          style: {
+            fontWeight: 'bold',
+            color: '#000000',
           },
         },
-        xAxis: {
-          type: 'datetime',
-          categories: this.f_date_time,
-          offset: 60,
-          labels: {
-            formatter: function () {
-              return HighCharts.dateFormat('%b/%e', this.value);
-            },
-          },
+        visible: true,
+        crosshair: {
+          width: 2,
+          color: '#3168DA',
+          dashStyle: 'ShortDash',
+        },
+      },
+
+      yAxis: [
+        {
+          min: 0,
           title: {
-            text: '',
+            text: 'Meter(m)',
             style: {
               fontWeight: 'bold',
               color: '#000000',
             },
           },
-          visible: false,
-          crosshair: {
-            width: 2,
-            color: '#3168DA',
-            dashStyle: 'ShortDash',
-          },
-        },
-        // xAxis: {
-        //   categories: this.f_date_time,
-        //   // type: 'datetime',
-        //   //   offset: 60,
-        //   //   labels: {
-        //   //     formatter: function(){
-        //   //       return HighCharts.dateFormat('%b/%e', this.f_date_time);
-        //   //     }
-        //   //   },
-        //     title: {
-        //       text: 'Date/Time',
-        //       style: {
-        //         fontWeight: 'bold',
-        //         color: '#000000'
-        //       }
-        //     },
-        // },
-        // yAxis: [{
-        //   title: {
-        //     text: 'Meter(m)'
-        //   }
-        // }, {
-        //     title: {
-        //       text: 'Wind Speed(km/h)'
-        //     },
-        //     gridLineWidth: 0,
-        //     opposite: true
-        // }],
-        yAxis: [
-          {
-            min: 0,
-            title: {
-              text: 'Meter(m)',
-              style: {
-                fontWeight: 'bold',
-                color: '#000000',
-              },
-            },
-            labels: {
-              format: '{value} ' + 'm',
-              style: {
-                color: '#5368f5',
-              },
-            },
-          },
-          {
-            title: {
-              text: 'Km/hr',
-              style: {
-                fontWeight: 'bold',
-                color: '#000000',
-              },
-            },
-            opposite: true,
-          },
-        ],
-        series: [
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
-              },
-            },
-            name: 'Significant Wave Height(m)',
-            data: this.wave_value,
-          },
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
-              },
-            },
-            name: 'Wind speed(km/hr)',
-            data: this.wind_value,
-            yAxis: 1,
-          },
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
-              },
-            },
-            name: 'Swell wave height(m)',
-            data: this.swell_value,
-          },
-        ],
-      });
-    } else if (this.lang == 'od') {
-      var myChart = HighCharts.chart({
-        //   this.chartOptions);
-        // this.chartOptions =  HighCharts.setOptions({
-        chart: {
-          renderTo: 'container',
-        },
-        title: {
-          text: 'ସାଧାରଣ ବର୍ଣ୍ଣନା',
-        },
-        credits: {
-          enabled: false,
-        },
-        legend: {
-          enabled: true,
-        },
-        plotOptions: {
-          area: {
-            showInLegend: true,
-          },
-        },
-        xAxis: {
-          type: 'datetime',
-          categories: this.f_date_time,
-          offset: 60,
           labels: {
-            formatter: function () {
-              return HighCharts.dateFormat('%b/%e', this.value);
+            format: '{value} ' + 'm',
+            style: {
+              color: '#5368f5',
             },
           },
+        },
+        {
           title: {
-            text: '',
+            text: 'Km/hr',
             style: {
               fontWeight: 'bold',
               color: '#000000',
             },
           },
-          visible: false,
-          crosshair: {
-            width: 2,
-            color: '#3168DA',
-            dashStyle: 'ShortDash',
-          },
+          opposite: true,
         },
-        // xAxis: {
-        //   categories: this.f_date_time,
-        //   // type: 'datetime',
-        //   //   offset: 60,
-        //   //   labels: {
-        //   //     formatter: function(){
-        //   //       return HighCharts.dateFormat('%b/%e', this.f_date_time);
-        //   //     }
-        //   //   },
-        //     title: {
-        //       text: 'Date/Time',
-        //       style: {
-        //         fontWeight: 'bold',
-        //         color: '#000000'
-        //       }
-        //     },
-        // },
-        // yAxis: [{
-        //   title: {
-        //     text: 'Meter(m)'
-        //   }
-        // }, {
-        //     title: {
-        //       text: 'Wind Speed(km/h)'
-        //     },
-        //     gridLineWidth: 0,
-        //     opposite: true
-        // }],
-        yAxis: [
-          {
-            min: 0,
-            title: {
-              text: 'Meter(m)',
-              style: {
-                fontWeight: 'bold',
-                color: '#000000',
-              },
-            },
-            labels: {
-              format: '{value} ' + 'm',
-              style: {
-                color: '#5368f5',
+      ],
+      series: [
+        {
+          type: 'spline',
+          marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 4,
+            states: {
+              hover: {
+                fillColor: 'white',
+                radius: 8,
+                lineColor: '#3168DA',
+                lineWidth: 2,
               },
             },
           },
-          {
-            title: {
-              text: 'Km/hr',
-              style: {
-                fontWeight: 'bold',
-                color: '#000000',
+          name:
+            this.lang == 'en'
+              ? 'Significant Wave Height(m)'
+              : 'ସିଗ୍ନିଫିକାଣ୍ଟ ଉଚ୍ଚ ତରଙ୍ଗ(ମିଟର)',
+          data: this.wave_value,
+        },
+        {
+          type: 'spline',
+          marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 4,
+            states: {
+              hover: {
+                fillColor: 'white',
+                radius: 8,
+                lineColor: '#3168DA',
+                lineWidth: 2,
               },
             },
-            opposite: true,
           },
-        ],
-        series: [
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
+          name: this.lang == 'en' ? 'Wind speed(km/hr)' : 'ପବନର ବେଗ(କିମି/ଘ)',
+          data: this.wind_value,
+          yAxis: 1,
+        },
+        {
+          type: 'spline',
+          marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 4,
+            states: {
+              hover: {
+                fillColor: 'white',
+                radius: 8,
+                lineColor: '#3168DA',
+                lineWidth: 2,
               },
             },
-            name: 'ଉଲ୍ଲେଖନୀୟ ଉଚ୍ଚ ତରଙ୍ଗ(m)',
-            data: this.wave_value,
           },
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
-              },
-            },
-            name: 'ପବନ ବେଗ(km/hr)',
-            data: this.wind_value,
-            yAxis: 1,
-          },
-          {
-            type: 'spline',
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 4,
-              states: {
-                hover: {
-                  fillColor: 'white',
-                  radius: 8,
-                  lineColor: '#3168DA',
-                  lineWidth: 2,
-                },
-              },
-            },
-            name: 'ଉଲ୍ଲେଖନୀୟ ସ୍ଵେଲ ଉଚ୍ଚତା(m)',
-            data: this.swell_value,
-          },
-        ],
-      });
-    }
+          name:
+            this.lang == 'en'
+              ? 'Swell wave height(m)'
+              : 'ସ୍ଵେଲ୍ଲ ଉଛ ତରଙ୍ଗ(ମିଟର)',
+          data: this.swell_value,
+        },
+      ],
+    });
   }
 
   closeModal() {
-    this.modalController.dismiss();
-  }
-
-  back() {
-    this.platform.backButton.subscribeWithPriority(5, () => {});
     this.modalController.dismiss();
   }
 }

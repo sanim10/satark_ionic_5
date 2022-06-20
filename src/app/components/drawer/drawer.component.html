@@ -1,14 +1,19 @@
-<div class="drawer" #drawer [ngClass]="drawerUp ? 'drawer-active' : 'drawer-inactive'">
+<div class="drawer" #drawer [ngClass]="drawerUp ? 'drawer-active' : 'drawer-inactive'" (click)="openCloseDrawer()">
   <div class="ion-text-center">
     <div class="drawer-handle">
       <div class="drawer-handle-icon"></div>
       <div class="drawer-handle-content">
         {{ "Today" | translate }}
-        <div *ngIf="lHelper.lang == 'en'" class="drawer-handle-content-location">
+
+        <div *ngIf="current_location_block ==null" class="drawer-handle-content-location">
+          <ion-icon src="../../../../assets/home/loc.svg"></ion-icon>
+          •••••••••••••
+        </div>
+        <div *ngIf="lHelper.lang == 'en' && current_location_block !=null" class="drawer-handle-content-location">
           <ion-icon src="../../../../assets/home/loc.svg"></ion-icon>
           {{ current_location_block }}, {{ current_location_district }}
         </div>
-        <div *ngIf="lHelper.lang == 'od'" class="drawer-handle-content-location">
+        <div *ngIf="lHelper.lang == 'od' && current_location_block !=null" class="drawer-handle-content-location">
           <ion-icon src="../../../../assets/home/loc.svg"></ion-icon>
           {{ current_location_block_ory }}, {{ current_location_district_ory }}
         </div>
@@ -31,26 +36,32 @@
         <div *ngIf="weatherForcast == null" class="drawer-card-content-grid">
           <div class="drawer-card-content-box">
             <div>
-              <ion-img class="weather-icon cloud"> </ion-img>
-              <ion-label>--° C</ion-label>
+              <ion-img class="weather-icon temp-high"> </ion-img>
+              <ion-label>••° C</ion-label>
+            </div>
+          </div>
+          <div class="drawer-card-content-box">
+            <div>
+              <ion-img class="weather-icon temp-low"> </ion-img>
+              <ion-label>••° C</ion-label>
             </div>
           </div>
           <div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon rain"></ion-img>
-              <ion-label> --mm</ion-label>
+              <ion-label> ••mm</ion-label>
             </div>
           </div>
-          <div class="drawer-card-content-box">
+          <!---<div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon wind"></ion-img>
-              <ion-label> --km/s</ion-label>
+              <ion-label> ••km/s</ion-label>
             </div>
-          </div>
+          </div> -->
           <div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon humidity"></ion-img>
-              <ion-label> --%</ion-label>
+              <ion-label> ••%</ion-label>
             </div>
           </div>
         </div>
@@ -58,23 +69,29 @@
         <div *ngIf="weatherForcast != null" class="drawer-card-content-grid">
           <div class="drawer-card-content-box">
             <div>
-              <ion-img class="weather-icon cloud"> </ion-img>
+              <ion-img class="weather-icon temp-high"> </ion-img>
               <ion-label>{{ weatherForcast[0].temp_max }}° C</ion-label>
+            </div>
+          </div>
+          <div class="drawer-card-content-box">
+            <div>
+              <ion-img class="weather-icon temp-low"> </ion-img>
+              <ion-label>{{ weatherForcast[0].temp_min }}° C</ion-label>
             </div>
           </div>
           <div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon rain"></ion-img>
               <ion-label>
-                {{ weatherForcast[0].rainfall_dynamic }} mm</ion-label>
+                {{ weatherForcast[0].rainfall }} mm</ion-label>
             </div>
           </div>
-          <div class="drawer-card-content-box">
+          <!---<div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon wind"></ion-img>
               <ion-label> {{ weatherForcast[0].wind_speed }}km/s</ion-label>
             </div>
-          </div>
+          </div> -->
           <div class="drawer-card-content-box">
             <div>
               <ion-img class="weather-icon humidity"></ion-img>
@@ -97,20 +114,20 @@
         </div>
       </div>
       <div *ngIf="lightningData == null" class="drawer-card-content-bg">
-        <ion-label>-------------</ion-label>
+        <ion-label>••••••••••••</ion-label>
       </div>
       <div *ngIf="lightningData != null" class="drawer-card-content-bg">
         <ion-label>{{
           lightningData.l_type == null
           ? ("No Lightning" | translate)
-          : (lightningData.l_type | translate)
+          : (lightningData.l_type_adv | translate)
           }}</ion-label>
       </div>
     </div>
 
     <div class="drawer-card heatwave" [ngClass]="
         heatwaveData != null
-          ? 'heatwave-' + getCondition(heatwaveData[0].heat_wave_status)
+          ? 'heatwave-' + getConditionClass(heatwaveData[0].heat_wave_status)
           : ''
       ">
       <div class="drawer-card-icon-bg">
@@ -120,16 +137,17 @@
         </div>
       </div>
       <div *ngIf="heatwaveData == null" class="drawer-card-content-bg">
-        <ion-label>--------
+        <ion-label>••••••••
           <span style="color: darkgrey">| </span>
-          --° C
+          ••° C
         </ion-label>
       </div>
       <div *ngIf="heatwaveData != null" class="drawer-card-content-bg">
-        <ion-label style="text-transform: capitalize">{{ getCondition(heatwaveData[0].heat_wave_status) | translate }}
+        <ion-label style="text-transform: capitalize">{{ getCondition(heatwaveData[0].heat_wave_status) |
+          translate }}
           <span style="color: darkgrey">| </span>
           <span style="font-family: 'Alata', sans-serif">
-            {{ heatwaveData[0].tx_dynamic }}
+            {{ heatwaveData[0].temp_max }}
             °C</span>
         </ion-label>
       </div>

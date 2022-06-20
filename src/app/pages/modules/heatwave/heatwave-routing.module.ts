@@ -18,11 +18,26 @@ const routes: Routes = [
         redirectTo: 'home',
         pathMatch: 'full',
       },
+      {
+        path: 'search-location',
+        loadChildren: () =>
+          import('./search-location/search-location.module').then(
+            (m) => m.SearchLocationPageModule
+          ),
+      },
     ],
   },
+
   {
     path: 'heatwave-map',
-    loadChildren: () => import('./heatwave-map/heatwave-map.module').then( m => m.HeatwaveMapPageModule)
+    loadChildren: () =>
+      import('./heatwave-map/heatwave-map.module').then(
+        (m) => m.HeatwaveMapPageModule
+      ),
+  },
+  {
+    path: 'map-view',
+    loadChildren: () => import('./map-view/map-view.module').then( m => m.MapViewPageModule)
   },
 ];
 

@@ -14,7 +14,11 @@ SwiperCore.use([Pagination]);
   styleUrls: ['./fav-modal.component.scss'],
 })
 export class FavModalComponent implements OnInit {
-  @Input() lightningData: any;
+  @Input() lightningData;
+  @Input() blockId: any;
+  @Input() block_name: any;
+  @Input() block_name_ory: any;
+  @Input() presented: any;
   @ViewChild('swiper', { static: true }) swiper?: SwiperComponent;
   config: SwiperOptions = {
     slidesPerView: 1,
@@ -40,22 +44,22 @@ export class FavModalComponent implements OnInit {
     private authService: AuthService,
     private languageHelper: LanguageHelperService
   ) {
-    this.back();
     this.lHelper = languageHelper;
   }
 
   ngOnInit() {
-    // this.display();
     this.registered_loc_data = this.lightningData;
-    console.log(this.lightningData);
+    console.log(this.registered_loc_data);
+    this.display();
   }
 
   display() {
+    if (this.blockId == null) {
+      this.getLightningAdvRegisteredLocData(this.lightningData.block_id);
+    } else {
+      this.getLightningAdvRegisteredLocData(this.blockId);
+    }
     this.loading = true;
-    // setTimeout(() => {
-    //   this.loading = false;
-    // }, 500);
-    this.getLightningAdvRegisteredLocData(this.lightningData.block_id);
   }
 
   doRefresh(event) {
@@ -68,11 +72,6 @@ export class FavModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalController.dismiss();
-  }
-
-  back() {
-    this.platform.backButton.subscribeWithPriority(5, () => {});
     this.modalController.dismiss();
   }
 
@@ -90,13 +89,14 @@ export class FavModalComponent implements OnInit {
           this.registered_loc_data.l_type = null;
           console.log('no registered_loc_data', this.registered_loc_data);
         }
+        this.loading = false;
       },
       (Error) => {
         this.authService.showErrorToast(
           'Error while getting data. Please refresh the page.'
         );
+        this.loading = false;
       }
     );
-    this.loading = false;
   }
 }

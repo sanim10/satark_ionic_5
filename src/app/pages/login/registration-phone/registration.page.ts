@@ -11,6 +11,7 @@ import {
   IonBackButtonDelegate,
   LoadingController,
   NavController,
+  Platform,
 } from '@ionic/angular';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 
@@ -24,6 +25,9 @@ export class RegistrationPage {
   @ViewChild('swiper', { static: true }) swiper?: SwiperComponent;
   @ViewChild(IonBackButtonDelegate, { static: false })
   backButton: IonBackButtonDelegate;
+  backPriorityBtn;
+
+  @ViewChild('phCtrl') phCtrl;
   @ViewChild('otp1Ctrl') otp1;
   @ViewChild('otp2Ctrl') otp2;
   @ViewChild('otp3Ctrl') otp3;
@@ -37,7 +41,8 @@ export class RegistrationPage {
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private httpClinet: HttpClient,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private platform: Platform
   ) {}
   lang;
   device_id;
@@ -87,6 +92,16 @@ export class RegistrationPage {
         this.navCtrl.navigateBack('login'), { replaceUrl: true };
       }
     };
+    this.backPriorityBtn = this.platform.backButton.subscribeWithPriority(
+      2,
+      () => {
+        if (this.activeSlide != 0) {
+          this.slidePrev();
+        } else {
+          this.navCtrl.navigateBack('login'), { replaceUrl: true };
+        }
+      }
+    );
   }
 
   shiftFocus(focus) {
@@ -130,11 +145,17 @@ export class RegistrationPage {
   }
 
   //generate OTP for new registration
-  requestOtp(phone) {
+  requestOtp(phone = 0) {
     this.lang = localStorage.getItem('language');
     this.device_id = localStorage.getItem('deviceid');
-    this.phone = phone;
-    let fullMobileNumber = '91' + phone;
+    var fullMobileNumber;
+
+    if (phone == 0) {
+      fullMobileNumber = '91' + this.phone;
+    } else {
+      this.phone = phone;
+      fullMobileNumber = '91' + phone;
+    }
 
     this.loadingCtrl
       .create({ keyboardClose: true, mode: 'ios' })
@@ -237,5 +258,9 @@ export class RegistrationPage {
             }
           );
       });
+  }
+
+  ionViewWillLeave() {
+    this.backPriorityBtn.unsubscribe();
   }
 }

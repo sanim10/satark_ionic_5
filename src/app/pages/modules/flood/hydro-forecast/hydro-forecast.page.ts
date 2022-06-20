@@ -7,6 +7,7 @@ import {
   OnInit,
   ViewChild,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { IonFab } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
@@ -52,7 +53,10 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
   discharge: any = [];
   water_lvl: any = [];
   public marker: any = [];
+  marker_lnglat;
   lang;
+  station_type;
+  station_type_od;
 
   activeSlide = 0;
   config: SwiperOptions = {
@@ -183,96 +187,37 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
             .setPopup(
               new mapboxgl.Popup({
                 closeOnClick: true,
-              }).setHTML(
-                ` <div>
-                  <ion-grid class="ion-no-padding">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-                  (this.lang == 'en'
-                    ? this.loc_name[j]
-                    : this.loc_name_ory[j]) +
-                  `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   
-                    <ion-row class="ion-no-padding">
-                      <ion-col class="ion-no-padding">
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Station Type` : `ଷ୍ଟେସନର ପ୍ରକାର`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#447FF7 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en' ? `Outlet` : `ବହିର୍ଗମନ ପଥ`) +
-                  `</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Discharge`
-                    : `ନିଷ୍କାସିତ ଜଳ ପରିମାଣ ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#447FF7 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
-                                    ` +
-                  this.discharge[j] +
-                  `m<sup>3</sup>/s
-                                    </p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Water Level`
-                    : `ଜଳ ସ୍ତରର ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#447FF7 !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.water_lvl[j] +
-                  `m</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Warning Level` : `ଚେତାବନୀ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#447FF7 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">NA</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#447FF7 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">NA</p></ion-col>
-                        </ion-row>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </div>`
-              )
+              })
+                .setLngLat(this.map.getCenter())
+                .setHTML(
+                  this.getHTMLContent(
+                    this.station_type =  "Outlet",
+                    this.station_type_od =  "ବହିର୍ଗମନ ପଥ",
+                    this.loc_name[j],
+                    this.loc_name_ory[j],
+                    this.discharge[j],
+                    this.water_lvl[j],
+                    this.lang == 'en' ? 'NA' : 'ଉପଲବ୍ଧ ନାହିଁ',
+                    this.lang == 'en' ? 'NA' : 'ଉପଲବ୍ଧ ନାହିଁ',
+                    'null',
+                    'null',
+                    '#447FF7'
+                  )
+                )
             )
             .addTo(this.map);
+          let dis = this;
 
+          marker.getElement().addEventListener('click', function (e) {
+            dis.marker_lnglat = marker.getLngLat();
+          });
           this.marker.push(marker);
         } else if (
           Math.round(this.water_lvl[j]) >= Math.round(this.warning_lvl[j]) &&
           Math.round(this.water_lvl[j]) < Math.round(this.danger_lvl[j])
         ) {
           var s =
-            '<div style="background:#ff713d; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#FF9C41; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -282,107 +227,29 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
             .setPopup(
               new mapboxgl.Popup({
                 closeOnClick: true,
-              }).setHTML(
-                ` <div>
-                  <ion-grid class="ion-no-padding">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-                  (this.lang == 'en'
-                    ? this.loc_name[j]
-                    : this.loc_name_ory[j]) +
-                  `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   
-                    <ion-row class="ion-no-padding">
-                      <ion-col class="ion-no-padding">
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Station Type` : `ଷ୍ଟେସନର ପ୍ରକାର`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en'
-                    ? `Flood Forecast Point`
-                    : `ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ`) +
-                  `</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Discharge`
-                    : `ନିଷ୍କାସିତ ଜଳ ପରିମାଣ ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
-                                    ` +
-                  this.discharge[j] +
-                  `m<sup>3</sup>/s
-                                    </p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Water Level`
-                    : `ଜଳ ସ୍ତରର ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.water_lvl[j] +
-                  `m</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Warning Level` : `ଚେତାବନୀ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.warning_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.danger_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Status` : `ସ୍ଥିତି`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#ff713d !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en'
-                    ? `Above Warning Level`
-                    : `ଚେତାବନୀ ସଂକେତ ଉପରେ`) +
-                  `</p></ion-col>
-                        </ion-row>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </div>`
-              )
+              })
+                .setLngLat(this.map.getCenter())
+                .setHTML(
+                  this.getHTMLContent(
+                    this.station_type =  "Flood Forecast Point",
+                    this.station_type_od =  "ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ",
+                    this.loc_name[j],
+                    this.loc_name_ory[j],
+                    this.discharge[j],
+                    this.water_lvl[j],
+                    this.warning_lvl[j] + 'm',
+                    this.danger_lvl[j] + 'm',
+                    'Above Warning Level',
+                    'ଚେତାବନୀ ସଂକେତ ଉପରେ',
+                    '#FF9C41'
+                  )
+                )
             )
             .addTo(this.map);
+          let dis = this;
+          marker.getElement().addEventListener('click', function (e) {
+            dis.marker_lnglat = marker.getLngLat();
+          });
           this.marker.push(marker);
         } else if (
           Math.round(this.water_lvl[j]) <= Math.round(this.warning_lvl[j])
@@ -398,112 +265,35 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
             .setPopup(
               new mapboxgl.Popup({
                 closeOnClick: true,
-              }).setHTML(
-                ` <div>
-                  <ion-grid class="ion-no-padding">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-                  (this.lang == 'en'
-                    ? this.loc_name[j]
-                    : this.loc_name_ory[j]) +
-                  `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   
-                    <ion-row class="ion-no-padding" >
-                      <ion-col class="ion-no-padding">
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Station Type` : `ଷ୍ଟେସନର ପ୍ରକାର`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500 font-weight:500">` +
-                  (this.lang == 'en'
-                    ? `Flood Forecast Point`
-                    : `ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ`) +
-                  `</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Discharge`
-                    : `ନିଷ୍କାସିତ ଜଳ ପରିମାଣ ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500font-weight:500">
-                                    ` +
-                  this.discharge[j] +
-                  `m<sup>3</sup>/s
-                                    </p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Water Level`
-                    : `ଜଳ ସ୍ତରର ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.water_lvl[j] +
-                  `m</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Warning Level` : `ଚେତାବନୀ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.warning_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.danger_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Status` : `ସ୍ଥିତି`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#2CBC2C !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en' ? `Normal` : `ସ୍ୱାଭାବିକ`) +
-                  `</p></ion-col>
-                        </ion-row>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </div>`
-              )
+              })
+                .setLngLat(this.map.getCenter())
+                .setHTML(
+                  this.getHTMLContent(
+                    this.station_type =  "Flood Forecast Point",
+                    this.station_type_od =  "ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ",
+                    this.loc_name[j],
+                    this.loc_name_ory[j],
+                    this.discharge[j],
+                    this.water_lvl[j],
+                    this.warning_lvl[j] + 'm',
+                    this.danger_lvl[j] + 'm',
+                    'Normal',
+                    'ସ୍ୱାଭାବିକ',
+                    '#2CBC2C'
+                  )
+                )
             )
             .addTo(this.map);
-
+          let dis = this;
+          marker.getElement().addEventListener('click', function (e) {
+            dis.marker_lnglat = marker.getLngLat();
+          });
           this.marker.push(marker);
         } else if (
           Math.round(this.water_lvl[j]) >= Math.round(this.danger_lvl[j])
         ) {
           var s =
-            '<div style="background:#f54444; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
+            '<div style="background:#FF1717; border-radius:100%; color:white; height:50px;width:50px;text-overflow: ellipsis; display:flex;align-items:center;justify-content:center; border: 2px solid white;"><div style="text-align:center; font-weight:600;line-height:10px;margin-top:4px">' +
             Math.round(+this.discharge[j]) +
             '<br/><span style="font-size:0.6rem;text-align:center;">m3/s</span></div></div>';
           el.innerHTML = s;
@@ -513,114 +303,40 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
             .setPopup(
               new mapboxgl.Popup({
                 closeOnClick: true,
-              }).setHTML(
-                ` <div>
-                  <ion-grid class="ion-no-padding">
-                  <ion-row id="popup-content" >
-                      <ion-col class="ion-no-padding ion-text-center">
-                   <ion-label style="text-align:center;font-weight:600;font-size:1.04rem ;">` +
-                  (this.lang == 'en'
-                    ? this.loc_name[j]
-                    : this.loc_name_ory[j]) +
-                  `<br/><br/></ion-label>
-                  </ion-col>
-                  </ion-row>
-                   
-                    <ion-row class="ion-no-padding">
-                      <ion-col class="ion-no-padding">
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding  ">
-                                <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Station Type` : `ଷ୍ଟେସନର ପ୍ରକାର`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en'
-                    ? `Flood Forecast Point`
-                    : `ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ`) +
-                  `</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Discharge`
-                    : `ନିଷ୍କାସିତ ଜଳ ପରିମାଣ ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                                <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">
-                                    ` +
-                  this.discharge[j] +
-                  `m<sup>3</sup>/s
-                                    </p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en'
-                    ? `Forecasted Water Level`
-                    : `ଜଳ ସ୍ତରର ପୂର୍ବାନୁମାନ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                              <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.water_lvl[j] +
-                  `m</p>
-                              </ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Warning Level` : `ଚେତାବନୀ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.warning_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  this.danger_lvl[j] +
-                  `</p></ion-col>
-                        </ion-row>
-                        <ion-row  class="ion-no-padding">
-                              <ion-col size="8" class="ion-no-padding ">
-                                 <p style="margin-top: 5px;font-size:1.01rem;">` +
-                  (this.lang == 'en' ? `Status` : `ସ୍ଥିତି`) +
-                  `</p>
-                              </ion-col>
-                              <ion-col  class="ion-no-padding"  style="color:#f54444 !important">
-                               <p style="margin-top: 5px;font-size:1.01rem;font-weight:500">` +
-                  (this.lang == 'en'
-                    ? `Above Danger Level`
-                    : `ବିପଦ ସଂକେତ ଉପରେ`) +
-                  `</p></ion-col>
-                        </ion-row>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </div>`
-              )
+              })
+                .setLngLat(this.map.getCenter())
+                .setHTML(
+                  this.getHTMLContent(
+                    this.station_type =  "Flood Forecast Point",
+                    this.station_type_od =  "ବନ୍ୟା ପୁର୍ବାନୁମାନର ପ୍ରସଙ୍ଗ /ଚିହ୍ନ",
+                    this.loc_name[j],
+                    this.loc_name_ory[j],
+                    this.discharge[j],
+                    this.water_lvl[j],
+                    this.warning_lvl[j] + 'm',
+                    this.danger_lvl[j] + 'm',
+                    'Above Danger Level',
+                    'ବିପଦ ସଂକେତ ଉପରେ',
+                    '#FF1717'
+                  )
+                )
             )
             .addTo(this.map);
-
+          let dis = this;
+          marker.getElement().addEventListener('click', function (e) {
+            dis.marker_lnglat = marker.getLngLat();
+          });
           this.marker.push(marker);
         }
       }
 
-      this.map.on('click', 'block-layer', (e) => {
-        console.log(e.features[0].properties);
+      this.map.on('click', (e) => {
+        if (this.marker_lnglat != null) {
+          this.map.flyTo({
+            center: [this.marker_lnglat.lng, this.marker_lnglat.lat + 0.4],
+          });
+          // this.map.panBy([0.1, 0]);
+        }
       });
     }, 0);
   }
@@ -642,12 +358,12 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
           attributionControl: false,
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [84.5121, 20.5012],
-          zoom: 6,
+          zoom: 5,
         });
         this.map.on('load', () => {
-          this.map.addSource('block', {
+          this.map.addSource('district', {
             type: 'geojson',
-            data: '../../../../../assets/geojson/Blocklevel.geojson',
+            data: '../../../../../assets/geojson/Odisha_Dist.geojson',
           });
 
           setTimeout(() => this.map.resize(), 0);
@@ -656,12 +372,25 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
 
           loadingEl.dismiss();
           this.map.addLayer({
-            id: 'block-layer',
+            id: 'district-layer',
             type: 'fill',
-            source: 'block',
+            source: 'district',
             paint: {
               'fill-color': 'white',
               'fill-opacity': 0.5,
+            },
+          });
+          this.map.addLayer({
+            id: 'district-layer2',
+            type: 'line',
+            source: 'district',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round',
+            },
+            paint: {
+              'line-color': '#000',
+              'line-width': 1,
             },
           });
           this.map.addSource('india', {
@@ -858,5 +587,142 @@ export class HydroForecastPage implements OnInit, AfterViewInit {
 
     item.scrollIntoView({ behavior: 'smooth' });
     this.getForecastDischargeAllStation(this.date_options[index]);
+  }
+
+  getHTMLContent(
+    station_type,
+    station_type_od,
+    loc_name,
+    loc_name_ory,
+    discharge,
+    water_lvl,
+    warning_lvl,
+    danger_lvl,
+    condition,
+    condition_ory,
+    color
+  ) {
+    var contentString =
+      ` <div>
+                  <ion-grid class="ion-no-padding">
+                  <ion-row id="popup-content" >
+                      <ion-col class="ion-no-padding ion-text-center">
+                   <ion-label style="text-align:center;font-weight:600;font-size:14px;">` +
+      (this.lang == 'en' ? loc_name : loc_name_ory) +
+      `<br/><br/></ion-label>
+                  </ion-col>
+                  </ion-row>
+                   
+                    <ion-row class="ion-no-padding" >
+                      <ion-col class="ion-no-padding">
+                        <ion-row  class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding  ">
+                                <p style="margin-top: 0px;font-size:14px;">` +
+      (this.lang == 'en' ? `Station Type` : `ଷ୍ଟେସନର ପ୍ରକାର`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                                <p style="margin-top: 0px;font-size:14px;font-weight:500">` +
+      (this.lang == 'en'
+        ? station_type
+        : station_type_od) +
+      `</p>
+                              </ion-col>
+                        </ion-row>
+                        <ion-row  class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:14px;">` +
+      (this.lang == 'en'
+        ? `Forecasted Discharge`
+        : `ନିଷ୍କାସିତ ଜଳ ପରିମାଣ ପୂର୍ବାନୁମାନ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                                <p style="margin-top: 0px;font-size:14px;font-weight:500">
+                                    ` +
+      discharge +
+      `m<sup>3</sup>/s
+                                    </p>
+                              </ion-col>
+                        </ion-row>
+                        <ion-row  class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:14px;">` +
+      (this.lang == 'en' ? `Forecasted Water Level` : `ଜଳ ସ୍ତରର ପୂର୍ବାନୁମାନ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      ` !important">
+                              <p style="margin-top: 0px;font-size:14px;font-weight:500">` +
+      water_lvl +
+      `m</p>
+                              </ion-col>
+                        </ion-row>
+                        <ion-row  class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:14px;">` +
+      (this.lang == 'en' ? `Warning Level` : `ଚେତାବନି ସଂକେତ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      `  !important">
+                               <p style="margin-top: 0px;font-size:14px;font-weight:500">` +
+      warning_lvl +
+      `</p></ion-col>
+                        </ion-row>
+                        <ion-row  class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:14px;">` +
+      (this.lang == 'en' ? `Danger Level` : `ବିପଦ ସଂକେତ`) +
+      `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+      color +
+      `  !important">
+                               <p style="margin-top: 0px;font-size:14px;font-weight:500">` +
+      danger_lvl +
+      `</p></ion-col>
+                        </ion-row>`;
+
+    if (condition != null) {
+      var conditionString =
+        `<ion-row class="ion-no-padding">
+                              <ion-col size="7" class="ion-no-padding ">
+                                 <p style="margin-top: 0px;font-size:14px;">` +
+        (this.lang == 'en' ? `Status` : `ସ୍ଥିତି`) +
+        `</p>
+                              </ion-col>
+                              <ion-col  class="ion-no-padding"  style="color:` +
+        color +
+        ` !important">
+                               <p style="margin-top: 0px;font-size:14px;font-weight:500">` +
+        (this.lang == 'en' ? condition : condition_ory) +
+        `</p></ion-col>
+                        </ion-row>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>`;
+
+      contentString.concat(conditionString);
+    } else {
+      var conditionString = `
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>`;
+      contentString.concat(conditionString);
+    }
+    return contentString;
+  }
+
+  ionViewWillLeave() {
+    this.loadingCtrl.dismiss();
   }
 }

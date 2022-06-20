@@ -1,20 +1,21 @@
 <ion-header [translucent]="false" class="ion-text-center ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start" class="ion-padding">
-      <ion-button
-        class="languageBtn"
-        *ngIf="lHelper.lang=='en'"
-        (click)="lHelper.setDisplayLanguage('od')"
-        >ଓଡ଼ିଆ
+    <ion-buttons slot="start">
+      <ion-button *ngIf="lHelper.lang=='en'" (click)="lHelper.setDisplayLanguage('od')"
+        class="translate-btn translate-btn-od ion-no-padding">
       </ion-button>
-      <ion-button
-        class="languageBtn"
-        size="small"
-        *ngIf="lHelper.lang=='od'"
-        (click)="lHelper.setDisplayLanguage('en')"
-        >English
+      <ion-button *ngIf="lHelper.lang=='od'" (click)="lHelper.setDisplayLanguage('en')"
+        class="translate-btn  translate-btn-en ion-no-padding">
       </ion-button>
     </ion-buttons>
+    <!-- <ion-buttons slot="start" class="ion-padding">
+
+      <ion-button class="languageBtn" *ngIf="lHelper.lang=='en'" (click)="lHelper.setDisplayLanguage('od')">ଓଡ଼ିଆ
+      </ion-button>
+      <ion-button class="languageBtn" size="small" *ngIf="lHelper.lang=='od'"
+        (click)="lHelper.setDisplayLanguage('en')">English
+      </ion-button>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
@@ -36,34 +37,18 @@
           <ion-card-content>
             <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
               <ion-item class="ion-no-padding ion-no-margin" lines="none">
-                <img
-                  src="../../assets/login/india_ic.svg"
-                  style="margin-left: 10px"
-                />
+                <img src="../../assets/login/india_ic.svg" style="margin-left: 10px" />
                 <ion-text color="primary" style="font-weight: 500">
                   &nbsp;+91
                 </ion-text>
                 <span class="pipe">|&nbsp;</span>
-                <ion-input
-                  name="phone"
-                  ngModel
-                  type="tel"
-                  required
-                  placeholder="{{'Your mobile number'| translate}}"
-                  minlength="10"
-                  maxlength="10"
-                  #phoneCtrl="ngModel"
-                  (focusout)="phoneCtrl.value==='' ? null: showErrorToast(phoneCtrl.value)"
-                >
+                <ion-input name="phone" ngModel type="tel" required placeholder="{{'Your mobile number'| translate}}"
+                  minlength="10" maxlength="10" #phoneCtrl="ngModel"
+                  (focusout)="phoneCtrl.value==='' ? null: showErrorToast(phoneCtrl.value)">
                 </ion-input>
               </ion-item>
-              <ion-button
-                [disabled]="!loginForm.valid"
-                expand="block"
-                size="default"
-                class="login-button"
-                type="submit"
-              >
+              <ion-button [disabled]="!loginForm.valid" expand="block" size="default" class="login-button"
+                type="submit">
                 {{"Login" | translate }}
               </ion-button>
             </form>
@@ -79,41 +64,23 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button
-          expand="block"
-          fill="outline"
-          color="light"
-          class="outline-button"
-          shape="round"
-          (click)="toEmailLogin()"
-        >
+        <ion-button expand="block" fill="outline" color="light" class="outline-button" shape="round"
+          (click)="toEmailLogin()">
           {{"Login using Email" | translate }}
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button
-          expand="block"
-          fill="outline"
-          color="light"
-          class="outline-button"
-          shape="round"
-          routerLink="registration"
-          >{{"Phone Registration" | translate}}
+        <ion-button expand="block" fill="outline" color="light" class="outline-button" shape="round"
+          routerLink="registration">{{"Phone Registration" | translate}}
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button
-          expand="block"
-          fill="outline"
-          color="light"
-          class="outline-button"
-          shape="round"
-          routerLink="email-registration"
-          >{{"Email Registration" | translate }}
+        <ion-button expand="block" fill="outline" color="light" class="outline-button" shape="round"
+          routerLink="email-registration">{{"Email Registration" | translate }}
         </ion-button>
       </ion-col>
     </ion-row>

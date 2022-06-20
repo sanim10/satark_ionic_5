@@ -1,0 +1,135 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar>
+    <ion-title>{{"Advisory" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-grid>
+
+    <div [ngStyle]="lang=='en'? {'display':'block'}:{'display':'none'}">
+      <swiper [config]="config" (slideChange)="onSlideChange()" #swiper>
+
+        <ng-template swiperSlide *ngFor="let content of advisory_img">
+          <ion-row>
+            <ion-col class="ion-no-padding">
+
+              <ion-card>
+                <ion-card-content>
+
+                  <div style="height: 80px;display:flex;align-items: center; justify-content: center;">
+                    <img *ngIf="content.dont!=null" src="../../../../../assets/modules/snake-bite/advisory/dont_do.png"
+                      alt="img" />
+
+                    <img *ngIf="content.after_bite!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/after_bite.png" alt="img" />
+
+                    <img *ngIf="content.time_is_crucial!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/time_crucial.png" alt="img" />
+
+                    <img *ngIf="content.be_safe!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/be_safe.png" alt="img" />
+
+                    <img *ngIf="content.snakes_like!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/snakes_like.png" alt="img" />
+
+                  </div>
+
+
+                  <div style="height: 200px; display:flex;" *ngIf="content.img">
+                    <img style="margin: 5px auto; max-height: 200px" src="{{content.img}}" alt="img" />
+                  </div>
+                  <br>
+
+                  <div>
+                    <h2 class="ion-text-center" *ngIf="content.title">{{content.title}}</h2>
+                    <ul>
+                      <li *ngFor=" let text of content.text">
+                        <div class="red-bullet" *ngIf="text.dont"><span>{{text.dont}}</span><br>
+                        </div>
+                        <div class="green-bullet" *ngIf="text.do">{{text.do}}<br></div>
+                      </li>
+                    </ul>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+
+            </ion-col>
+          </ion-row>
+        </ng-template>
+      </swiper>
+    </div>
+    <div [ngStyle]="lang=='od'? {'display':'block'}:{'display':'none'}">
+      <swiper [config]="config" (slideChange)="onSlideChange()" #swiper_od>
+
+        <ng-template swiperSlide *ngFor="let content of advisory_img_od">
+          <ion-row>
+            <ion-col class="ion-no-padding">
+
+              <ion-card>
+                <ion-card-content>
+
+                  <div style="height: 100px;display:flex;align-items: center; justify-content: center;">
+                    <img *ngIf="content.dont!=null" src="../../../../../assets/modules/snake-bite/advisory/dont_do.png"
+                      alt="img" />
+
+                    <img *ngIf="content.after_bite!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/after_bite.png" alt="img" />
+
+                    <img *ngIf="content.time_is_crucial!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/time_crucial.png" alt="img" />
+
+                    <img *ngIf="content.be_safe!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/be_safe.png" alt="img" />
+
+                    <img *ngIf="content.snakes_like!=null"
+                      src="../../../../../assets/modules/snake-bite/advisory/snakes_like.png" alt="img" />
+
+                  </div>
+
+
+                  <div *ngIf="content.img" style="height: 170px; display:flex;">
+                    <img style="margin: 5px auto; max-height: 170px" src="{{content.img}}" alt="img" />
+                    <br>
+                  </div>
+
+                  <div>
+                    <h2 class="ion-text-center" *ngIf="content.title">{{content.title }}</h2>
+                    <ul>
+                      <li *ngFor=" let text of content.text">
+                        <div class="red-bullet" *ngIf="text.dont"><span>{{text.dont }}</span><br>
+                        </div>
+                        <div class="green-bullet" *ngIf="text.do">{{text.do }}<br></div>
+                      </li>
+                    </ul>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+
+            </ion-col>
+          </ion-row>
+        </ng-template>
+      </swiper>
+    </div>
+
+
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <ion-button size="default" style="margin-right:15px" (click)="slidePrev()" *ngIf="activeSlide!=0">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button size="default" style="margin-left:15px" (click)="slideNext()" *ngIf="activeSlide!=slidesLength">
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-grid>
+
+
+</ion-content>

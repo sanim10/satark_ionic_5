@@ -1,10 +1,17 @@
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar>
-    <ion-title>{{ "Favourite" | translate }}</ion-title>
+    <ion-title *ngIf="!blockId">{{ "Favourite" | translate }}</ion-title>
+    <ion-title *ngIf="blockId">{{ "Block" | translate }}</ion-title>
     <ion-buttons slot="start">
       <ion-button class="back-button" (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
+    </ion-buttons>
+    <ion-buttons>
+      <div class="entity">
+        <img src="../../../../assets/home/osdma_logo.png" />
+        <img src="../../../../assets/home/imd_logo.png" />
+      </div>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -22,15 +29,12 @@
     <div class="skeleton skeleton-card-desc"></div>
   </div>
 
-  <ion-grid
-    *ngIf="!loading && imd_alert_data != null"
-    class="container ion-padding"
-  >
+  <ion-grid *ngIf="!loading && imd_alert_data != null" class="container ion-padding">
     <ion-row>
       <ion-col>
         <ion-label class="ion-padding-start headers">{{
           "Status" | translate
-        }}</ion-label>
+          }}</ion-label>
       </ion-col>
     </ion-row>
     <ion-row class="ion-padding-bottom">
@@ -38,11 +42,8 @@
         <ion-card>
           <ion-card-content class="ion-no-padding">
             <ion-grid>
-              <ion-row class="{{ heatwaveData.condition }}">
-                <ion-col
-                  class="card-icon-bg ion-padding-top ion-padding-bottom"
-                  size="2.4"
-                >
+              <ion-row class="{{ heatwaveData.condition_class }}">
+                <ion-col class="card-icon-bg ion-padding-top ion-padding-bottom" size="2.4">
                   <div class="wrapper">
                     <ion-icon></ion-icon>
                   </div>
@@ -51,27 +52,20 @@
                   <ion-grid class="ion-no-padding">
                     <ion-row>
                       <ion-col class="ion-no-padding ion-text-center">
-                        <ion-label
-                          *ngIf="lHelper.lang === 'en'"
-                          class="card-content-location"
-                          >&nbsp;{{ imd_alert_data[0].block_name }}
+                        <ion-label *ngIf="lHelper.lang === 'en'" class="card-content-location">&nbsp;{{
+                          imd_alert_data[0].block_name }}, {{imd_alert_data[0].district_name}}
                         </ion-label>
-                        <ion-label
-                          *ngIf="lHelper.lang === 'od'"
-                          class="card-content-location"
-                          >&nbsp;{{ imd_alert_data[0].block_name_ory }}
+                        <ion-label *ngIf="lHelper.lang === 'od'" class="card-content-location">&nbsp;{{
+                          imd_alert_data[0].block_name_ory }}, {{imd_alert_data[0].district_name_ory}}
                         </ion-label>
                       </ion-col>
                     </ion-row>
 
                     <ion-row>
                       <ion-col class="ion-text-center">
-                        <ion-label
-                          >{{ heatwaveData.condition | translate
+                        <ion-label>{{ heatwaveData.condition | translate
                           }}<span style="margin: 0 5px; opacity: 0.7">|</span>
-                          <span class="temperature"
-                            >{{ this.imd_alert_data[0].tx_dynamic }}°C</span
-                          >
+                          <span class="temperature">{{ this.imd_alert_data[0].temp_max }}°C</span>
                         </ion-label>
                       </ion-col>
                     </ion-row>
@@ -79,22 +73,12 @@
                 </ion-col>
               </ion-row>
 
-              <ion-row
-                class="forecast ion-padding-top ion-padding-bottom"
-                size="12"
-              >
-                <ion-col
-                  *ngFor="let forecast of imd_alert_data"
-                  class="ion-text-center"
-                  size="2.4"
-                >
-                  <ion-label>{{ convertDate(forecast.date) }}</ion-label
-                  ><br /><br />
-                  <ion-label
-                    class="temperature temperature-{{
+              <ion-row class="forecast ion-padding-top ion-padding-bottom" size="12">
+                <ion-col *ngFor="let forecast of imd_alert_data" class="ion-text-center" size="2.4">
+                  <ion-label>{{ convertDate(forecast.date) }}</ion-label><br /><br />
+                  <ion-label class="temperature temperature-{{
                       forecast.heat_wave_status
-                    }}"
-                    >{{ forecast.tx_dynamic }}°C
+                    }}">{{ forecast.temp_max }}°C
                   </ion-label>
                 </ion-col>
               </ion-row>
@@ -109,7 +93,7 @@
         <ion-col>
           <ion-label class="headers">{{
             advise.headerName | translate
-          }}</ion-label>
+            }}</ion-label>
         </ion-col>
       </ion-row>
 
@@ -120,11 +104,7 @@
               <ion-card>
                 <ion-card-content>
                   <div style="height: 80px; display: flex">
-                    <ion-img
-                      style="margin: 5px auto; max-height: 80px"
-                      src="{{ content.img }}"
-                      alt="img"
-                    >
+                    <ion-img style="margin: 5px auto; max-height: 80px" src="{{ content.img }}" alt="img">
                     </ion-img>
                   </div>
 
@@ -141,6 +121,7 @@
       </swiper>
     </ion-row>
 
-    <br />
+    <br /><br />
   </ion-grid>
+
 </ion-content>

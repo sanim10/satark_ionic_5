@@ -1,3 +1,5 @@
+import { NavController } from '@ionic/angular';
+import { AuthService } from './../../../guard/auth.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,13 +11,18 @@ import { Component, OnInit } from '@angular/core';
 export class WeatherPage implements OnInit {
   lang;
 
-  constructor(private router: Router) {
+  constructor(private navCtrl: NavController) {
     this.lang = localStorage.getItem('language');
   }
 
   ngOnInit() {}
 
   routeTo() {
-    this.router.navigateByUrl('weather/weather-map');
+    // this.router.navigateByUrl('weather/weather-map');
+    this.navCtrl.navigateForward('weather/map-view');
+  }
+
+  routeToHome() {
+    this.navCtrl.navigateBack('/home', { replaceUrl: true });
   }
 }

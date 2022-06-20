@@ -13,6 +13,7 @@ import { ApiService } from './../../../../providers/api.service';
 export class FavModalComponent implements OnInit {
   @Input() weatherData: any;
   @Input() blockId: any;
+  @Input() presented: any;
 
   loading = true;
   public user_data: any;
@@ -38,7 +39,6 @@ export class FavModalComponent implements OnInit {
     private authService: AuthService,
     private langHelper: LanguageHelperService
   ) {
-    this.back();
     this.lHelper = langHelper;
   }
 
@@ -52,10 +52,8 @@ export class FavModalComponent implements OnInit {
     this.loading = true;
     if (this.blockId == null) {
       this.getImdRainfallValueAdditionForBlock(this.weatherData.block_id);
-      this.get10DaysImdForecast(this.weatherData.block_id);
     } else {
       this.getImdRainfallValueAdditionForBlock(this.blockId);
-      this.get10DaysImdForecast(this.blockId);
     }
   }
 
@@ -67,11 +65,6 @@ export class FavModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalController.dismiss();
-  }
-
-  back() {
-    this.platform.backButton.subscribeWithPriority(5, () => {});
     this.modalController.dismiss();
   }
 
@@ -90,6 +83,15 @@ export class FavModalComponent implements OnInit {
           if (this.value_addtion_forecast_data?.length == 0) {
             this.value_addtion_forecast_data = null;
           } else {
+            console.log(this.value_addtion_forecast_data);
+            this.current_location_block =
+              this.value_addtion_forecast_data[0].block_name;
+            this.current_location_block_ory =
+              this.value_addtion_forecast_data[0].block_name_ory;
+            this.current_location_district =
+              this.value_addtion_forecast_data[0].district_name;
+            this.current_location_district_ory =
+              this.value_addtion_forecast_data[0].district_name_ory;
           }
           this.loading = false;
         },
