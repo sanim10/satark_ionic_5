@@ -103,6 +103,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log("opening map");
     this.requestPermission();
     this.NHS.clicked.subscribe(() => {
       if (this.mapState) {
@@ -117,6 +118,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getLocation = () => {
+    console.log("getiing location");
     Geolocation.getCurrentPosition()
       .then((data) => {
         console.log(data);
@@ -635,13 +637,15 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
 
   requestPermission() {
     Geolocation.checkPermissions().then((status) => {
+      console.log("status...", status);
       if (status.location == 'granted' && status.coarseLocation === 'granted') {
         this.permission = true;
         this.getLocation();
       } else {
+        console.log("status...", status);
         this.permission = false;
         Geolocation.requestPermissions().then((permissionStatus) => {
-          console.log(permissionStatus);
+          console.log("permission status...",permissionStatus);
           if (
             permissionStatus.location == 'granted' &&
             permissionStatus.coarseLocation == 'granted'
@@ -655,6 +659,9 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       }
+    }) .catch((err) => {
+      this.authService.showAlert(null, 'Please enable Location!');
+      // this.loader.dismiss();
     });
   }
 
@@ -666,6 +673,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
       spinner: 'bubbles',
       cssClass: 'loader-css-class',
       mode: 'ios',
+      duration: 3000
     });
     this.loader.present();
   }

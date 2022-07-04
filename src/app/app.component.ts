@@ -87,6 +87,7 @@ export class AppComponent implements OnInit {
   }
 
   async setToken(token) {
+    console.log("settoken....",token);
     await Storage.set({
       key: 'deviceid',
       value: token,
@@ -143,7 +144,9 @@ export class AppComponent implements OnInit {
       });
 
       PushNotifications.addListener('registration', (token: Token) => {
+        console.log("registration token.....",token.value);
         localStorage.setItem('deviceid', token.value);
+        console.log("deviceid.....",localStorage.getItem('deviceid'));
         this.setToken(token.value);
       });
 

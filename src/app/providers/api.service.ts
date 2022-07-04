@@ -579,4 +579,11 @@ export class ApiService {
     );
   }
 
+  //get recent earthquakes
+  getRecentEarthquakes(){
+    return this.httpClient.get(
+      'https://satark.rimes.int/api_earthquake/recent_earthquake_events_get'
+    );
+  }
+
 }

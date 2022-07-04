@@ -17,6 +17,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { keys } from 'highcharts';
 
 @Injectable({
   providedIn: 'root',
@@ -45,15 +46,31 @@ export class AuthService {
   ) {
     this.loadAuth();
     this.device_id = localStorage.getItem('deviceid');
+    // console.log("deviceid....", this.device_id);
+  }
+
+  async getToken(){
+    const ret = await Storage.get({ key: 'deviceid' });
+    const user = ret.value;
+    console.log("<<<<<<<<deviceid....", ret);
   }
 
   async loadAuth() {
+    console.log("is auth...>>>>");
     const authState = await Storage.get({ key: 'authenticated' });
+    console.log("is auth...>>>>", authState.value);
     if (authState && authState.value) {
       this.isAuthenticated.next(true);
     } else {
       this.isAuthenticated.next(false);
     }
+  }
+
+  async cleanAuth(){
+    await Storage.set({
+      key: 'authenticated',
+      value: "",
+    });
   }
 
   //Login using phone number
@@ -127,7 +144,7 @@ export class AuthService {
                     device: this.device_id,
                     extra_param: 'update_device_id',
                   });
-
+                  console.log("params...", params);
                   this.httpClinet.post(url, params).subscribe(
                     (data) => {
                       // console.log(data);
@@ -184,7 +201,8 @@ export class AuthService {
   loginEmail(email: String, password: String) {
     this.lang = localStorage.getItem('language');
     this.device_id = localStorage.getItem('deviceid');
-
+    this.getToken();
+    // console.log(".....device",Storage.get({ key: 'deviceid'}));
     this.loadingCtrl
       .create({ keyboardClose: true, mode: 'ios' })
       .then((loadingEl) => {
@@ -202,7 +220,7 @@ export class AuthService {
               .pipe(take(1))
               .subscribe((response) => {
                 this.success = response['success'];
-                console.log('success', this.success);
+                console.log('success......', this.success);
 
                 if (this.success) {
                   this.router.navigateByUrl('home', { replaceUrl: true });
@@ -210,7 +228,7 @@ export class AuthService {
                   this.setLoginState('true');
                   loadingEl.dismiss();
                   var usr_data = response.result[0];
-                  console.log('success', usr_data);
+                  console.log('.....success', usr_data);
 
                   localStorage.setItem('block_id', usr_data.block_id);
                   localStorage.setItem('district_id', usr_data.district_id);
@@ -248,6 +266,8 @@ export class AuthService {
                     device: this.device_id,
                     extra_param: 'update_device_id',
                   });
+
+                  console.log("params...", params);
                   this.httpClinet
                     .post(url, params)
                     .pipe(take(1))
@@ -324,8 +344,9 @@ export class AuthService {
 
   logout(): Promise<void> {
     this.isAuthenticated.next(false);
-    Storage.clear();
-    localStorage.clear();
+    // Storage.clear();
+    // localStorage.clear();
+    this.cleanAuth();
     this.router.navigateByUrl('/login', { replaceUrl: true });
     return;
   }

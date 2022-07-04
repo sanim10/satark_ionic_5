@@ -596,6 +596,9 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       }
+    }).catch((err) => {
+      this.authService.showAlert(null, 'Please enable Location!');
+      // this.loader.dismiss();
     });
   }
 
@@ -625,6 +628,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
       spinner: 'bubbles',
       cssClass: 'loader-css-class',
       mode: 'ios',
+      duration:3000
     });
     this.loader.present();
   }

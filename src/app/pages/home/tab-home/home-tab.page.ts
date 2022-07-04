@@ -45,7 +45,7 @@ export class HomeTabPage implements OnInit, OnDestroy {
   routeState;
   flash_msg_data: any;
   current_version_android: any = '25.0';
-  current_version_ios: any = '22.0';
+  current_version_ios: any = '29.0';
 
   current_version_from_db_android: any;
   current_version_from_db_ios: any;
